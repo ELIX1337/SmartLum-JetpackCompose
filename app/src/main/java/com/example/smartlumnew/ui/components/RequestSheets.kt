@@ -57,7 +57,7 @@ fun LocationEnableRequestSheet(isLocationEnabled: Boolean) {
 @Composable
 fun PermissionRequestSheet(
     requestText: String,
-    declinedText: String,
+    deniedText: String,
     permissionStatus: Boolean,
     permissions: MultiplePermissionsState,
     onPermissionGranted: (Boolean) -> Unit,
@@ -66,7 +66,7 @@ fun PermissionRequestSheet(
     if (!permissionStatus) {
         RequestPermissions(
             requestText,
-            declinedText,
+            deniedText,
             permissions,
             onPermissionsGranted = onPermissionGranted,
             doNotShowRationaleClicked = doNotShowRationaleClicked,

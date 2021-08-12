@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SmartLumNew</string>
+    <string name="location_permission_request">From Android 6.0 Marshmallow onwards applications requires Location permission in order to scan for Bluetooth Low Energy devices</string>
+    <string name="location_permission_denied">From Android 6.0 Marshmallow onwards applications requires Location permission in order to scan for Bluetooth Low Energy devices. \n\nThis is because Bluetooth LE beacons may be used to determine the phone\'s and user\'s location</string>
+    <string name="home_screen">Home</string>
+    <string name="scanner_screen">Scanner</string>
+    <string name="settings_screen">Settings</string>
 </resources>

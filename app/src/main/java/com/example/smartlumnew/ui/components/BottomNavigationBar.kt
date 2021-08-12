@@ -7,6 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
@@ -22,8 +24,8 @@ fun BottomNavigationBar(navController: NavController) {
         val currentRoute = navBackStackEntry.value?.destination?.route
         items.forEach { item ->
             BottomNavigationItem(
-                icon = { Icon(painter = painterResource(id = item.icon), contentDescription = item.title.toString()) },
-                label = { Text(item.title.toString()) },
+                icon = { Icon(painter = painterResource(id = item.icon), contentDescription = stringResource(item.title)) },
+                label = { Text(stringResource(item.title)) },
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
