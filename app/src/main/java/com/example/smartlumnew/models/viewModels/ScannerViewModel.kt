@@ -1,4 +1,4 @@
-package com.example.smartlumnew.viewModels
+package com.example.smartlumnew.models.viewModels
 
 import android.Manifest
 import android.app.Application
@@ -8,8 +8,8 @@ import android.location.LocationManager
 import android.os.ParcelUuid
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.smartlumnew.bluetooth.PeripheralsLiveData
-import com.example.smartlumnew.bluetooth.TorchereManager
+import com.example.smartlumnew.models.bluetooth.PeripheralsLiveData
+import com.example.smartlumnew.models.bluetooth.TorchereManager
 import no.nordicsemi.android.support.v18.scanner.ScanSettings
 import no.nordicsemi.android.support.v18.scanner.*
 import com.example.smartlumnew.utils.Utils
@@ -47,10 +47,11 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun startScan() {
-        if (isScanning.value == true) {
+        if (_isScanning.value!!) {
+            Log.e("TAG", "startScan: scanner is already scanning")
             return
         }
-        Log.e("TAG", "startScan")
+        Log.e("TAG", "startScan - value = ${_isScanning.value}")
         val uuidList: MutableList<ParcelUuid> = ArrayList()
         uuidList.add(ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID))
         val filters: MutableList<ScanFilter> = ArrayList()
@@ -72,7 +73,7 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun stopScan() {
-        if (isScanning.value == true && isBluetoothEnabled.value == true) {
+        if (isScanning.value!! && isBluetoothEnabled.value!!) {
             Log.e("TAG", "stopScan")
             val scanner = BluetoothLeScannerCompat.getScanner()
             scanner.stopScan(scanCallback)

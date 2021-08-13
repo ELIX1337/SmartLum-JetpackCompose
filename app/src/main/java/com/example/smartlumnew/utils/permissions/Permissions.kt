@@ -1,4 +1,4 @@
-package com.example.smartlumnew.permissions
+package com.example.smartlumnew.utils.permissions
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*

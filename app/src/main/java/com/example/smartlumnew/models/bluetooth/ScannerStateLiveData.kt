@@ -1,4 +1,4 @@
-package com.example.smartlumnew.bluetooth
+package com.example.smartlumnew.models.bluetooth
 
 import androidx.lifecycle.LiveData
 

@@ -1,4 +1,4 @@
-package com.example.smartlumnew.bluetooth.callbacks
+package com.example.smartlumnew.models.bluetooth.callbacks
 
 import android.bluetooth.BluetoothDevice
 import android.graphics.Color

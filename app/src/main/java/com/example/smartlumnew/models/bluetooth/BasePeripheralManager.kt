@@ -1,4 +1,4 @@
-package com.example.smartlumnew.bluetooth
+package com.example.smartlumnew.models.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
@@ -7,7 +7,7 @@ import android.bluetooth.BluetoothGattService
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.smartlumnew.bluetooth.callbacks.FirmwareVersionDataCallback
+import com.example.smartlumnew.models.bluetooth.callbacks.FirmwareVersionDataCallback
 import no.nordicsemi.android.ble.livedata.ObservableBleManager
 
 open class BasePeripheralManager(context: Context) : ObservableBleManager(context) {

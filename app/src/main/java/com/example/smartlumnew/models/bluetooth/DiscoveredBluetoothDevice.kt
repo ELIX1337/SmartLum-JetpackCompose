@@ -1,4 +1,4 @@
-package com.example.smartlumnew.bluetooth
+package com.example.smartlumnew.models.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.os.Parcel

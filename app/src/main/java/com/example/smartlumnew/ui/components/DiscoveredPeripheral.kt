@@ -16,7 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
-import com.example.smartlumnew.bluetooth.DiscoveredBluetoothDevice
+import com.example.smartlumnew.models.bluetooth.DiscoveredBluetoothDevice
 
 @Composable
 fun DiscoveredPeripheralsList(

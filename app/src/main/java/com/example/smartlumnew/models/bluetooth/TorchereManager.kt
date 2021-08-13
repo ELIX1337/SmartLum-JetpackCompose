@@ -1,4 +1,4 @@
-package com.example.smartlumnew.bluetooth
+package com.example.smartlumnew.models.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
@@ -7,7 +7,7 @@ import android.bluetooth.BluetoothGattService
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.smartlumnew.bluetooth.callbacks.*
+import com.example.smartlumnew.models.bluetooth.callbacks.*
 import java.util.*
 
 class TorchereManager(context: Context) : BasePeripheralManager(context) {

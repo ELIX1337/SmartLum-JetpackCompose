@@ -1,6 +1,5 @@
 package com.example.smartlumnew.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
@@ -10,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.smartlumnew.NavigationHost
-import com.example.smartlumnew.ui.components.BottomNavigationBar
-import com.example.smartlumnew.ui.components.Screen
+import com.example.smartlumnew.SmartLumNavGraph
+import com.example.smartlumnew.models.viewModels.ScannerViewModel
+import com.example.smartlumnew.ui.home.BottomNavigationBar
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @Composable
@@ -24,17 +23,15 @@ fun currentRoute(navController: NavHostController): String? {
 @ExperimentalMaterialApi
 @ExperimentalPermissionsApi
 @Composable
-fun MainScreen() {
+fun SmartLumApp(scannerViewModel: ScannerViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            if (currentRoute(navController) != Screen.Peripheral.route) {
+            //if (currentRoute(navController) != Screen.Peripheral.route) {
                 BottomNavigationBar(navController)
-            }
+            //}
         }
     ) {
-        Box(modifier = Modifier.padding(it)) {
-            NavigationHost(navController)
-        }
+        SmartLumNavGraph(scannerViewModel,Modifier.padding(it),navController)
     }
 }
