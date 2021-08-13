@@ -92,7 +92,10 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
             Log.e("TAG", "onBatchScanResults: $results")
             var atLeastOneMatchedFilter = false
             results.forEach { result ->
+                val uuids = result.scanRecord?.serviceUuids
+                Log.e("TAG", "onBatchScanResults: UUIDS - $uuids ")
                 atLeastOneMatchedFilter = scanResult.peripheralDiscovered(result) || atLeastOneMatchedFilter
+
             }
             if (atLeastOneMatchedFilter) {
                 scanResult.applyFilter()

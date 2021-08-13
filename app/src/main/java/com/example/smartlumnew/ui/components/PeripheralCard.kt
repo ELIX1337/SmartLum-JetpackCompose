@@ -16,12 +16,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
-import com.example.smartlumnew.models.bluetooth.DiscoveredBluetoothDevice
+import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 
 @Composable
-fun DiscoveredPeripheralsList(
-    peripherals: List<DiscoveredBluetoothDevice?>?,
-    onPeripheralSelected: (DiscoveredBluetoothDevice) -> Unit) {
+fun PeripheralsList(
+    peripherals: List<DiscoveredPeripheral?>?,
+    onPeripheralSelected: (DiscoveredPeripheral) -> Unit) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(8.dp, 16.dp)
@@ -29,7 +29,7 @@ fun DiscoveredPeripheralsList(
         if (peripherals != null) {
             items(peripherals) { result ->
                 if (result != null) {
-                    DiscoveredPeripheral(
+                    PeripheralCard(
                         result,
                         onPeripheralSelected = onPeripheralSelected)
                 }
@@ -39,10 +39,11 @@ fun DiscoveredPeripheralsList(
 }
 
 @Composable
-fun DiscoveredPeripheral(
-    scanResult: DiscoveredBluetoothDevice,
-    onPeripheralSelected: (DiscoveredBluetoothDevice) -> Unit) {
-    val peripheralName = scanResult.device.name ?: "Unknown name"
+fun PeripheralCard(
+    scanResult: DiscoveredPeripheral,
+    onPeripheralSelected: (DiscoveredPeripheral) -> Unit) {
+    val advertisingName = scanResult.device.name ?: "Unknown name"
+    val peripheralType = scanResult.type
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +57,7 @@ fun DiscoveredPeripheral(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.image_torchere),
+                painter = painterResource(peripheralType?.image ?: R.drawable.ic_launcher_foreground),
                 contentDescription = "Discovered peripheral image",
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.BottomStart,
@@ -69,12 +70,16 @@ fun DiscoveredPeripheral(
                     .fillMaxHeight()
             ) {
                 Text(
-                    text = peripheralName,
+                    text = advertisingName,
                     style = MaterialTheme.typography.h6
                 )
                 Text(
-                    text = "Torchere",
+                    text = peripheralType?.name ?: "Unknown device",
                     style = MaterialTheme.typography.overline
+                )
+                Text(
+                    text = peripheralType?.description ?: "No description",
+                    style = MaterialTheme.typography.body1
                 )
             }
             Icon(

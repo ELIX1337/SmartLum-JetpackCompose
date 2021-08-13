@@ -4,9 +4,9 @@ import android.os.ParcelUuid
 import androidx.lifecycle.LiveData
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 
-class PeripheralsLiveData : LiveData<List<DiscoveredBluetoothDevice?>?> {
-    private val devices: MutableList<DiscoveredBluetoothDevice> = ArrayList()
-    private var filteredDevices: List<DiscoveredBluetoothDevice>? = null
+class PeripheralsLiveData : LiveData<List<DiscoveredPeripheral?>?> {
+    private val devices: MutableList<DiscoveredPeripheral> = ArrayList()
+    private var filteredDevices: List<DiscoveredPeripheral>? = null
     private var filterUuidRequired: Boolean
     private var filterNearbyOnly = false
 
@@ -44,12 +44,12 @@ class PeripheralsLiveData : LiveData<List<DiscoveredBluetoothDevice?>?> {
     /* package */
     @Synchronized
     fun peripheralDiscovered(result: ScanResult): Boolean {
-        val device: DiscoveredBluetoothDevice
+        val device: DiscoveredPeripheral
 
         // Check if it's a new device.
         val index = indexOf(result)
         if (index == -1) {
-            device = DiscoveredBluetoothDevice(result)
+            device = DiscoveredPeripheral(result)
             devices.add(device)
         } else {
             device = devices[index]
@@ -79,7 +79,7 @@ class PeripheralsLiveData : LiveData<List<DiscoveredBluetoothDevice?>?> {
     /* package */
     @Synchronized
     fun applyFilter(): Boolean {
-        val tmp: MutableList<DiscoveredBluetoothDevice> = ArrayList()
+        val tmp: MutableList<DiscoveredPeripheral> = ArrayList()
         for (device in devices) {
             val result = device.scanResult
             if (matchesUuidFilter(result) && matchesNearbyFilter(device.highestRssi)) {

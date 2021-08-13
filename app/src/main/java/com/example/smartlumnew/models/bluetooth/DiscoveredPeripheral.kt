@@ -3,14 +3,20 @@ package com.example.smartlumnew.models.bluetooth
 import android.bluetooth.BluetoothDevice
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
+import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Immutable
+import com.example.smartlumnew.R
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import org.jetbrains.annotations.Contract
+import java.util.*
 
-class DiscoveredBluetoothDevice : Parcelable {
+class DiscoveredPeripheral : Parcelable {
     val device: BluetoothDevice
     private var lastScanResult: ScanResult? = null
     var name: String? = null
         private set
+    var type: PeripheralProfile? = null
     var rssi = 0
         private set
     private var previousRssi = 0
@@ -23,24 +29,13 @@ class DiscoveredBluetoothDevice : Parcelable {
     var highestRssi = -128
         private set
 
-    enum class Type {
-        NORDIC_BLINKY, EASY, TORCHERE
-    }
-
-    private var deviceType: Type? = null
-
     constructor(scanResult: ScanResult) {
         device = scanResult.device
         update(scanResult)
-        //deviceType = DeviceQualifier.defineDeviceType(scanResult)
     }
 
     val address: String
         get() = device.address
-
-    fun getDeviceType(): Type {
-        return deviceType!!
-    }
 
     val scanResult: ScanResult
         get() = lastScanResult!!
@@ -67,7 +62,12 @@ class DiscoveredBluetoothDevice : Parcelable {
      */
     fun update(scanResult: ScanResult) {
         lastScanResult = scanResult
-        name = if (scanResult.scanRecord != null) scanResult.scanRecord!!.deviceName else null
+        scanResult.scanRecord?.let { record ->
+            name = record.deviceName ?: "Unknown device"
+            record.serviceUuids?.let { services ->
+                type = peripheralProfiles.find { profile -> profile.type == PeripheralType.getType(services.map { it.uuid }) }
+            }
+        }
         previousRssi = rssi
         rssi = scanResult.rssi
         if (highestRssi < rssi) highestRssi = rssi
@@ -82,7 +82,7 @@ class DiscoveredBluetoothDevice : Parcelable {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is DiscoveredBluetoothDevice) {
+        if (other is DiscoveredPeripheral) {
             return device.address == other.device.address
         }
         return super.equals(other)
@@ -112,14 +112,14 @@ class DiscoveredBluetoothDevice : Parcelable {
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<DiscoveredBluetoothDevice> =
-            object : Parcelable.Creator<DiscoveredBluetoothDevice> {
+        @JvmField val CREATOR: Parcelable.Creator<DiscoveredPeripheral> =
+            object : Parcelable.Creator<DiscoveredPeripheral> {
                 @Contract("_ -> new")
-                override fun createFromParcel(source: Parcel): DiscoveredBluetoothDevice {
-                    return DiscoveredBluetoothDevice(source)
+                override fun createFromParcel(source: Parcel): DiscoveredPeripheral {
+                    return DiscoveredPeripheral(source)
                 }
 
-                override fun newArray(size: Int): Array<DiscoveredBluetoothDevice?> {
+                override fun newArray(size: Int): Array<DiscoveredPeripheral?> {
                     return arrayOfNulls(size)
                 }
             }

@@ -10,7 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.smartlumnew.R
-import com.example.smartlumnew.models.bluetooth.DiscoveredBluetoothDevice
+import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.viewModels.ScannerViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -27,7 +27,7 @@ enum class HomeDestinations(
 @ExperimentalPermissionsApi
 @ExperimentalMaterialApi
 fun NavGraphBuilder.addHomeGraph(
-    onPeripheralSelected: (DiscoveredBluetoothDevice) -> Unit,
+    onPeripheralSelected: (DiscoveredPeripheral) -> Unit,
     scannerViewModel: ScannerViewModel
 ) {
     composable(HomeDestinations.FEED.route) {

@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.smartlumnew.models.bluetooth.BasePeripheralManager
-import com.example.smartlumnew.models.bluetooth.DiscoveredBluetoothDevice
+import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 
 open class BasePeripheralViewModel(context: Application) : AndroidViewModel(context) {
 
@@ -15,7 +15,7 @@ open class BasePeripheralViewModel(context: Application) : AndroidViewModel(cont
 
     val firmwareVersion: LiveData<Int> = basePeripheralManager.firmwareVersion
 
-    fun connect(target: DiscoveredBluetoothDevice) {
+    fun connect(target: DiscoveredPeripheral) {
         if (peripheral == null) {
             peripheral = target.device
             reconnect()

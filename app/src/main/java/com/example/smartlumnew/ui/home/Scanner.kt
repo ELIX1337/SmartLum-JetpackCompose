@@ -15,10 +15,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
-import com.example.smartlumnew.models.bluetooth.DiscoveredBluetoothDevice
+import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.viewModels.ScannerViewModel
 import com.example.smartlumnew.ui.components.BluetoothEnableRequestSheet
-import com.example.smartlumnew.ui.components.DiscoveredPeripheralsList
+import com.example.smartlumnew.ui.components.PeripheralsList
 import com.example.smartlumnew.ui.components.LocationEnableRequestSheet
 import com.example.smartlumnew.ui.components.PermissionRequestSheet
 import com.example.smartlumnew.utils.Utils
@@ -30,7 +30,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 @Composable
 fun Scanner(
     scannerViewModel: ScannerViewModel,
-    onPeripheralSelected: (DiscoveredBluetoothDevice) -> Unit
+    onPeripheralSelected: (DiscoveredPeripheral) -> Unit
 ) {
     val context = LocalContext.current
     val isScanning by scannerViewModel.isScanning.observeAsState(false)
@@ -64,7 +64,7 @@ fun Scanner(
             }
         }
     ) {
-        DiscoveredPeripheralsList(scanResult, onPeripheralSelected)
+        PeripheralsList(scanResult, onPeripheralSelected)
     }
 
     if (!isBluetoothEnabled || !isLocationEnabled || !isLocationPermissionGranted) {
