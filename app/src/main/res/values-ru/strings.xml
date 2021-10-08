@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartLum</string>
+    <string name="slider_cell_speed">Скорость</string>
+    <string name="switch_cell_random_color">Случайный цвет</string>
+    <string name="peripheral_type_torchere">Торшер</string>
+    <string name="peripheral_type_table_lamp">Настольная лампа</string>
+    <string name="peripheral_type_unknown">Неизвестно</string>
+    <string name="peripheral_type_stairs_lighting">Освещение лестницы</string>
+    <string name="peripheral_description_fl_classic">Минималистичная напольная лампа</string>
+    <string name="peripheral_description_sl_base">Контроллер освещения лестницы</string>
+    <string name="peripheral_description_fl_mini">Минималистичная настольная лампа</string>
+    <string name="peripheral_name_unknown">Неизвестно</string>
+    <string name="picker_cell_animations">Анимации</string>
+    <string name="stepper_cell_step">Шаг</string>
+    <string name="picker_cell_direction">Направление</string>
+    <string name="color_cell_secondary">Дополнительный цвет</string>
+    <string name="color_cell_primary">Основной цвет</string>
+    <string name="button_commit">Подтвердить</string>
+    <string name="title_bot_sensor_trigger_distance">Дистанция срабатывания нижнего датчика</string>
+    <string name="title_top_sensor_trigger_distance">Дистанция срабатывания верхнего датчика</string>
+    <string name="message_device_not_initialized">Устройство не настроено</string>
+    <string name="reset_button">Сбросить</string>
+    <string name="stepper_cell_led_timeout">Задержка</string>
+    <string name="slider_cell_led_on_speed">Скорость анимации</string>
+    <string name="slider_cell_led_brightness">Яркость</string>
+    <string name="switch_cell_led_on">Включить ленту</string>
+    <string name="settings_screen_title">Настройки</string>
+    <string name="scanner_screen_title">Устройства</string>
+    <string name="home_screen_title">Главная</string>
+    <string name="location_permission_request">Начиная с Android 6.0 Marshmallow, приложениям требуется разрешение на определение местоположения для поиска устройств Bluetooth Low Energy.</string>
+    <string name="location_permission_denied">Начиная с Android 6.0 Marshmallow, приложениям требуется разрешение на определение местоположения для поиска устройств Bluetooth Low Energy.\n\nЭто связано с тем, что Bluetooth LE маяки могут использоваться для определения местоположения телефона и пользователя.</string>
+    <string name="peripheral_description_unknown">Нет описания</string>
+    <string name="peripheral_name_fl_mini">FL-Mini</string>
+    <string name="peripheral_name_fl_classic">FL-Classic</string>
+    <string name="peripheral_name_sl_base">SL-Base</string>
+</resources>

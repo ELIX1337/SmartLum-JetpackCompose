@@ -1,92 +1,65 @@
-package com.example.smartlumnew.models.bluetooth.callbacks
+package com.example.smartlumnew.models.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.graphics.Color
-import android.util.Log
+import com.example.smartlumnew.models.data.parseDoubleByteData
 import no.nordicsemi.android.ble.callback.profile.ProfileDataCallback
 import no.nordicsemi.android.ble.data.Data
 
-abstract class FirmwareVersionDataCallback : ProfileDataCallback, FirmwareVersionCallback {
+interface IntegerCallback {
+    fun onIntegerValueReceived(device: BluetoothDevice, data: Int)
+}
+
+interface BooleanCallback {
+    fun onBooleanReceived(device: BluetoothDevice, state: Boolean)
+}
+
+interface RGBCallback {
+    fun onRGBReceived(device: BluetoothDevice, color: Int)
+}
+
+abstract class SingleByteDataCallback : ProfileDataCallback, IntegerCallback {
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        Log.e("TAG", "onDataReceived: FIRMWARE VERSION - ${data.getIntValue(Data.FORMAT_UINT8, 0)}" )
+        if (data.size() != 1) {
+            onInvalidDataReceived(device, data)
+            return
+        }
+        val value = data.getIntValue(Data.FORMAT_UINT8, 0)!!
+        onIntegerValueReceived(device, value)
+    }
+}
+
+abstract class DoubleByteDataCallback : ProfileDataCallback, IntegerCallback {
+    override fun onDataReceived(device: BluetoothDevice, data: Data) {
         if (data.size() != 2) {
             onInvalidDataReceived(device, data)
             return
         }
-        val value = data.getIntValue(Data.FORMAT_UINT8, 0)!!
-        onFirmwareVersionReceived(device, value)
+        val value = parseDoubleByteData(data, Data.FORMAT_UINT8, false)
+        onIntegerValueReceived(device, value)
     }
 }
 
-interface FirmwareVersionCallback {
-    fun onFirmwareVersionReceived(device: BluetoothDevice, version: Int)
-}
-
-interface AnimationDirectionCallback {
-    fun onAnimationDirectionReceived(device: BluetoothDevice, direction: Int)
-}
-
-abstract class AnimationDirectionDataCallback : ProfileDataCallback, AnimationDirectionCallback {
+abstract class BooleanDataCallback : ProfileDataCallback, BooleanCallback {
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
         if (data.size() != 1) {
             onInvalidDataReceived(device, data)
             return
         }
-        val value = data.getIntValue(Data.FORMAT_UINT8, 0)!!
-        onAnimationDirectionReceived(device, value)
-    }
-}
-
-interface AnimationModeCallback {
-    fun onAnimationModeReceived(device: BluetoothDevice, mode: Int)
-}
-
-abstract class AnimationModeDataCallback : ProfileDataCallback, AnimationModeCallback {
-    override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        if (data.size() != 1) {
-            onInvalidDataReceived(device, data)
-            return
+        when (data.getIntValue(Data.FORMAT_UINT8, 0)!!) {
+            STATE_TRUE  -> onBooleanReceived(device, true)
+            STATE_FALSE -> onBooleanReceived(device, false)
+            else        -> onInvalidDataReceived(device, data)
         }
-        val value = data.getIntValue(Data.FORMAT_UINT8, 0)!!
-        onAnimationModeReceived(device, value)
+    }
+
+    companion object {
+        private const val STATE_FALSE = 0x00
+        private const val STATE_TRUE  = 0x01
     }
 }
 
-interface AnimationSpeedCallback {
-    fun onAnimationSpeedReceived(device: BluetoothDevice, speed: Int)
-}
-
-abstract class AnimationSpeedDataCallback : ProfileDataCallback, AnimationSpeedCallback {
-    override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        if (data.size() != 1) {
-            onInvalidDataReceived(device, data)
-            return
-        }
-        val value = data.getIntValue(Data.FORMAT_UINT8, 0)!!
-        onAnimationSpeedReceived(device, value)
-    }
-}
-
-interface AnimationStepCallback {
-    fun onAnimationStepReceived(device: BluetoothDevice, step: Int)
-}
-
-abstract class AnimationStepDataCallback : ProfileDataCallback, AnimationStepCallback {
-    override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        if (data.size() != 1) {
-            onInvalidDataReceived(device, data)
-            return
-        }
-        val value = data.getIntValue(Data.FORMAT_UINT8, 0)!!
-        onAnimationStepReceived(device, value)
-    }
-}
-
-interface ColorCallback {
-    fun onColorReceived(device: BluetoothDevice, color: Int)
-}
-
-abstract class ColorDataCallback : ProfileDataCallback, ColorCallback {
+abstract class RGBDataCallback : ProfileDataCallback, RGBCallback {
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
         if (data.size() != 3) {
             onInvalidDataReceived(device, data)
@@ -96,31 +69,7 @@ abstract class ColorDataCallback : ProfileDataCallback, ColorCallback {
             val green = data.getIntValue(Data.FORMAT_UINT8, 1)!!
             val blue = data.getIntValue(Data.FORMAT_UINT8, 2)!!
             val color = Color.rgb(red, green, blue)
-            onColorReceived(device, color)
-            Log.e("TAG", "onDataReceived: ${color}" )
+            onRGBReceived(device, color)
         }
-    }
-}
-
-interface RandomColorCallback {
-    fun onRandomColorState(device: BluetoothDevice, state: Boolean)
-}
-
-abstract class RandomColorDataCallback : ProfileDataCallback, RandomColorCallback {
-    override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        if (data.size() != 1) {
-            onInvalidDataReceived(device, data)
-            return
-        }
-        when (data.getIntValue(Data.FORMAT_UINT8, 0)!!) {
-            STATE_ENABLED  -> onRandomColorState(device, true)
-            STATE_DISABLED -> onRandomColorState(device, false)
-            else           -> onInvalidDataReceived(device, data)
-        }
-    }
-
-    companion object {
-        private const val STATE_DISABLED = 0x00
-        private const val STATE_ENABLED = 0x01
     }
 }

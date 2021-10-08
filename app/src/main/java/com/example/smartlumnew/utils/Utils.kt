@@ -8,9 +8,9 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.util.Log
-import androidx.preference.PreferenceManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 
 object Utils {
     private const val PREFS_PERMISSION_REQUESTED = "permission_requested"

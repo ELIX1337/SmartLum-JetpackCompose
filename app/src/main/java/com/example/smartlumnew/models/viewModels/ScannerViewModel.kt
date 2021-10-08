@@ -3,21 +3,27 @@ package com.example.smartlumnew.models.viewModels
 import android.Manifest
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.ParcelUuid
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.smartlumnew.models.bluetooth.PeripheralsLiveData
 import com.example.smartlumnew.models.bluetooth.TorchereManager
-import no.nordicsemi.android.support.v18.scanner.ScanSettings
-import no.nordicsemi.android.support.v18.scanner.*
 import com.example.smartlumnew.utils.Utils
-import java.lang.IllegalArgumentException
+import no.nordicsemi.android.support.v18.scanner.*
 
 class ScannerViewModel(application: Application) : AndroidViewModel(application) {
 
     val scanResult = PeripheralsLiveData()
+
+    private val _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private val _isScanning = MutableLiveData(false)
     val isScanning: LiveData<Boolean> = _isScanning
@@ -41,8 +47,12 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun refresh() {
-        if (isScanning.value == true) {
-            return
+        _isRefreshing.postValue(true)
+        scanResult.clear()
+        //stopScan()
+        //startScan()
+        if (isScanning.value!!) {
+            _isRefreshing.postValue(false)
         }
     }
 
@@ -89,11 +99,11 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {
-            Log.e("TAG", "onBatchScanResults: $results")
+            //Log.e("TAG", "onBatchScanResults: $results")
             var atLeastOneMatchedFilter = false
             results.forEach { result ->
                 val uuids = result.scanRecord?.serviceUuids
-                Log.e("TAG", "onBatchScanResults: UUIDS - $uuids ")
+                //Log.e("TAG", "onBatchScanResults: UUIDS - $uuids ")
                 atLeastOneMatchedFilter = scanResult.peripheralDiscovered(result) || atLeastOneMatchedFilter
 
             }

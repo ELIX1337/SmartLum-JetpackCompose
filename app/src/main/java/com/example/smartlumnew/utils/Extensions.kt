@@ -2,7 +2,7 @@ package com.example.smartlumnew.utils
 
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.smartlumnew.ui.MainActivity
+import com.example.smartlumnew.MainActivity
 
 private fun MainActivity.requestPermissions(
     requestedPermissions: Array<String>,

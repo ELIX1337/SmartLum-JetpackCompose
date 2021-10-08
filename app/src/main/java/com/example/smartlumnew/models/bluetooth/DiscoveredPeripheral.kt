@@ -3,10 +3,6 @@ package com.example.smartlumnew.models.bluetooth
 import android.bluetooth.BluetoothDevice
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
-import androidx.annotation.DrawableRes
-import androidx.compose.runtime.Immutable
-import com.example.smartlumnew.R
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import org.jetbrains.annotations.Contract
 import java.util.*
@@ -16,7 +12,7 @@ class DiscoveredPeripheral : Parcelable {
     private var lastScanResult: ScanResult? = null
     var name: String? = null
         private set
-    var type: PeripheralProfile? = null
+    var type: PeripheralProfileEnum = PeripheralProfileEnum.UNKNOWN
     var rssi = 0
         private set
     private var previousRssi = 0
@@ -65,7 +61,7 @@ class DiscoveredPeripheral : Parcelable {
         scanResult.scanRecord?.let { record ->
             name = record.deviceName ?: "Unknown device"
             record.serviceUuids?.let { services ->
-                type = peripheralProfiles.find { profile -> profile.type == PeripheralType.getType(services.map { it.uuid }) }
+                type = PeripheralProfileEnum.getType(services.map { it.uuid }) ?: PeripheralProfileEnum.UNKNOWN
             }
         }
         previousRssi = rssi
