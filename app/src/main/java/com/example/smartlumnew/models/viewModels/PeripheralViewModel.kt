@@ -27,7 +27,7 @@ class PeripheralViewModelFactory(private val context: Application, private val t
                 }
             }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("Unknown ViewModel class - $type")
     }
 }
 
