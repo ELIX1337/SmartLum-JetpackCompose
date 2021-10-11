@@ -11,7 +11,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,9 +20,7 @@ fun Cell(
 ) {
     val styledContent: @Composable (() -> Unit)? = additionalContent?.let {
         @Composable {
-            val style = MaterialTheme.typography.body2.copy(
-                textAlign = TextAlign.Center,
-            )
+            val style = MaterialTheme.typography.body2.copy()
             ProvideTextStyle(style, content = additionalContent)
         }
     }
