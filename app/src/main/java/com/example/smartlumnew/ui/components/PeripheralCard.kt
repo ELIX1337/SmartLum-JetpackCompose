@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
@@ -20,16 +22,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
@@ -53,7 +47,7 @@ fun PeripheralsList(
                 insets = LocalWindowInsets.current.systemBars,
                 applyTop = true,
                 applyBottom = true,
-                additionalTop = dimensionResource(id = R.dimen.AppBar_height) + 6.dp,
+                additionalTop = dimensionResource(id = R.dimen.AppBar_height) + 12.dp,
                 additionalBottom = 6.dp
             )
         ) {
@@ -61,7 +55,6 @@ fun PeripheralsList(
                 if (peripheral != null) {
                     PeripheralCard(
                         peripheralProfile = peripheral.type,
-                        address = peripheral.address,
                         onPeripheralSelected = { onPeripheralSelected(peripheral) }
                     )
 
@@ -95,7 +88,7 @@ fun NoDevices() {
                 contentDescription = "Search"
             )
             Text(
-                text = "No devices found",
+                text = stringResource(R.string.peripheral_list_text_no_devices_found),
                 textAlign = TextAlign.Center
             )
         }
@@ -106,7 +99,6 @@ fun NoDevices() {
 @Composable
 fun PeripheralCard(
     peripheralProfile: PeripheralProfileEnum,
-    address: String = "null",
     onPeripheralSelected: () -> Unit
 ) {
     Card(
@@ -114,7 +106,7 @@ fun PeripheralCard(
             .fillMaxWidth()
             .sizeIn(Dp.Unspecified, 100.dp, Dp.Unspecified, 150.dp)
             .clickable { onPeripheralSelected() },
-        shape = MaterialTheme.shapes.large,
+        shape = MaterialTheme.shapes.medium,
         elevation = 8.dp
     ) {
         Image(
@@ -156,8 +148,7 @@ fun PeripheralCard(
                     )
                 }
                 TextCard(
-                    text = address,
-                    //text = stringResource(peripheralProfile.description),
+                    text = stringResource(peripheralProfile.description),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier.padding(1.dp)
                 )
@@ -176,46 +167,4 @@ fun PeripheralCard(
             }
         }
     }
-}
-
-@Composable
-fun TextCard(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = Color.White,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    fontStyle: FontStyle? = null,
-    fontWeight: FontWeight? = null,
-    fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit.Unspecified,
-    textDecoration: TextDecoration? = null,
-    textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    overflow: TextOverflow = TextOverflow.Clip,
-    softWrap: Boolean = true,
-    maxLines: Int = Int.MAX_VALUE,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current,
-    backgroundColor: Color = Color(0,0,0,0x33)
-) {
-    Text(
-        text = text,
-        color = color,
-        style = style,
-        fontSize = fontSize,
-        fontStyle = fontStyle,
-        fontWeight = fontWeight,
-        fontFamily = fontFamily,
-        letterSpacing = letterSpacing,
-        textDecoration = textDecoration,
-        textAlign = textAlign,
-        lineHeight = lineHeight,
-        overflow = overflow,
-        softWrap = softWrap,
-        maxLines = maxLines,
-        onTextLayout = onTextLayout,
-        modifier = modifier
-            .background(backgroundColor, RoundedCornerShape(10.dp))
-            .padding(12.dp, 6.dp)
-    )
 }
