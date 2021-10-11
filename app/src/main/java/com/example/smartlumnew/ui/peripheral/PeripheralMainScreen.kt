@@ -1,6 +1,7 @@
 package com.example.smartlumnew.ui.peripheral
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Icon
@@ -41,28 +42,25 @@ fun PeripheralScreen(
 ) {
     viewModel.connect(peripheral)
     val connectionState by viewModel.connectionState.observeAsState(ConnectionState.CONNECTING)
-
+    Log.e("TAG", "PeripheralScreen: VM - $viewModel")
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-//        Spacer(
-//            Modifier
-//                .padding(0.dp, dimensionResource(id = R.dimen.AppBar_height), 0.dp, 0.dp)
-//                .statusBarsPadding())
         PeripheralScreen(
             modifier = modifier,
             viewModel = viewModel,
             peripheral = peripheral,
             connectionState = connectionState,
         )
-        //Spacer(Modifier.navigationBarsPadding())
     }
     PeripheralTopBar(
         title = stringResource(peripheral.type.peripheralName),
         navigateUp = { navigateUp() },
         openPeripheralSettings = { openPeripheralSettings(peripheral, viewModel) },
-        showActions = viewModel.isInitialized.observeAsState(false).value
+        showActions = viewModel.isInitialized.observeAsState(false).value && viewModel.hasOptions.observeAsState(
+            initial = false
+        ).value
     )
 }
 
@@ -119,7 +117,7 @@ fun PeripheralSetupScreen(
     peripheralType: PeripheralProfileEnum,
     viewModel: PeripheralViewModel,
 ) {
-    Column {
+    Column(modifier) {
         PeripheralSetupScreen(
             peripheralType = peripheralType,
             viewModel = viewModel,
