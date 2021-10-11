@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import com.example.smartlumnew.R
 import com.example.smartlumnew.ui.components.BottomSheetAlert
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
@@ -36,18 +38,18 @@ fun RequestPermissions(
                 // Showing default rationale screen if custom not implemented
                 else {
                     BottomSheetAlert(
-                        titleText = "Permissions denied",
+                        titleText = stringResource(R.string.alert_permissions_denied_title),
                         descriptionText = declinedText,
-                        positiveButtonText = "Go to settings",
+                        positiveButtonText = stringResource(R.string.alert_permissions_denied_navigate_to_settings_button),
                         onPositiveButtonClick =  navigateToSettingsScreen
                     )
                 }
             } else {
                 BottomSheetAlert(
-                    titleText = "Permissions required",
+                    titleText = stringResource(R.string.alert_permissions_required_title),
                     descriptionText = requestText,
-                    positiveButtonText = "Request permissions",
-                    negativeButtonText = "Do not show rationale again",
+                    positiveButtonText = stringResource(R.string.alert_permissions_required_request_button),
+                    negativeButtonText = stringResource(R.string.alert_permissions_required_do_not_show_rationale_button),
                     onPositiveButtonClick = { multiplePermissionsState.launchMultiplePermissionRequest() },
                     onNegativeButtonClick = { doNotShowRationale = true }
                 )
@@ -57,9 +59,9 @@ fun RequestPermissions(
         // Sending to the Settings screen
         else -> {
             BottomSheetAlert(
-                titleText = "Permissions denied",
+                titleText = stringResource(R.string.alert_permissions_denied_title),
                 descriptionText = declinedText,
-                positiveButtonText = "Go to settings",
+                positiveButtonText = stringResource(R.string.alert_permissions_denied_navigate_to_settings_button),
                 onPositiveButtonClick =  navigateToSettingsScreen
             )
         }

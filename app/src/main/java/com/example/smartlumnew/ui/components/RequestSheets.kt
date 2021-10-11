@@ -16,7 +16,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.smartlumnew.R
 import com.example.smartlumnew.utils.permissions.RequestPermissions
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
@@ -26,9 +28,9 @@ fun BluetoothEnableRequestSheet(isBluetoothEnabled: Boolean) {
     val context = LocalContext.current
     if (!isBluetoothEnabled) {
         BottomSheetAlert(
-            titleText = "Bluetooth is not enabled",
-            descriptionText = "Please, turn it on to scan for devices",
-            positiveButtonText = "Enable bluetooth",
+            titleText = stringResource(R.string.alert_bluetooth_disabled_title),
+            descriptionText = stringResource(R.string.alert_bluetooth_disabled_description),
+            positiveButtonText = stringResource(R.string.alert_bluetooth_disabled_enable),
             onPositiveButtonClick = {
                 val manager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
                 manager.adapter.enable()
@@ -42,10 +44,9 @@ fun LocationEnableRequestSheet(isLocationEnabled: Boolean) {
     val context = LocalContext.current
     if (!isLocationEnabled) {
         BottomSheetAlert(
-            titleText = "Location is not enabled",
-            descriptionText = "Since Android Lollipop applications needs to location service be enabled for Bluetooth scan. " +
-                    "Please enable location service in app settings",
-            positiveButtonText = "Enable location service",
+            titleText = stringResource(R.string.alert_location_disabled_title),
+            descriptionText = stringResource(R.string.alert_location_disabled_description),
+            positiveButtonText = stringResource(R.string.alert_location_disabled_enable),
             onPositiveButtonClick = {
                 context.startActivity(
                     Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)

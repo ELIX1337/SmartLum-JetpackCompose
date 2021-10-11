@@ -29,7 +29,6 @@ fun PeripheralSettingsScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            //.padding(12.dp, 0.dp)
     ) {
         Column(
             modifier = Modifier
@@ -47,7 +46,9 @@ fun PeripheralSettingsScreen(
             ) {
                 Text(stringResource(R.string.reset_button))
             }
-            Text("Firmware version - ${viewModel.firmwareVersion.value}")
+            viewModel.firmwareVersion.value?.let {
+                Text(stringResource(R.string.peripheral_settings_text_firmware_version) + it)
+            }
             PeripheralResetDialog(
                 isOpen = showDialog,
                 dismiss = { showDialog = false },
@@ -59,7 +60,7 @@ fun PeripheralSettingsScreen(
             )
         }
         PeripheralTopBar(
-            title = "Device settings",
+            title = stringResource(R.string.peripheral_settings_screen_title),
             navigateUp = navigateUp,
             openPeripheralSettings = { },
             showActions = false
@@ -77,19 +78,19 @@ fun PeripheralResetDialog(
         AlertDialog(
             onDismissRequest = dismiss,
             title = {
-                Text("Are you sure to reset?")
+                Text(stringResource(R.string.alert_dialog_reset_title))
             },
             text = {
-                Text("This action will set factory settings")
+                Text(stringResource(R.string.alert_dialog_reset_text))
             },
             confirmButton = {
                 Button(confirm) {
-                    Text("Reset")
+                    Text(stringResource(R.string.alert_dialog_reset_confirm))
                 }
             },
             dismissButton = {
                 Button(dismiss) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.alert_dialog_reset_dismiss))
                 }
             }
         )

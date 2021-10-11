@@ -2,7 +2,6 @@ package com.example.smartlumnew.ui.peripheral
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -44,7 +43,7 @@ fun SLBaseMainScreen(
         SwitchCell(
             title = stringResource(R.string.switch_cell_led_on),
             initValue = ledState,
-            additionalContent = { Row { Text("This option will enable after disconnection") } }
+            additionalContent = { Text(stringResource(R.string.sl_base_led_on_cell_description)) }
         ) {
             ledState = it
             baseViewModel.setLedState(it)
@@ -91,7 +90,7 @@ fun SLBaseSettingsScreen(
             title = stringResource(R.string.title_top_sensor_trigger_distance),
             initValue = topSensorTriggerDistance,
             valueRange = 1f..200f,
-            additionalContent = { Text("Current value - ${topSensorTriggerDistance.toInt()}") },
+            additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + topSensorTriggerDistance.toInt()) },
             onValueChanged = {
                 topSensorTriggerDistance = it
                 viewModel.setTopSensorTriggerDistance(it)
@@ -101,7 +100,7 @@ fun SLBaseSettingsScreen(
             title = stringResource(R.string.title_bot_sensor_trigger_distance),
             initValue = botSensorTriggerDistance,
             valueRange = 1f..200f,
-            additionalContent = { Text("Current value - ${botSensorTriggerDistance.toInt()}") },
+            additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + botSensorTriggerDistance.toInt()) },
             onValueChanged = {
                 botSensorTriggerDistance = it
                 viewModel.setBotSensorTriggerDistance(it)
@@ -118,6 +117,7 @@ fun SLBaseSetupScreen(
     var botSensorTriggerDistance by remember { mutableStateOf(viewModel.botSensorTriggerDistance.value ?: 1) }
 
     Column(
+        modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -125,20 +125,20 @@ fun SLBaseSetupScreen(
             title = stringResource(R.string.title_top_sensor_trigger_distance),
             initValue = topSensorTriggerDistance.toFloat(),
             valueRange = 1f..200f,
-            additionalContent = { Text("Current value - $topSensorTriggerDistance") },
+            additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + topSensorTriggerDistance.toInt()) },
             onValueChanged = {
                 topSensorTriggerDistance = it.toInt()
-                viewModel.setTopSensorTriggerDistance(it)
+                viewModel.initTopSensorTriggerDistance(it)
             }
         )
         SliderCell(
             title = stringResource(R.string.title_bot_sensor_trigger_distance),
             initValue = botSensorTriggerDistance.toFloat(),
             valueRange = 1f..200f,
-            additionalContent = { Text("Current value - $botSensorTriggerDistance") },
+            additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + botSensorTriggerDistance.toInt()) },
             onValueChanged = {
                 botSensorTriggerDistance = it.toInt()
-                viewModel.setBotSensorTriggerDistance(it)
+                viewModel.initBotSensorTriggerDistance(it)
             }
         )
         Button(onClick = { viewModel.commit() }) {
