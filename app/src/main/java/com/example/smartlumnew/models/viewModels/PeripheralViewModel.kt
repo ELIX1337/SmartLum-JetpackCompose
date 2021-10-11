@@ -4,6 +4,7 @@ import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.smartlumnew.models.bluetooth.ConnectionState
@@ -39,7 +40,10 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     val isInitialized:   LiveData<Boolean>         = manager.isInitialized
     val isConnected:     LiveData<Boolean>         = manager.isConnected
     val connectionState: LiveData<ConnectionState> = manager.peripheralConnectionState
-    val disconnectReason: LiveData<Int> = manager.disconnectReason
+    val disconnectReason:LiveData<Int>            = manager.disconnectReason
+
+    val _hasOptions = MutableLiveData(false)
+    val hasOptions: LiveData<Boolean> = _hasOptions
 
     fun connect(target: DiscoveredPeripheral) {
         if (peripheral == null) {

@@ -19,6 +19,10 @@ class TorchereViewModelFactory(private val context: Application) : ViewModelProv
 
 class FLClassicViewModel(context: Application) : PeripheralViewModel(TorchereManager(context)) {
 
+    init {
+        _hasOptions.postValue(false)
+    }
+
     private val torchereManager: TorchereManager = peripheralManager as TorchereManager
 
     val primaryColor:       LiveData<Int> = torchereManager.primaryColor

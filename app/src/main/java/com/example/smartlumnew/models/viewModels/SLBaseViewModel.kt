@@ -20,6 +20,10 @@ class SLBaseViewModelFactory(private val context: Application) : ViewModelProvid
 
 class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(context)) {
 
+    init {
+        _hasOptions.postValue(true)
+    }
+
     private val baseManager: SLBaseManager = peripheralManager as SLBaseManager
 
     val ledBrightness: MutableLiveData<Float> = baseManager.ledBrightness
