@@ -1,7 +1,6 @@
 package com.example.smartlumnew.ui.home
 
 import android.Manifest
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -109,7 +108,6 @@ fun Scanner(
         }
     }
     else if (!bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-        Log.e("TAG", "ScannerScreen: collapsing")
         LaunchedEffect(bottomSheetScaffoldState.bottomSheetState) {
             bottomSheetScaffoldState.bottomSheetState.collapse()
         }
