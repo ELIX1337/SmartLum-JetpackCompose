@@ -2,32 +2,32 @@ package com.example.smartlumnew.ui.home
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ExpandLess
-import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.smartlumnew.BuildConfig
 import com.example.smartlumnew.R
+import com.example.smartlumnew.ui.components.ExpandableCell
 import com.example.smartlumnew.ui.components.ValuePickerItem
 import com.example.smartlumnew.ui.theme.AppTheme
 import com.example.smartlumnew.ui.theme.appTheme
-import com.example.smartlumnew.ui.theme.contrastTransparent
 import com.example.smartlumnew.ui.theme.setAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
@@ -47,31 +47,13 @@ fun Settings(
     val scope = rememberCoroutineScope()
     val showDialog = rememberSaveable { mutableStateOf(false) }
 
-    val termsIntent = remember {
-        Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://smartlum.flycricket.io/terms.html")
-        ) }
-    val privacyIntent = remember {
-        Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://smartlum.flycricket.io/privacy.html")
-        ) }
-    val vkIntent = remember {
-        Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://smartlum.flycricket.io/privacy.html")
-        ) }
-    val instagramIntent = remember {
-        Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://www.instagram.com/smartlum/")
-        ) }
-    val websiteIntent = remember {
-        Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://smart-lum.com")
-        ) }
+    val termsIntent     = Intent(Intent.ACTION_VIEW, Uri.parse("https://smartlum.flycricket.io/terms.html"))
+    val licencesIntent  = Intent(context, OssLicensesMenuActivity::class.java)
+    val privacyIntent   = Intent(Intent.ACTION_VIEW, Uri.parse("https://smartlum.flycricket.io/privacy.html"))
+    val instagramIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/smartlum/"))
+    val vkIntent        = Intent(Intent.ACTION_VIEW, Uri.parse("https://vk.com/smartlum"))
+    val websiteIntent   = Intent(Intent.ACTION_VIEW, Uri.parse("https://smart-lum.com"))
+
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
@@ -83,89 +65,77 @@ fun Settings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ExpandableCell(
-                headerContent = { Text("About") }
-            ) {
-                Column {
-                    OutlinedButton(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = {
-                            context.startActivity(termsIntent)
-                        }
-                    ) {
-                        Text("Terms of use")
-                    }
-                    OutlinedButton(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    context,
-                                    OssLicensesMenuActivity::class.java
-                                )
-                            )
-                        }
-                    ) {
-                        Text("Licences")
-                    }
-                    OutlinedButton(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = {
-                            context.startActivity(privacyIntent)
-                        }
-                    ) {
-                        Text("Privacy policy")
-                    }
-                }
-            }
-
-            ExpandableCell(
-                headerContent = { Text("General") }
+                headerContent = { Text(stringResource(R.string.settings_general_cell_title)) }
             ) {
                 Column {
                     OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
                         onClick =  { showDialog.value = true }
                     ) {
-                        Text("Theme")
+                        Text(stringResource(R.string.settings_app_theme_button))
                     }
                     Surface(
                         Modifier
                             .fillMaxWidth()
-                            .padding(16.dp, 12.dp)) {
-                        Text("Version - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+                            .padding(16.dp, 12.dp)
+                    ) {
+                        Text(stringResource(R.string.settings_app_version_text) + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")")
                     }
                 }
             }
+
             ExpandableCell(
-                headerContent = { Text("Contacts") }
+                headerContent = { Text(stringResource(R.string.settings_about_cell_title)) }
             ) {
                 Column {
                     OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = { context.startActivity(instagramIntent) }
+                        onClick = { context.startActivity(termsIntent) }
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_instagram),
-                            contentDescription = "Instagram",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text("Instagram")
+                        Text(stringResource(R.string.settings_terms_button))
                     }
                     OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = { context.startActivity(websiteIntent) }
+                        onClick = { context.startActivity(licencesIntent) }
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_web),
-                            contentDescription = "Website",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text("Website")
+                        Text(stringResource(R.string.settings_open_source_licences_button))
+                    }
+                    OutlinedButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { context.startActivity(privacyIntent) }
+                    ) {
+                        Text(stringResource(R.string.settings_privacy_button))
+                    }
+                }
+            }
+
+            ExpandableCell(
+                headerContent = { Text(stringResource(R.string.settings_contacts_cell_title)) }
+            ) {
+                Column {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        icon = painterResource(id = R.drawable.ic_instagram),
+                        contentDescription = "Instagram",
+                        text = stringResource(R.string.settings_instagram_link_button)
+                    ) {
+                        context.startActivity(instagramIntent)
+                    }
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        icon = painterResource(id = R.drawable.ic_vk),
+                        contentDescription = "VK",
+                        text = stringResource(R.string.settings_vk_link_button)
+                    ) {
+                        context.startActivity(vkIntent)
+                    }
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        icon = painterResource(id = R.drawable.ic_web),
+                        contentDescription = "Website",
+                        text = stringResource(R.string.settings_website_link_button)
+                    ) {
+                        context.startActivity(websiteIntent)
                     }
                 }
             }
@@ -175,6 +145,28 @@ fun Settings(
             dismiss = { showDialog.value = false },
             selected = appTheme.value,
             onSelected = { scope.launch { setAppTheme(context.applicationContext, it) } })
+    }
+}
+
+@Composable
+fun Button(
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    contentDescription: String,
+    text: String = "",
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(text)
     }
 }
 
@@ -189,24 +181,24 @@ fun ThemeSelectionDialog(
         AlertDialog(
             onDismissRequest = dismiss,
             title = {
-                Text("Choose theme")
+                Text(stringResource(R.string.alert_choose_app_theme))
             },
             text = {
                 Column {
                     ValuePickerItem(
-                        title = "Light",
+                        title = stringResource(R.string.light_app_theme_radio_button),
                         isSelected = selected == AppTheme.LIGHT_THEME
                     ) {
                         onSelected(AppTheme.LIGHT_THEME)
                     }
                     ValuePickerItem(
-                        title = "Dark",
+                        title = stringResource(R.string.dark_app_theme_radio_button),
                         isSelected = selected == AppTheme.NIGHT_THEME
                     ) {
                         onSelected(AppTheme.NIGHT_THEME)
                     }
                     ValuePickerItem(
-                        title = "System",
+                        title = stringResource(R.string.system_app_theme_radion_button),
                         isSelected = selected == AppTheme.SYSTEM_THEME
                     ) {
                         onSelected(AppTheme.SYSTEM_THEME)
@@ -215,64 +207,10 @@ fun ThemeSelectionDialog(
             },
             confirmButton = {
                 Button(dismiss) {
-                    Text("OK")
+                    Text(stringResource(R.string.alert_choose_app_theme_confirm_button))
                 }
             }
         )
-    }
-}
-
-@Composable
-fun ExpandableCell(
-    modifier: Modifier = Modifier,
-    headerContent: @Composable (() -> Unit),
-    bodyContent: @Composable (() -> Unit)? = null,
-) {
-    val styledContent: @Composable (() -> Unit)? = bodyContent?.let {
-        @Composable {
-            val style = MaterialTheme.typography.body2.copy(
-                textAlign = TextAlign.Center,
-            )
-            ProvideTextStyle(style, content = bodyContent)
-        }
-    }
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    Surface(
-        modifier = modifier
-            .animateContentSize(spring(Spring.DampingRatioMediumBouncy, Spring.StiffnessMedium))
-            .border(BorderStroke(1.dp, contrastTransparent()))
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 44.dp),
-        elevation = 1.dp
-    ) {
-        Column {
-            Surface(
-                Modifier
-                    .clickable { expanded = !expanded }
-                    .fillMaxWidth()
-                    .padding(16.dp, 12.dp)) {
-                Row {
-                    Box(Modifier.weight(9f)) {
-                        headerContent()
-                    }
-                    Icon(
-                        imageVector = if (!expanded) Icons.Rounded.ExpandMore else Icons.Rounded.ExpandLess,
-                        contentDescription = "Expand icon")
-                }
-            }
-            if (expanded) {
-                styledContent?.let {
-                    Surface {
-                        Divider()
-                        Box(
-                            Modifier
-                                .padding(16.dp, 12.dp)) {
-                            it()
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
