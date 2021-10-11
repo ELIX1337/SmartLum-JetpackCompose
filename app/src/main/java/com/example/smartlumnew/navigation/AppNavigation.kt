@@ -91,22 +91,22 @@ fun NavGraphBuilder.smartlumComposable(
     enterTransition: (
     AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition?
     )? = { _, _ ->
-        slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(700))
+        slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(200))
     },
     exitTransition: (
     AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition?
     )? = { _, _ ->
-        slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(700))
+        slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(200))
     },
     popEnterTransition: (
     AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition?
     )? = { _, _ ->
-        slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(700))
+        slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(200))
     },
     popExitTransition: (
     AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition?
     )? = { _, _ ->
-        slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(700))
+        slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(200))
     },
     content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
 ) {
