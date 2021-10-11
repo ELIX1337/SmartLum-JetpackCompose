@@ -14,6 +14,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.smartlumnew.models.bluetooth.PeripheralsLiveData
+import com.example.smartlumnew.models.bluetooth.SLBaseManager
 import com.example.smartlumnew.models.bluetooth.TorchereManager
 import com.example.smartlumnew.utils.Utils
 import no.nordicsemi.android.support.v18.scanner.*
@@ -58,16 +59,22 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
 
     fun startScan() {
         if (_isScanning.value!!) {
-            Log.e("TAG", "startScan: scanner is already scanning")
             return
         }
-        Log.e("TAG", "startScan - value = ${_isScanning.value}")
-        val uuidList: MutableList<ParcelUuid> = ArrayList()
-        uuidList.add(ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID))
-        val filters: MutableList<ScanFilter> = ArrayList()
-        for (a in uuidList) {
-            filters.add(ScanFilter.Builder().setServiceUuid(a).build())
-        }
+//        val uuidList: MutableList<ParcelUuid> = arrayListOf(
+//            ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID),
+//            ParcelUuid(SLBaseManager.SL_BASE_SERVICE_UUID)
+//        )
+
+        val filters: MutableList<ScanFilter> = arrayListOf(
+            ScanFilter.Builder()
+                .setServiceUuid(ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID))
+                .setServiceUuid(ParcelUuid(SLBaseManager.SL_BASE_SERVICE_UUID))
+                .build()
+        )
+//        uuidList.forEach {
+//            filters.add(ScanFilter.Builder().setServiceUuid(it).build())
+//        }
         val scanSettings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .setReportDelay(500)
@@ -75,7 +82,7 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
             .build()
         val scanner = BluetoothLeScannerCompat.getScanner()
         try {
-            scanner.startScan(null, scanSettings, scanCallback)
+            scanner.startScan(filters, scanSettings, scanCallback)
             _isScanning.postValue(true)
         } catch (error: IllegalArgumentException) {
             Log.e("TAG", "startScan: scanner already scanning - $error" )
