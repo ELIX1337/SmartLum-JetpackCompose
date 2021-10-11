@@ -34,7 +34,6 @@ fun NavGraphBuilder.addPeripheralGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     peripheral: () -> DiscoveredPeripheral,
-    //viewModel: () -> PeripheralViewModel,
     navigateUp: () -> Unit,
 ) {
     lateinit var vm: PeripheralViewModel
@@ -47,8 +46,8 @@ fun NavGraphBuilder.addPeripheralGraph(
             peripheral = peripheral(),
             //viewModel = viewModel(),
             navigateUp = navigateUp,
-            openPeripheralSettings = { peripheral, vviewModel ->
-                vm = vviewModel
+            openPeripheralSettings = { _, viewModel ->
+                vm = viewModel
                 if (navController.currentDestination?.route != PeripheralGraphDestinations.SETTINGS.route) {
                     navController.navigate(PeripheralGraphDestinations.SETTINGS.route) {
                         launchSingleTop = true
