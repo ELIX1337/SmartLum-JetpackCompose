@@ -48,12 +48,20 @@ class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(
         baseManager.writeLedTimeout(timeout)
     }
 
-    fun setTopSensorTriggerDistance(@FloatRange(from = 1.0) distance: Float) {
+    fun initTopSensorTriggerDistance(@FloatRange(from = 1.0) distance: Float) {
         initTopSensorTriggerDistance = distance
     }
 
-    fun setBotSensorTriggerDistance(@FloatRange(from = 1.0) distance: Float) {
+    fun initBotSensorTriggerDistance(@FloatRange(from = 1.0) distance: Float) {
         initBotSensorTriggerDistance = distance
+    }
+
+    fun setTopSensorTriggerDistance(@FloatRange(from = 1.0) distance: Float) {
+        baseManager.writeTopSensorTriggerDistance(distance)
+    }
+
+    fun setBotSensorTriggerDistance(@FloatRange(from = 1.0) distance: Float) {
+        baseManager.writeBotSensorTriggerDistance(distance)
     }
 
     fun setAnimationOnSpeed(speed: Float) {
