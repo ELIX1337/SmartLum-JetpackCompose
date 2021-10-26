@@ -12,7 +12,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
@@ -22,6 +21,8 @@ import com.example.smartlumnew.ui.components.BluetoothEnableRequestSheet
 import com.example.smartlumnew.ui.components.LocationEnableRequestSheet
 import com.example.smartlumnew.ui.components.PeripheralsList
 import com.example.smartlumnew.ui.components.PermissionRequestSheet
+import com.example.smartlumnew.ui.theme.appBarHeight
+import com.example.smartlumnew.ui.theme.statusBarHeight
 import com.example.smartlumnew.utils.Utils
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -80,12 +81,12 @@ fun Scanner(
         Box {
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                //verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(isRefreshing),
-                    indicatorPadding = PaddingValues(dimensionResource(R.dimen.AppBar_height) + dimensionResource(R.dimen.StatusBar_height)),
+                    indicatorPadding = PaddingValues(appBarHeight + statusBarHeight),
                     refreshTriggerDistance = 100.dp,
                     onRefresh = { scannerViewModel.refresh() }
                 ) {

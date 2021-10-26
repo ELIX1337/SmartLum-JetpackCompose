@@ -7,9 +7,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.FastForward
+import androidx.compose.material.icons.rounded.FastRewind
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FLClassic(
-    modifier: Modifier = Modifier,
+    //modifier: Modifier = Modifier,
     FLClassicViewModel: FLClassicViewModel
 ) {
     val primaryColor       = FLClassicViewModel.primaryColor.observeAsState(Color.WHITE)
@@ -37,7 +38,6 @@ fun FLClassic(
     val animationSpeed     = FLClassicViewModel.animationOnSpeed.observeAsState(0f)
     val animationStep      = FLClassicViewModel.animationStep.observeAsState(0)
 
-    val scrollState      = rememberScrollState()
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
     val content: @Composable (() -> Unit) = { Text("NULL") }
@@ -51,7 +51,6 @@ fun FLClassic(
 
     if (!bottomSheetState.isVisible) sheetContent = content
     ModalBottomSheetLayout(
-        modifier = modifier,
         sheetState = bottomSheetState,
         sheetContent = {
             sheetContent()
@@ -62,7 +61,6 @@ fun FLClassic(
         ) { state ->
             Column(
                 modifier = Modifier
-                    .verticalScroll(scrollState)
                     .padding(8.dp, 16.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
@@ -109,13 +107,22 @@ fun FLClassic(
                             }
                         }
                         AnimationSettings.Speed -> {
-                            SliderCell(stringResource(R.string.slider_cell_speed), speed, 0f..30f) { sspeed ->
-                                speed = sspeed
-                                FLClassicViewModel.setAnimationOnSpeed(sspeed)
+                            SliderCell(
+                                title = stringResource(R.string.slider_cell_speed),
+                                value = speed,
+                                valueRange = 0f..30f,
+                                leftIcon = { Icon(Icons.Rounded.FastRewind, "Slow animation") },
+                                rightIcon = { Icon(Icons.Rounded.FastForward, "Fast animation") }
+                            ) { value ->
+                                speed = value
+                                FLClassicViewModel.setAnimationOnSpeed(value)
                             }
                         }
                         AnimationSettings.Direction -> {
-                            ValuePickerCell(stringResource(R.string.picker_cell_direction), animationDirection.value.name) {
+                            ValuePickerCell(
+                                stringResource(R.string.picker_cell_direction),
+                                stringResource(animationDirection.value.elementName)
+                            ) {
                                 sheetContent = {
                                     ValuePicker(
                                         items = PeripheralAnimationDirections.values().asList(),
@@ -145,7 +152,10 @@ fun FLClassic(
                     }
                 }
 
-                ValuePickerCell(stringResource(R.string.picker_cell_animations), animationMode.value.name) {
+                ValuePickerCell(
+                    stringResource(R.string.picker_cell_animations),
+                    stringResource(animationMode.value.elementName)
+                ) {
                     sheetContent = {
                         ValuePicker(
                             items = PeripheralAnimations.values().asList(),

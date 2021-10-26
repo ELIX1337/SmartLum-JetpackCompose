@@ -7,23 +7,30 @@ import android.bluetooth.BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
 import android.bluetooth.BluetoothGattService
 import android.content.Context
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
+import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.PeripheralData
+import com.example.smartlumnew.models.data.PeripheralError
 import no.nordicsemi.android.ble.data.Data
 import no.nordicsemi.android.ble.livedata.ObservableBleManager
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import java.util.*
 
-enum class ConnectionState {
-    CONNECTING,
-    CONNECTED,
-    FAILED_TO_CONNECT,
-    READY,
-    DISCONNECTING,
-    DISCONNECTED;
+enum class ConnectionState(@StringRes val textValue: Int) {
+    CONNECTING(R.string.connection_state_connecting),
+    CONNECTED(R.string.connection_state_connected),
+    FAILED_TO_CONNECT(R.string.connection_state_failed_to_connect),
+    READY(R.string.connection_state_ready),
+    DISCONNECTING(R.string.connection_state_disconnecting),
+    DISCONNECTED(R.string.connection_state_disconnected);
 }
 
 open class PeripheralManager(context: Context) : ObservableBleManager(context) {
+
+    companion object {
+        val UUID_MASK : UUID = UUID.fromString("BB930000-3CE1-4720-A753-28C0159DC777")
+    }
 
     private var firmwareVersionCharacteristic: BluetoothGattCharacteristic? = null
     private var resetToFactoryCharacteristic:  BluetoothGattCharacteristic? = null
@@ -36,7 +43,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     val isConnected     = MutableLiveData<Boolean>()
     val firmwareVersion = MutableLiveData<Int>()
     val isInitialized   = MutableLiveData<Boolean>()
-    val onError         = MutableLiveData<Int>()
+    val error           = MutableLiveData<PeripheralError>()
 
     var foundCharacteristics = mutableMapOf<UUID,BluetoothGattCharacteristic>()
     private var supported = false
@@ -190,7 +197,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     private val deviceErrorCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             Log.e("TAG", "onErrorReceived base manager: $data")
-            onError.postValue(data)
+            error.postValue(PeripheralError.valueOf(data))
         }
 
         override fun onInvalidDataReceived(device: BluetoothDevice, data: Data) {

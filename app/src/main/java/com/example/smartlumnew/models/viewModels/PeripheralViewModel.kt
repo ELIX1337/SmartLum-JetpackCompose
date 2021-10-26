@@ -11,6 +11,7 @@ import com.example.smartlumnew.models.bluetooth.ConnectionState
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.bluetooth.PeripheralManager
 import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
+import com.example.smartlumnew.models.data.PeripheralError
 
 class PeripheralViewModelFactory(private val context: Application, private val type: PeripheralProfileEnum?) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -36,11 +37,12 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     val peripheralManager: PeripheralManager = manager
     private var peripheral: BluetoothDevice? = null
 
-    val firmwareVersion: LiveData<Int>             = manager.firmwareVersion
-    val isInitialized:   LiveData<Boolean>         = manager.isInitialized
-    val isConnected:     LiveData<Boolean>         = manager.isConnected
-    val connectionState: LiveData<ConnectionState> = manager.peripheralConnectionState
-    val disconnectReason:LiveData<Int>            = manager.disconnectReason
+    val firmwareVersion:  LiveData<Int>             = manager.firmwareVersion
+    val isInitialized:    LiveData<Boolean>         = manager.isInitialized
+    val isConnected:      LiveData<Boolean>         = manager.isConnected
+    val connectionState:  LiveData<ConnectionState> = manager.peripheralConnectionState
+    val disconnectReason: LiveData<Int>             = manager.disconnectReason
+    val error:            LiveData<PeripheralError> = manager.error
 
     val _hasOptions = MutableLiveData(false)
     val hasOptions: LiveData<Boolean> = _hasOptions

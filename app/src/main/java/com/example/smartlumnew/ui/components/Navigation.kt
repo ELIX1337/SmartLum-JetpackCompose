@@ -35,15 +35,15 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun TransparentTopBar(
-    title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    title: @Composable () -> Unit,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = themeTransparent(),
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = 0.dp
 ) {
-    Column {
+    Column() {
         TopAppBar(
             title = title,
             modifier = modifier

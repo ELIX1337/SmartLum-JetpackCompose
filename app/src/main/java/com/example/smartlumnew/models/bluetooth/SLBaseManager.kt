@@ -16,7 +16,7 @@ import java.util.*
 
 class SLBaseManager(context: Context) : PeripheralManager(context) {
 
-    /** Dimmer UUID  */
+    /** SL_BASE UUID  */
     companion object {
         val SL_BASE_SERVICE_UUID: UUID = UUID.fromString("BB930003-3CE1-4720-A753-28C0159DC777")
     }
@@ -192,7 +192,7 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
     }
 
     fun writeBotSensorTriggerDistance(distance: Float) {
-        topTriggerDistanceCharacteristic?.let {
+        botTriggerDistanceCharacteristic?.let {
             writeCharacteristic(
                 it,
                 createDoubleByteData(distance.toInt()),

@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.smartlumnew.models.bluetooth.PeripheralManager
 import com.example.smartlumnew.models.bluetooth.PeripheralsLiveData
 import com.example.smartlumnew.models.bluetooth.SLBaseManager
 import com.example.smartlumnew.models.bluetooth.TorchereManager
@@ -61,20 +62,16 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
         if (_isScanning.value!!) {
             return
         }
-//        val uuidList: MutableList<ParcelUuid> = arrayListOf(
-//            ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID),
-//            ParcelUuid(SLBaseManager.SL_BASE_SERVICE_UUID)
-//        )
+        val uuidList: MutableList<ParcelUuid> = arrayListOf(
+            ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID),
+            ParcelUuid(SLBaseManager.SL_BASE_SERVICE_UUID)
+        )
 
         val filters: MutableList<ScanFilter> = arrayListOf(
             ScanFilter.Builder()
-                .setServiceUuid(ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID))
-                .setServiceUuid(ParcelUuid(SLBaseManager.SL_BASE_SERVICE_UUID))
+                .setServiceUuid(ParcelUuid(PeripheralManager.UUID_MASK), ParcelUuid(PeripheralManager.UUID_MASK))
                 .build()
         )
-//        uuidList.forEach {
-//            filters.add(ScanFilter.Builder().setServiceUuid(it).build())
-//        }
         val scanSettings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .setReportDelay(500)
@@ -106,11 +103,9 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {
-            //Log.e("TAG", "onBatchScanResults: $results")
             var atLeastOneMatchedFilter = false
             results.forEach { result ->
                 val uuids = result.scanRecord?.serviceUuids
-                //Log.e("TAG", "onBatchScanResults: UUIDS - $uuids ")
                 atLeastOneMatchedFilter = scanResult.peripheralDiscovered(result) || atLeastOneMatchedFilter
 
             }

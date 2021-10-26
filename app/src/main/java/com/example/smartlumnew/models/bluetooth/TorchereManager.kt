@@ -19,7 +19,8 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
 
     /** Torchere UUID  */
     companion object {
-        val TORCHERE_SERVICE_UUID: UUID = UUID.fromString("BB930002-3CE1-4720-A753-28C0159DC777")
+        val FL_MINI_SERVICE_UUID : UUID = UUID.fromString("BB930002-3CE1-4720-A753-28C0159DC777")
+        val TORCHERE_SERVICE_UUID: UUID = UUID.fromString("BB930001-3CE1-4720-A753-28C0159DC777")
     }
 
     private var primaryColorCharacteristic       : BluetoothGattCharacteristic? = null

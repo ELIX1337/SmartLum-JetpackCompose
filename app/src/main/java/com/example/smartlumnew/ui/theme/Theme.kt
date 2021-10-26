@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -19,23 +20,26 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+val statusBarHeight = 24.dp
+val appBarHeight    = 56.dp
+
 private val DarkColorPalette = darkColors(
     primary = SlYellow,
-    primaryVariant = Color(0xFF3700B3),
+    primaryVariant = SlDarkBlue,
     secondary = Color(0xFF03DAC6),
-//    secondaryVariant = Color(0xFF03DAC6),
-//    background = Color(0xFF121212),
-//    surface = Color(0xFF121212),
-    error = Color(0xFFCF6679),
+    secondaryVariant = Color(0xFF03DAC6),
+    background = Color(0xFF121212),
+    surface = Color(0xFF121212),
+    error = Color(0xFFB4374E),
     onPrimary = Color.Black,
     onSecondary = Color.Black,
     onBackground = Color.White,
     onSurface = Color.White,
-    onError = Color.Black
+    onError = Color.White
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
+    primary = SlDarkBlue,
     primaryVariant = Purple700,
     secondary = Teal200
 

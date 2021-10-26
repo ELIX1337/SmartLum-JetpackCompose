@@ -2,6 +2,8 @@ package com.example.smartlumnew.models.data
 
 import android.graphics.Color
 import android.util.Log
+import androidx.annotation.StringRes
+import com.example.smartlumnew.R
 import no.nordicsemi.android.ble.data.Data
 
 object PeripheralData {
@@ -39,7 +41,8 @@ enum class AnimationSettings {
 
 interface PeripheralDataElement {
     val code: Int
-    val name: String
+    @get:StringRes
+    val elementName: Int
 }
 
 enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>): PeripheralDataElement {
@@ -54,6 +57,8 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     ) {
         override val code: Int
             get() = 1
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_tetris
     },
 
     Wave(
@@ -66,6 +71,8 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     ) {
         override val code: Int
             get() = 2
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_wave
     },
 
     Transfusion(
@@ -77,6 +84,8 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     ) {
         override val code: Int
             get() = 3
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_transfusion
     },
 
     RainbowTransfusion(
@@ -86,6 +95,8 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     ) {
         override val code: Int
             get() = 4
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_rainbow_transfusion
     },
 
     Rainbow(
@@ -96,6 +107,8 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     ) {
         override val code: Int
             get() = 5
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_rainbow
     },
 
     Static(
@@ -105,6 +118,8 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     ) {
         override val code: Int
             get() = 6
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_static
     };
 
     companion object {
@@ -117,21 +132,29 @@ enum class PeripheralAnimationDirections: PeripheralDataElement {
     FromBottom {
         override val code: Int
             get() = 1
+        override val elementName: Int
+            get() = R.string.peripheral_animation_direction_from_bottom
     },
 
     FromTop {
         override val code: Int
             get() = 2
+        override val elementName: Int
+            get() = R.string.peripheral_animation_direction_from_top
     },
 
     ToCenter {
         override val code: Int
             get() = 3
+        override val elementName: Int
+            get() = R.string.peripheral_animation_direction_to_center
     },
 
     FromCenter {
         override val code: Int
             get() = 4
+        override val elementName: Int
+            get() = R.string.peripheral_animation_direction_from_center
     };
 
     companion object {

@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.models.data.PeripheralDataElement
 
@@ -23,7 +24,7 @@ fun ValuePicker(
     ) {
         items(items = items, itemContent = { item ->
             ValuePickerItem(
-                title = item.name,
+                title = stringResource(item.elementName),
                 isSelected = item == selected) {
                 onSelected(item)
             }

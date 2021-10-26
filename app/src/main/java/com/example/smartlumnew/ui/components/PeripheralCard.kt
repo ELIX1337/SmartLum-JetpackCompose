@@ -18,8 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
+import com.example.smartlumnew.ui.theme.appBarHeight
+import com.example.smartlumnew.ui.theme.contrastTransparent
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 
@@ -47,7 +47,7 @@ fun PeripheralsList(
                 insets = LocalWindowInsets.current.systemBars,
                 applyTop = true,
                 applyBottom = true,
-                additionalTop = dimensionResource(id = R.dimen.AppBar_height) + 12.dp,
+                additionalTop = appBarHeight + 12.dp,
                 additionalBottom = 6.dp
             )
         ) {
@@ -76,12 +76,12 @@ fun PeripheralsList(
 @Composable
 fun NoDevices() {
     Card(
-        backgroundColor = colorResource(id = R.color.black_alpha),
+        backgroundColor = contrastTransparent().copy(alpha = 0.15f),
         elevation = 0.dp
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(6.dp)
+            modifier = Modifier.padding(12.dp)
         ) {
             Icon(
                 Icons.Rounded.Search,

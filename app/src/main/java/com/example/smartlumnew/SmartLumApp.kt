@@ -14,7 +14,6 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -26,6 +25,7 @@ import com.example.smartlumnew.ui.components.AnimatedContentSwitch
 import com.example.smartlumnew.ui.components.DrawerContent
 import com.example.smartlumnew.ui.components.TransparentTopBar
 import com.example.smartlumnew.ui.theme.SmartLumTheme
+import com.example.smartlumnew.ui.theme.appBarHeight
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
@@ -73,7 +73,7 @@ fun SmartLumApp(
             ) {
                 AppNavigation(
                     Modifier
-                        .padding(0.dp, dimensionResource(id = R.dimen.AppBar_height), 0.dp, 0.dp)
+                        .padding(0.dp, appBarHeight, 0.dp, 0.dp)
                         .statusBarsPadding()
                         .navigationBarsPadding(),
                     scannerViewModel,
@@ -81,7 +81,7 @@ fun SmartLumApp(
                 )
                 AnimatedVisibility(
                     visible = showNavigationTopBar,
-                    enter =  slideInVertically(),
+                    enter = slideInVertically(),
                     exit = slideOutVertically(),
                 ) {
                     NavigationTopBar(

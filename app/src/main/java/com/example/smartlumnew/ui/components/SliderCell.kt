@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 internal fun SliderCellPreview() {
     SliderCell(
         title = "Some long text title with more and more text that cannot fit into",
-        initValue = 2f,
+        value = 2f,
         valueRange = 0f..10f
     ) { }
 }
@@ -26,7 +26,7 @@ internal fun SliderCellPreview() {
 @Composable
 fun SliderCell(
     title: String,
-    initValue: Float,
+    value: Float,
     valueRange: ClosedFloatingPointRange<Float>,
     leftIcon: @Composable () -> Unit = { },
     rightIcon: @Composable () -> Unit = { },
@@ -46,7 +46,7 @@ fun SliderCell(
                     leftIcon()
                     Slider(
                         modifier = Modifier.weight(1f),
-                        value = initValue,
+                        value = value,
                         valueRange = valueRange,
                         onValueChange = { onValueChanged(it) }
                     )

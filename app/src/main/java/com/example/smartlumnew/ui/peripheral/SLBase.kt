@@ -26,7 +26,7 @@ import com.example.smartlumnew.ui.components.SwitchCell
 
 @Composable
 fun SLBaseMainScreen(
-    modifier: Modifier = Modifier,
+    //modifier: Modifier = Modifier,
     baseViewModel: SLBaseViewModel
 ) {
     var ledState by remember { mutableStateOf(baseViewModel.ledState.value ?: false) }
@@ -35,8 +35,8 @@ fun SLBaseMainScreen(
     var ledTimeout by remember { mutableStateOf(baseViewModel.ledTimeout.value ?: 0) }
 
     Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
+        modifier = Modifier
+            //.verticalScroll(rememberScrollState())
             .padding(8.dp, 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -88,7 +88,7 @@ fun SLBaseSettingsScreen(
     ) {
         SliderCell(
             title = stringResource(R.string.title_top_sensor_trigger_distance),
-            initValue = topSensorTriggerDistance,
+            value = topSensorTriggerDistance,
             valueRange = 1f..200f,
             additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + topSensorTriggerDistance.toInt()) },
             onValueChanged = {
@@ -98,7 +98,7 @@ fun SLBaseSettingsScreen(
         )
         SliderCell(
             title = stringResource(R.string.title_bot_sensor_trigger_distance),
-            initValue = botSensorTriggerDistance,
+            value = botSensorTriggerDistance,
             valueRange = 1f..200f,
             additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + botSensorTriggerDistance.toInt()) },
             onValueChanged = {
@@ -123,7 +123,7 @@ fun SLBaseSetupScreen(
     ) {
         SliderCell(
             title = stringResource(R.string.title_top_sensor_trigger_distance),
-            initValue = topSensorTriggerDistance.toFloat(),
+            value = topSensorTriggerDistance.toFloat(),
             valueRange = 1f..200f,
             additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + topSensorTriggerDistance.toInt()) },
             onValueChanged = {
@@ -133,7 +133,7 @@ fun SLBaseSetupScreen(
         )
         SliderCell(
             title = stringResource(R.string.title_bot_sensor_trigger_distance),
-            initValue = botSensorTriggerDistance.toFloat(),
+            value = botSensorTriggerDistance.toFloat(),
             valueRange = 1f..200f,
             additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + botSensorTriggerDistance.toInt()) },
             onValueChanged = {
