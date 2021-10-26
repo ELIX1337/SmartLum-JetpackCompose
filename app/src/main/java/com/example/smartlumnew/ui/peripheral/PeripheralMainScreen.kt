@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartlumnew.R
@@ -140,6 +141,12 @@ fun PeripheralSetupScreen(
     viewModel: PeripheralViewModel,
 ) {
     Column(modifier) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.periheral_setup_screen_header),
+            style = MaterialTheme.typography.subtitle1,
+            textAlign = TextAlign.Center
+        )
         PeripheralSetupScreen(
             peripheralType = peripheralType,
             viewModel = viewModel,
@@ -157,6 +164,7 @@ private fun PeripheralSetupScreen(
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSetupScreen(viewModel as SLBaseViewModel)
         PeripheralProfileEnum.UNKNOWN    -> Text("Unknown device")
+
     }
 }
 

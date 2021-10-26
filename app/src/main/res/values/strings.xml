@@ -92,4 +92,5 @@
     <string name="peripheral_animation_direction_from_top">From top</string>
     <string name="peripheral_animation_direction_to_center">To center</string>
     <string name="peripheral_animation_direction_from_center">From center</string>
+    <string name="periheral_setup_screen_header">Device requires configuration</string>
 </resources>
