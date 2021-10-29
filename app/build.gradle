@@ -4,24 +4,25 @@ plugins {
     id("com.google.android.gms.oss-licenses-plugin")
     id 'org.jetbrains.kotlin.android'
 }
+apply plugin: 'kotlin-android'
 
 android {
     signingConfigs {
         release {
             storePassword 'Waipnmfjj4aglf8lpq41'
             keyPassword 'Waipnmfjj4aglf8lpq41'
-            storeFile file('/Users/timurumalin/Desktop/Keys/Keystore')
+            storeFile file('/Users/timurumalin/Desktop/App/Android/Keystore/Keystore')
             keyAlias 'key0'
         }
     }
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "com.smartlumNew.smartlumNew"
+        applicationId "com.smartlum.smartlum"
         minSdk 26
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -109,5 +110,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 }

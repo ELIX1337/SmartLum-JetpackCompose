@@ -47,6 +47,7 @@ fun FLClassic(
     crossfadeState = animationMode.value
 
     var speed by remember { mutableStateOf(animationSpeed.value) }
+
     speed = animationSpeed.value
 
     if (!bottomSheetState.isVisible) sheetContent = content
@@ -70,7 +71,7 @@ fun FLClassic(
                             ColorCell(stringResource(R.string.color_cell_primary), primaryColor.value) {
                                 sheetContent = {
                                     ColorPicker(
-                                        initColor = primaryColor.value
+                                        initColor = colorToHSV(primaryColor.value)
                                     ) { color ->
                                         FLClassicViewModel.setPrimaryColor(color)
                                     }
@@ -87,7 +88,7 @@ fun FLClassic(
                             ColorCell(stringResource(R.string.color_cell_secondary), secondaryColor.value) {
                                 sheetContent = {
                                     ColorPicker(
-                                        initColor = secondaryColor.value
+                                        initColor = colorToHSV(secondaryColor.value)
                                     ) { color ->
                                         FLClassicViewModel.setSecondaryColor(color)
                                     }
