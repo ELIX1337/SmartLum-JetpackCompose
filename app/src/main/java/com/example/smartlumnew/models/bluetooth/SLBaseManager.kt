@@ -51,8 +51,8 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
             super.isRequiredServiceSupported(gatt)
             val ledService       = gatt.getService(LED_SERVICE_UUID)
-            val animationService = gatt.getService(ANIMATION_SERVICE_UUID)
-            val sensorService    = gatt.getService(SENSOR_SERVICE_UUID)
+            val animationService = gatt.getService(LEGACY_ANIMATION_SERVICE_UUID)
+            val sensorService    = gatt.getService(LEGACY_SENSOR_SERVICE_UUID)
             ledService?.let       { initLedCharacteristics(it) }
             animationService?.let { initAnimationCharacteristics(it) }
             sensorService?.let    { initSensorCharacteristics(it) }
@@ -76,18 +76,18 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
     }
 
     private fun initLedCharacteristics(service: BluetoothGattService) {
-        ledStateCharacteristic      = service.getCharacteristic(LED_STATE_CHARACTERISTIC_UUID)
+        ledStateCharacteristic      = service.getCharacteristic(LEGACY_LED_STATE_CHARACTERISTIC_UUID)
         ledBrightnessCharacteristic = service.getCharacteristic(LED_BRIGHTNESS_CHARACTERISTIC_UUID)
-        ledTimeoutCharacteristic    = service.getCharacteristic(LED_TIMEOUT_CHARACTERISTIC_UUID)
+        ledTimeoutCharacteristic    = service.getCharacteristic(LEGACY_LED_TIMEOUT_CHARACTERISTIC_UUID)
     }
 
     private fun initAnimationCharacteristics(service: BluetoothGattService) {
-        animationOnSpeedCharacteristic  = service.getCharacteristic(ANIMATION_ON_SPEED_CHARACTERISTIC_UUID)
+        animationOnSpeedCharacteristic  = service.getCharacteristic(LEGACY_ANIMATION_ON_SPEED_CHARACTERISTIC_UUID)
     }
 
     private fun initSensorCharacteristics(service: BluetoothGattService) {
-        topTriggerDistanceCharacteristic = service.getCharacteristic(TOP_SENSOR_TRIGGER_DISTANCE_CHARACTERISTIC_UUID)
-        botTriggerDistanceCharacteristic = service.getCharacteristic(BOT_SENSOR_TRIGGER_DISTANCE_CHARACTERISTIC_UUID)
+        topTriggerDistanceCharacteristic = service.getCharacteristic(LEGACY_TOP_SENSOR_TRIGGER_DISTANCE_CHARACTERISTIC_UUID)
+        botTriggerDistanceCharacteristic = service.getCharacteristic(LEGACY_BOT_SENSOR_TRIGGER_DISTANCE_CHARACTERISTIC_UUID)
     }
 
     private val ledStateCallback: BooleanDataCallback = object : BooleanDataCallback() {

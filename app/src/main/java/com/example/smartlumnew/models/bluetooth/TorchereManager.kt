@@ -57,8 +57,8 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
 
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
             super.isRequiredServiceSupported(gatt)
-            val colorService     = gatt.getService(COLOR_SERVICE_UUID)
-            val animationService = gatt.getService(ANIMATION_SERVICE_UUID)
+            val colorService     = gatt.getService(LEGACY_COLOR_SERVICE_UUID)
+            val animationService = gatt.getService(LEGACY_ANIMATION_SERVICE_UUID)
             colorService?.let     { initColorCharacteristics(it) }
             animationService?.let { initAnimationCharacteristics(it) }
             isInitialized.postValue(colorService != null && animationService != null)
@@ -86,17 +86,17 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
     }
 
     private fun initColorCharacteristics(service: BluetoothGattService) {
-        primaryColorCharacteristic   = service.getCharacteristic(COLOR_PRIMARY_CHARACTERISTIC_UUID)
-        secondaryColorCharacteristic = service.getCharacteristic(COLOR_SECONDARY_CHARACTERISTIC_UUID)
-        randomColorCharacteristic    = service.getCharacteristic(COLOR_RANDOM_CHARACTERISTIC_UUID)
+        primaryColorCharacteristic   = service.getCharacteristic(LEGACY_COLOR_PRIMARY_CHARACTERISTIC_UUID)
+        secondaryColorCharacteristic = service.getCharacteristic(LEGACY_COLOR_SECONDARY_CHARACTERISTIC_UUID)
+        randomColorCharacteristic    = service.getCharacteristic(LEGACY_COLOR_RANDOM_CHARACTERISTIC_UUID)
     }
 
     private fun initAnimationCharacteristics(service: BluetoothGattService) {
-        animationModeCharacteristic      = service.getCharacteristic(ANIMATION_MODE_CHARACTERISTIC_UUID)
-        animationOnSpeedCharacteristic   = service.getCharacteristic(ANIMATION_ON_SPEED_CHARACTERISTIC_UUID)
-        animationOffSpeedCharacteristic  = service.getCharacteristic(ANIMATION_OFF_SPEED_CHARACTERISTIC_UUID)
-        animationDirectionCharacteristic = service.getCharacteristic(ANIMATION_DIRECTION_CHARACTERISTIC_UUID)
-        animationStepCharacteristic      = service.getCharacteristic(ANIMATION_STEP_CHARACTERISTIC_UUID)
+        animationModeCharacteristic      = service.getCharacteristic(LEGACY_ANIMATION_MODE_CHARACTERISTIC_UUID)
+        animationOnSpeedCharacteristic   = service.getCharacteristic(LEGACY_ANIMATION_ON_SPEED_CHARACTERISTIC_UUID)
+        animationOffSpeedCharacteristic  = service.getCharacteristic(LEGACY_ANIMATION_OFF_SPEED_CHARACTERISTIC_UUID)
+        animationDirectionCharacteristic = service.getCharacteristic(LEGACY_ANIMATION_DIRECTION_CHARACTERISTIC_UUID)
+        animationStepCharacteristic      = service.getCharacteristic(LEGACY_ANIMATION_STEP_CHARACTERISTIC_UUID)
     }
 
     private val primaryColorCallback: RGBDataCallback = object : RGBDataCallback() {

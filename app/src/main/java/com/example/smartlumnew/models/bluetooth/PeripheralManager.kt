@@ -112,8 +112,8 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         }
 
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
-            val deviceInfoService = gatt.getService(DEVICE_INFO_SERVICE_UUID)
-            val eventService      = gatt.getService(EVENT_SERVICE_UUID)
+            val deviceInfoService = gatt.getService(LEGACY_DEVICE_INFO_SERVICE_UUID)
+            val eventService      = gatt.getService(LEGACY_EVENT_SERVICE_UUID)
             deviceInfoService?.let { initDeviceInfoCharacteristics(it) }
             eventService?.let      { initEventCharacteristics(it) }
             supported = deviceInfoService != null
@@ -143,14 +143,14 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     }
 
     private fun initDeviceInfoCharacteristics(service: BluetoothGattService) {
-        firmwareVersionCharacteristic = service.getCharacteristic(DEVICE_FIRMWARE_VERSION_CHARACTERISTIC_UUID)
-        resetToFactoryCharacteristic  = service.getCharacteristic(RESET_TO_FACTORY_CHARACTERISTIC_UUID)
-        dfuCharacteristic             = service.getCharacteristic(DEVICE_DFU_CHARACTERISTIC_UUID)
-        deviceInitStateCharacteristic = service.getCharacteristic(DEVICE_INIT_STATE_CHARACTERISTIC_UUID)
+        firmwareVersionCharacteristic = service.getCharacteristic(LEGACY_DEVICE_FIRMWARE_VERSION_CHARACTERISTIC_UUID)
+        resetToFactoryCharacteristic  = service.getCharacteristic(LEGACY_RESET_TO_FACTORY_CHARACTERISTIC_UUID)
+        dfuCharacteristic             = service.getCharacteristic(LEGACY_DEVICE_DFU_CHARACTERISTIC_UUID)
+        deviceInitStateCharacteristic = service.getCharacteristic(LEGACY_DEVICE_INIT_STATE_CHARACTERISTIC_UUID)
     }
 
     private fun initEventCharacteristics(service: BluetoothGattService) {
-        deviceErrorCharacteristic = service.getCharacteristic(EVENT_ERROR_CHARACTERISTIC_UUID)
+        deviceErrorCharacteristic = service.getCharacteristic(LEGACY_EVENT_ERROR_CHARACTERISTIC_UUID)
     }
 
     fun resetToFactorySettings() {
