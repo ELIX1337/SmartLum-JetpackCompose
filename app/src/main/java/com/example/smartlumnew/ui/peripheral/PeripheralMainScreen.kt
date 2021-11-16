@@ -1,6 +1,7 @@
 package com.example.smartlumnew.ui.peripheral
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -21,10 +22,7 @@ import com.example.smartlumnew.models.bluetooth.ConnectionState
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
 import com.example.smartlumnew.models.data.PeripheralError
-import com.example.smartlumnew.models.viewModels.FLClassicViewModel
-import com.example.smartlumnew.models.viewModels.PeripheralViewModel
-import com.example.smartlumnew.models.viewModels.PeripheralViewModelFactory
-import com.example.smartlumnew.models.viewModels.SLBaseViewModel
+import com.example.smartlumnew.models.viewModels.*
 import com.example.smartlumnew.ui.components.Cell
 import com.example.smartlumnew.ui.components.ConnectingScreen
 import com.example.smartlumnew.ui.components.TransparentTopBar
@@ -101,8 +99,8 @@ private fun PeripheralScreen(
     val isInitialized   by viewModel.isInitialized.observeAsState()
     val error           by viewModel.error.observeAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
-
-    if (isInitialized == true) {
+    Log.e("TAG", "PeripheralScreen: INIT - ${isInitialized}", )
+    if (isInitialized != false) {
         Column(modifier //modifier.verticalScroll(rememberScrollState())
         ) {
             error?.let { PeripheralErrorCell { showErrorDialog = true } }
@@ -127,10 +125,14 @@ fun PeripheralReadyScreen(
     viewModel: PeripheralViewModel
 ) {
     when (peripheralType) {
-        PeripheralProfileEnum.FL_CLASSIC -> FLClassic(viewModel as FLClassicViewModel)
-        PeripheralProfileEnum.FL_MINI    -> FLClassic(viewModel as FLClassicViewModel)
-        PeripheralProfileEnum.SL_BASE    -> SLBaseMainScreen(viewModel as SLBaseViewModel)
-        PeripheralProfileEnum.UNKNOWN    -> Text("Unknown device")
+        PeripheralProfileEnum.FL_CLASSIC  -> FLClassic(viewModel as FLClassicViewModel)
+        PeripheralProfileEnum.FL_MINI     -> FLClassic(viewModel as FLClassicViewModel)
+        PeripheralProfileEnum.SL_BASE     -> SLBaseMainScreen(viewModel as SLBaseViewModel)
+        PeripheralProfileEnum.SL_STANDART -> SLStandartMainScreen(viewModel as SLStandartViewModel)
+        PeripheralProfileEnum.UNKNOWN     -> {
+            Log.e("TAG", "PeripheralReadyScreen: UNKNOWN DEVICE" )
+            Text("Unknown device")
+        }
     }
 }
 
@@ -163,6 +165,7 @@ private fun PeripheralSetupScreen(
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSetupScreen(viewModel as SLBaseViewModel)
+        PeripheralProfileEnum.SL_STANDART -> SLStandartSetupScreen(viewModel as SLStandartViewModel)
         PeripheralProfileEnum.UNKNOWN    -> Text("Unknown device")
 
     }

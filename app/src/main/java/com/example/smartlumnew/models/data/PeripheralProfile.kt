@@ -42,6 +42,13 @@ enum class PeripheralProfileEnum(
         peripheralName = R.string.peripheral_name_sl_base,
         description = R.string.peripheral_description_sl_base,
         image = R.drawable.image_stairs
+    ),   
+    SL_STANDART(
+        type = R.string.peripheral_type_stairs_lighting,
+        UUID = UUID.fromString("BB930004-3CE1-4720-A753-28C0159DC777"),
+        peripheralName = R.string.peripheral_name_sl_standart,
+        description = R.string.peripheral_description_sl_standart,
+        image = R.drawable.image_stairs
     );
 
     companion object {

@@ -23,7 +23,7 @@ object PeripheralDataModel {
     var primaryColor:       Color? = null
     var secondaryColor:     Color? = null
     var randomColor:        Boolean? = null
-    var animationMode:      PeripheralAnimations? = null
+    var animationMode:      FlClassicAnimations? = null
     var animationDirection: PeripheralAnimationDirections? = null
     var animationOnSpeed:   Int? = null
     var animationOffSpeed:  Int? = null
@@ -45,7 +45,41 @@ interface PeripheralDataElement {
     val elementName: Int
 }
 
-enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>): PeripheralDataElement {
+enum class SlStandartAnimations(val supportingSettings: List<AnimationSettings>): PeripheralDataElement {
+    Tetris(
+        listOf(
+            AnimationSettings.PrimaryColor,
+            AnimationSettings.SecondaryColor,
+            AnimationSettings.RandomColor,
+            AnimationSettings.Direction,
+            AnimationSettings.Speed)
+    ) {
+        override val code: Int
+            get() = 1
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_tetris
+    },
+
+    Wave(
+        listOf(
+            AnimationSettings.PrimaryColor,
+            AnimationSettings.SecondaryColor,
+            AnimationSettings.Direction,
+            AnimationSettings.Speed,
+            AnimationSettings.Step)
+    ) {
+        override val code: Int
+            get() = 2
+        override val elementName: Int
+            get() = R.string.peripheral_animation_mode_name_wave
+    };
+
+    companion object {
+        fun valueOf(code: Int): SlStandartAnimations? = SlStandartAnimations.values().find { it.code == code }
+    }
+}
+
+enum class FlClassicAnimations(val supportingSettings: List<AnimationSettings>): PeripheralDataElement {
 
     Tetris(
         listOf(
@@ -123,7 +157,7 @@ enum class PeripheralAnimations(val supportingSettings: List<AnimationSettings>)
     };
 
     companion object {
-        fun valueOf(code: Int): PeripheralAnimations? = values().find { it.code == code }
+        fun valueOf(code: Int): FlClassicAnimations? = values().find { it.code == code }
     }
 }
 

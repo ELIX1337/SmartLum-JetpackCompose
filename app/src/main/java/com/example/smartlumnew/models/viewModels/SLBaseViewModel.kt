@@ -30,8 +30,8 @@ class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(
     val ledState:                 LiveData<Boolean> = baseManager.ledState
     val ledTimeout:               LiveData<Int>     = baseManager.ledTimeout
     val animationOnSpeed:         LiveData<Float>   = baseManager.animationOnSpeed
-    val topSensorTriggerDistance: LiveData<Float>     = baseManager.topSensorTriggerDistance
-    val botSensorTriggerDistance: LiveData<Float>     = baseManager.botSensorTriggerDistance
+    val topSensorTriggerDistance: LiveData<Float>   = baseManager.topSensorTriggerDistance
+    val botSensorTriggerDistance: LiveData<Float>   = baseManager.botSensorTriggerDistance
 
     var initTopSensorTriggerDistance: Float = 1.0f
     var initBotSensorTriggerDistance: Float = 1.0f

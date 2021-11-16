@@ -37,6 +37,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     private var dfuCharacteristic:             BluetoothGattCharacteristic? = null
     private var deviceInitStateCharacteristic: BluetoothGattCharacteristic? = null
     private var deviceErrorCharacteristic:     BluetoothGattCharacteristic? = null
+    private var demoModeStateCharacteristic:   BluetoothGattCharacteristic? = null
 
     val peripheralConnectionState = MutableLiveData<ConnectionState>()
     val disconnectReason = MutableLiveData<Int>()
@@ -44,6 +45,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     val firmwareVersion = MutableLiveData<Int>()
     val isInitialized   = MutableLiveData<Boolean>()
     val error           = MutableLiveData<PeripheralError>()
+    val demoMode        = MutableLiveData<Boolean>()
 
     var foundCharacteristics = mutableMapOf<UUID,BluetoothGattCharacteristic>()
     private var supported = false
@@ -147,6 +149,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         resetToFactoryCharacteristic  = service.getCharacteristic(LEGACY_RESET_TO_FACTORY_CHARACTERISTIC_UUID)
         dfuCharacteristic             = service.getCharacteristic(LEGACY_DEVICE_DFU_CHARACTERISTIC_UUID)
         deviceInitStateCharacteristic = service.getCharacteristic(LEGACY_DEVICE_INIT_STATE_CHARACTERISTIC_UUID)
+        demoModeStateCharacteristic   = service.getCharacteristic(DEVICE_DEMO_MODE_STATE_CHARACTERISTIC_UUID)
     }
 
     private fun initEventCharacteristics(service: BluetoothGattService) {
@@ -172,6 +175,17 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
                 WRITE_TYPE_NO_RESPONSE
             )
                 .enqueue()
+        }
+    }
+
+    fun writeDemoMode(state: Boolean) {
+        demoModeStateCharacteristic?.let {
+            writeCharacteristic(
+                it,
+                if (state) PeripheralData.setTrue() else PeripheralData.setFalse(),
+                WRITE_TYPE_NO_RESPONSE
+            ).enqueue()
+            demoMode.postValue(state)
         }
     }
 

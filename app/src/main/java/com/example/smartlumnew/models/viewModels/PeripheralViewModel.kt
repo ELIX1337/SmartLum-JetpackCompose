@@ -27,6 +27,11 @@ class PeripheralViewModelFactory(private val context: Application, private val t
                     return FLClassicViewModel(context) as T
                 }
             }
+            PeripheralProfileEnum.SL_STANDART -> {
+                if (modelClass.isAssignableFrom(SLStandartViewModel::class.java)) {
+                    return SLStandartViewModel(context) as T
+                }
+            }
         }
         throw IllegalArgumentException("Unknown ViewModel class - $type")
     }
@@ -43,6 +48,7 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     val connectionState:  LiveData<ConnectionState> = manager.peripheralConnectionState
     val disconnectReason: LiveData<Int>             = manager.disconnectReason
     val error:            LiveData<PeripheralError> = manager.error
+    val demoMode:         LiveData<Boolean>         = manager.demoMode
 
     val _hasOptions = MutableLiveData(false)
     val hasOptions: LiveData<Boolean> = _hasOptions
@@ -81,6 +87,10 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
 
     fun enableDfuMode() {
         peripheralManager.enableDfuMode()
+    }
+
+    fun setDemoMode(state: Boolean) {
+        peripheralManager.writeDemoMode(state)
     }
 
     open fun commit() { }

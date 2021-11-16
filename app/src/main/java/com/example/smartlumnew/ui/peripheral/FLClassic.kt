@@ -18,8 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.AnimationSettings
+import com.example.smartlumnew.models.data.FlClassicAnimations
 import com.example.smartlumnew.models.data.PeripheralAnimationDirections
-import com.example.smartlumnew.models.data.PeripheralAnimations
 import com.example.smartlumnew.models.viewModels.FLClassicViewModel
 import com.example.smartlumnew.ui.components.*
 import kotlinx.coroutines.launch
@@ -28,15 +28,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun FLClassic(
     //modifier: Modifier = Modifier,
-    FLClassicViewModel: FLClassicViewModel
+    viewModel: FLClassicViewModel
 ) {
-    val primaryColor       = FLClassicViewModel.primaryColor.observeAsState(Color.WHITE)
-    val secondaryColor     = FLClassicViewModel.secondaryColor.observeAsState(Color.WHITE)
-    val randomColorState   = FLClassicViewModel.randomColor.observeAsState(false)
-    val animationMode      = FLClassicViewModel.animationMode.observeAsState(PeripheralAnimations.Wave)
-    val animationDirection = FLClassicViewModel.animationDirection.observeAsState(PeripheralAnimationDirections.FromTop)
-    val animationSpeed     = FLClassicViewModel.animationOnSpeed.observeAsState(0f)
-    val animationStep      = FLClassicViewModel.animationStep.observeAsState(0)
+    val primaryColor       = viewModel.primaryColor.observeAsState(Color.WHITE)
+    val secondaryColor     = viewModel.secondaryColor.observeAsState(Color.WHITE)
+    val randomColorState   = viewModel.randomColor.observeAsState(false)
+    val animationMode      = viewModel.animationMode.observeAsState(FlClassicAnimations.Wave)
+    val animationDirection = viewModel.animationDirection.observeAsState(PeripheralAnimationDirections.FromTop)
+    val animationSpeed     = viewModel.animationOnSpeed.observeAsState(0f)
+    val animationStep      = viewModel.animationStep.observeAsState(0)
 
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
@@ -73,7 +73,7 @@ fun FLClassic(
                                     ColorPicker(
                                         initColor = colorToHSV(primaryColor.value)
                                     ) { color ->
-                                        FLClassicViewModel.setPrimaryColor(color)
+                                        viewModel.setPrimaryColor(color)
                                     }
                                 }
                                 scope.launch {
@@ -90,7 +90,7 @@ fun FLClassic(
                                     ColorPicker(
                                         initColor = colorToHSV(secondaryColor.value)
                                     ) { color ->
-                                        FLClassicViewModel.setSecondaryColor(color)
+                                        viewModel.setSecondaryColor(color)
                                     }
 
                                 }
@@ -104,7 +104,7 @@ fun FLClassic(
                         }
                         AnimationSettings.RandomColor -> {
                             SwitchCell(stringResource(R.string.switch_cell_random_color) ,randomColorState.value) { state ->
-                                FLClassicViewModel.setRandomColor(state)
+                                viewModel.setRandomColor(state)
                             }
                         }
                         AnimationSettings.Speed -> {
@@ -116,7 +116,7 @@ fun FLClassic(
                                 rightIcon = { Icon(Icons.Rounded.FastForward, "Fast animation") }
                             ) { value ->
                                 speed = value
-                                FLClassicViewModel.setAnimationOnSpeed(value)
+                                viewModel.setAnimationOnSpeed(value)
                             }
                         }
                         AnimationSettings.Direction -> {
@@ -129,7 +129,7 @@ fun FLClassic(
                                         items = PeripheralAnimationDirections.values().asList(),
                                         selected = animationDirection.value
                                     ) { selection ->
-                                        FLClassicViewModel.setAnimationDirection(selection as PeripheralAnimationDirections)
+                                        viewModel.setAnimationDirection(selection as PeripheralAnimationDirections)
                                     }
                                 }
                                 scope.launch {
@@ -147,7 +147,7 @@ fun FLClassic(
                                 0,
                                 20
                             ) { step ->
-                                FLClassicViewModel.setAnimationStep(step)
+                                viewModel.setAnimationStep(step)
                             }
                         }
                     }
@@ -159,10 +159,10 @@ fun FLClassic(
                 ) {
                     sheetContent = {
                         ValuePicker(
-                            items = PeripheralAnimations.values().asList(),
+                            items = FlClassicAnimations.values().asList(),
                             selected = animationMode.value
                         ) { selection ->
-                            FLClassicViewModel.setAnimationMode(selection as PeripheralAnimations)
+                            viewModel.setAnimationMode(selection as FlClassicAnimations)
                         }
                     }
                     scope.launch {

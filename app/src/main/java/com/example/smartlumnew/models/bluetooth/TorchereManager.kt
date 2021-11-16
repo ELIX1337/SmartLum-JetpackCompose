@@ -9,8 +9,8 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.smartlumnew.models.data.FlClassicAnimations
 import com.example.smartlumnew.models.data.PeripheralAnimationDirections
-import com.example.smartlumnew.models.data.PeripheralAnimations
 import com.example.smartlumnew.models.data.PeripheralData
 import no.nordicsemi.android.ble.data.Data
 import java.util.*
@@ -35,7 +35,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
     val primaryColor       = MutableLiveData<Int>()
     val secondaryColor     = MutableLiveData<Int>()
     val randomColor        = MutableLiveData<Boolean>()
-    val animationMode      = MutableLiveData<PeripheralAnimations>()
+    val animationMode      = MutableLiveData<FlClassicAnimations>()
     val animationOnSpeed   = MutableLiveData<Float>()
     val animationOffSpeed  = MutableLiveData<Int>()
     val animationDirection = MutableLiveData<PeripheralAnimationDirections>()
@@ -121,7 +121,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
         object : SingleByteDataCallback() {
             override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
                 Log.d("TAG", "onAnimationModeReceived: $data")
-                animationMode.postValue(PeripheralAnimations.valueOf(data))
+                animationMode.postValue(FlClassicAnimations.valueOf(data))
             }
         }
     private val animationOnSpeedCallback: SingleByteDataCallback =
@@ -155,6 +155,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
 
     fun writePrimaryColor(color: Int) {
         if (primaryColorCharacteristic == null) return
+        if (primaryColor.value == color) return
         val data = byteArrayOf(
             Color.red(color).toByte(), Color.green(color)
                 .toByte(), Color.blue(color).toByte()
@@ -169,6 +170,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
 
     fun writeSecondaryColor(color: Int) {
         if (secondaryColorCharacteristic == null) return
+        if (secondaryColor.value == color) return
         val data = byteArrayOf(
             Color.red(color).toByte(), Color.green(color)
                 .toByte(), Color.blue(color).toByte()
@@ -198,7 +200,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
             Data.opCode(mode.toByte()),
             WRITE_TYPE_NO_RESPONSE
         ).enqueue()
-        animationMode.postValue(PeripheralAnimations.valueOf(mode))
+        animationMode.postValue(FlClassicAnimations.valueOf(mode))
     }
 
     fun writeAnimationOnSpeed(speed: Float) {
