@@ -1,8 +1,6 @@
 package com.example.smartlumnew.ui.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,17 +10,19 @@ import androidx.compose.ui.Modifier
 @Composable
 fun SwitchCell(
     title: String,
-    initValue: Boolean,
+    value: Boolean,
     additionalContent: @Composable (() -> Unit)? = null,
     onStateChange: (Boolean) -> Unit,
 ) {
     Cell(
+        onClick = { onStateChange(!value) },
         mainContent = {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
-                    modifier = Modifier
-                        .weight(1f),
-                    contentAlignment = Alignment.CenterStart
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(text = title)
                 }
@@ -31,7 +31,7 @@ fun SwitchCell(
                         .weight(1f),
                     contentAlignment = Alignment.CenterEnd
                 ) {
-                    Switch(checked = initValue, onCheckedChange = onStateChange)
+                    Switch(checked = value, onCheckedChange = onStateChange)
                 }
             }
         },

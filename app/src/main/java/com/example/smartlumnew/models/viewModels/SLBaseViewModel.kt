@@ -9,15 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.smartlumnew.models.bluetooth.SLBaseManager
 
-class SLBaseViewModelFactory(private val context: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SLBaseViewModel::class.java)) {
-            return SLBaseViewModel(context) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
-
 class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(context)) {
 
     init {

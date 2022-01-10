@@ -1,48 +1,86 @@
 package com.example.smartlumnew.ui.components
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import java.lang.NumberFormatException
+import kotlin.math.min
 
 @Composable
 fun StepperCell(
     title: String,
-    initValue: Int,
+    value: Int,
     minValue: Int = 0,
     maxValue: Int = 10,
     additionalContent: @Composable (() -> Unit)? = null,
     onStepChanged: (Int) -> Unit
 ) {
-    var value by remember { mutableStateOf(initValue) }
+    var _value by remember { mutableStateOf(value) }
+    val focusManager = LocalFocusManager.current
 
     Cell(
         mainContent = {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = title,
                     modifier = Modifier
-                        .weight(1f))
-                Text(
-                    text = value.toString(),
-                    style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier.weight(1f))
+                )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(12.dp, 0.dp)
+                        .width(36.dp)
+                        .weight(1f),
+                    value = _value.toString(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            onStepChanged(_value)
+                            focusManager.clearFocus()
+                        }
+                    ),
+                    singleLine = true,
+                    onValueChange = {
+                        if (it.isNotEmpty()) {
+                            try {
+                                it.toInt().let { number ->
+                                    when {
+                                        number > maxValue -> { _value = maxValue }
+                                        number < minValue -> { _value = minValue }
+                                        else -> { _value = number }
+                                    }
+                                }
+                            } catch (e:NumberFormatException) { }
+                        } else {
+                            _value = minValue
+                        }
+                    })
                 Stepper(
-                    initValue = initValue,
+                    modifier = Modifier.weight(1f),
+                    value = _value,
                     minValue = minValue,
                     maxValue = maxValue
                 ) {
-                    value = it
+                    _value = it
                     onStepChanged(it)
                 }
             }
@@ -54,17 +92,16 @@ fun StepperCell(
 @Composable
 fun Stepper(
     modifier: Modifier = Modifier,
-    initValue: Int = 0,
+    value: Int = 0,
     minValue: Int = 0,
     maxValue: Int = 10,
     onStepChanged: (Int) -> Unit
 ) {
-    var currentValue by remember { mutableStateOf(initValue) }
     Row(modifier = modifier) {
         Button(
             contentPadding = PaddingValues(0.dp),
-            onClick = { if (currentValue >= minValue) onStepChanged(--currentValue) },
-            enabled = currentValue > minValue,
+            onClick = { if (value >= minValue) onStepChanged(value - 1) },
+            enabled = value > minValue,
             shape = RoundedCornerShape(50, 0, 0, 50)
         ) {
             Text(
@@ -74,8 +111,8 @@ fun Stepper(
         }
         Button(
             contentPadding = PaddingValues(0.dp),
-            onClick = { if (currentValue <= maxValue) onStepChanged(++currentValue) },
-            enabled = currentValue < maxValue,
+            onClick = { if (value <= maxValue) onStepChanged(value + 1) },
+            enabled = value < maxValue,
             shape = RoundedCornerShape(0, 50, 50, 0)
         ) {
             Text(

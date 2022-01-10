@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,8 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -45,6 +48,7 @@ fun SmartLumApp(
             var canPop by remember { mutableStateOf(false) }
             var currentRoute by remember { mutableStateOf("") }
             var showNavigationTopBar by remember { mutableStateOf(true) }
+            var focusManager = LocalFocusManager.current
 
             DisposableEffect(navController) {
                 val callback = NavController.OnDestinationChangedListener { controller, destination, _ ->
@@ -62,6 +66,12 @@ fun SmartLumApp(
             }
 
             Scaffold(
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            focusManager.clearFocus()
+                        })
+                    },
                 scaffoldState = scaffoldState,
                 drawerContent = {
                     DrawerContent(

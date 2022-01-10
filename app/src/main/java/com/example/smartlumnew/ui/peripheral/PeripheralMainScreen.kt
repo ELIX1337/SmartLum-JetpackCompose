@@ -99,17 +99,15 @@ private fun PeripheralScreen(
     val isInitialized   by viewModel.isInitialized.observeAsState()
     val error           by viewModel.error.observeAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
-    Log.e("TAG", "PeripheralScreen: INIT - ${isInitialized}", )
-    if (isInitialized != false) {
-        Column(modifier //modifier.verticalScroll(rememberScrollState())
-        ) {
-            error?.let { PeripheralErrorCell { showErrorDialog = true } }
-            PeripheralReadyScreen(peripheralType, viewModel)
-        }
-    } else if (isInitialized == false) {
-        PeripheralSetupScreen(modifier, peripheralType, viewModel)
-    }
 
+    Column(modifier = modifier) {
+        error?.let { PeripheralErrorCell { showErrorDialog = true } }
+        if (isInitialized != false) {
+            PeripheralReadyScreen(modifier, peripheralType, viewModel)
+        } else if (isInitialized == false) {
+            PeripheralSetupScreen(modifier, peripheralType, viewModel)
+        }
+    }
     error?.let {
         PeripheralErrorDialog(
             error = it,
@@ -121,14 +119,15 @@ private fun PeripheralScreen(
 
 @Composable
 fun PeripheralReadyScreen(
+    modifier: Modifier = Modifier,
     peripheralType: PeripheralProfileEnum,
     viewModel: PeripheralViewModel
 ) {
     when (peripheralType) {
-        PeripheralProfileEnum.FL_CLASSIC  -> FLClassic(viewModel as FLClassicViewModel)
-        PeripheralProfileEnum.FL_MINI     -> FLClassic(viewModel as FLClassicViewModel)
+        PeripheralProfileEnum.FL_CLASSIC  -> FLClassic(modifier, viewModel as FLClassicViewModel)
+        PeripheralProfileEnum.FL_MINI     -> FLClassic(modifier, viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE     -> SLBaseMainScreen(viewModel as SLBaseViewModel)
-        PeripheralProfileEnum.SL_STANDART -> SLStandartMainScreen(viewModel as SLStandartViewModel)
+        PeripheralProfileEnum.SL_STANDART -> SLProMainScreen(viewModel as SLProViewModel)
         PeripheralProfileEnum.UNKNOWN     -> {
             Log.e("TAG", "PeripheralReadyScreen: UNKNOWN DEVICE" )
             Text("Unknown device")
@@ -142,10 +141,12 @@ fun PeripheralSetupScreen(
     peripheralType: PeripheralProfileEnum,
     viewModel: PeripheralViewModel,
 ) {
-    Column(modifier) {
+    Column {
         Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.periheral_setup_screen_header),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 12.dp),
+            text = stringResource(R.string.peripheral_setup_screen_header),
             style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center
         )
@@ -165,7 +166,7 @@ private fun PeripheralSetupScreen(
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSetupScreen(viewModel as SLBaseViewModel)
-        PeripheralProfileEnum.SL_STANDART -> SLStandartSetupScreen(viewModel as SLStandartViewModel)
+        PeripheralProfileEnum.SL_STANDART -> SLProSetupScreen(viewModel as SLProViewModel)
         PeripheralProfileEnum.UNKNOWN    -> Text("Unknown device")
 
     }

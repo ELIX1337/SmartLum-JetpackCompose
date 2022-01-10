@@ -9,9 +9,9 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.smartlumnew.models.data.FlClassicAnimations
-import com.example.smartlumnew.models.data.PeripheralAnimationDirections
 import com.example.smartlumnew.models.data.PeripheralData
+import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimations
+import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDirections
 import no.nordicsemi.android.ble.data.Data
 import java.util.*
 
@@ -38,7 +38,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
     val animationMode      = MutableLiveData<FlClassicAnimations>()
     val animationOnSpeed   = MutableLiveData<Float>()
     val animationOffSpeed  = MutableLiveData<Int>()
-    val animationDirection = MutableLiveData<PeripheralAnimationDirections>()
+    val animationDirection = MutableLiveData<FlClassicAnimationDirections>()
     val animationStep      = MutableLiveData<Int>()
 
     private inner class TorcherePeripheralManagerGattCallback : PeripheralManagerGattCallback() {
@@ -142,7 +142,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
         object : SingleByteDataCallback() {
             override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
                 Log.d("TAG", "onAnimationDirectionReceived: $data")
-                animationDirection.postValue(PeripheralAnimationDirections.valueOf(data))
+                animationDirection.postValue(FlClassicAnimationDirections.valueOf(data))
             }
         }
     private val animationStepCallback: SingleByteDataCallback =
@@ -231,7 +231,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
             Data.opCode(direction.toByte()),
             WRITE_TYPE_NO_RESPONSE
         ).enqueue()
-        animationDirection.postValue(PeripheralAnimationDirections.valueOf(direction))
+        animationDirection.postValue(FlClassicAnimationDirections.valueOf(direction))
     }
 
     fun writeAnimationStep(step: Int) {

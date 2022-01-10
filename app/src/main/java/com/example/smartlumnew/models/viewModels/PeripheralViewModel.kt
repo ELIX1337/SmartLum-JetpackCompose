@@ -1,3 +1,5 @@
+@file:Suppress("NonExhaustiveWhenStatementMigration")
+
 package com.example.smartlumnew.models.viewModels
 
 import android.app.Application
@@ -28,9 +30,12 @@ class PeripheralViewModelFactory(private val context: Application, private val t
                 }
             }
             PeripheralProfileEnum.SL_STANDART -> {
-                if (modelClass.isAssignableFrom(SLStandartViewModel::class.java)) {
-                    return SLStandartViewModel(context) as T
+                if (modelClass.isAssignableFrom(SLProViewModel::class.java)) {
+                    return SLProViewModel(context) as T
                 }
+            }
+            else -> {
+                Log.e("TAG", "PeripheralViewModelFactory: UNKNOWN TYPE - $type ")
             }
         }
         throw IllegalArgumentException("Unknown ViewModel class - $type")
@@ -97,7 +102,6 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        Log.e("TAG", "onCleared: ON CLEARED" )
         disconnect()
         peripheralManager.close()
     }

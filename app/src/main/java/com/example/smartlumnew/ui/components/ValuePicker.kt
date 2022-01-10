@@ -24,7 +24,7 @@ fun ValuePicker(
     ) {
         items(items = items, itemContent = { item ->
             ValuePickerItem(
-                title = stringResource(item.elementName),
+                title = stringResource(item.elementNameStringID),
                 isSelected = item == selected) {
                 onSelected(item)
             }

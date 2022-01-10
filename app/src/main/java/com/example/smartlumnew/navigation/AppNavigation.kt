@@ -2,11 +2,8 @@ package com.example.smartlumnew.navigation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.*
@@ -30,7 +27,7 @@ fun AppNavigation(
     navController: NavHostController,
     startDestination: String = MainDestinations.HOME_GRAPH_ROUTE,
 ) {
-    var destinationPeripheral by rememberSaveable { mutableStateOf<DiscoveredPeripheral?>(null) }
+    var destinationPeripheral by remember { mutableStateOf<DiscoveredPeripheral?>(null) }
     AnimatedNavHost(
         navController = navController,
         startDestination = startDestination
@@ -88,26 +85,10 @@ fun NavGraphBuilder.smartlumComposable(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    enterTransition: (
-    AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition?
-    )? = { _, _ ->
-        slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(200))
-    },
-    exitTransition: (
-    AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition?
-    )? = { _, _ ->
-        slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(200))
-    },
-    popEnterTransition: (
-    AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition?
-    )? = { _, _ ->
-        slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(200))
-    },
-    popExitTransition: (
-    AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition?
-    )? = { _, _ ->
-        slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(200))
-    },
+    enterTransition: (AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?)? = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(400)) },
+    exitTransition: (AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?)? = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(400)) },
+    popEnterTransition: (AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?)? = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(400)) },
+    popExitTransition: (AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?)? = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(400)) },
     content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
 ) {
     composable(

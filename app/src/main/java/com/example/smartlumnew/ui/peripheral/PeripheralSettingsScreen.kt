@@ -7,15 +7,18 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
 import com.example.smartlumnew.models.viewModels.FLClassicViewModel
 import com.example.smartlumnew.models.viewModels.PeripheralViewModel
 import com.example.smartlumnew.models.viewModels.SLBaseViewModel
+import com.example.smartlumnew.models.viewModels.SLProViewModel
 
 @Composable
 fun PeripheralSettingsScreen(
@@ -26,45 +29,44 @@ fun PeripheralSettingsScreen(
     onResetClicked: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val error           by viewModel.error.observeAsState()
+    var showErrorDialog by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Spacer(modifier)
+        Column(modifier = modifier) {
+            error?.let { PeripheralErrorCell { showErrorDialog = true } }
             PeripheralSettingsScreen(
+                modifier = modifier,
                 peripheral = peripheral,
                 viewModel = viewModel,
-            )
-            Button(
-                onClick = { showDialog = true }
-            ) {
-                Text(stringResource(R.string.reset_button))
-            }
-            viewModel.firmwareVersion.value?.let {
-                Text(stringResource(R.string.peripheral_settings_text_firmware_version) + it)
-            }
-            PeripheralResetDialog(
-                isOpen = showDialog,
-                dismiss = { showDialog = false },
-                confirm = {
-                    viewModel.resetToFactorySettings()
-                    showDialog = false
-                    onResetClicked()
-                }
+                resetSettings = { showDialog = true }
             )
         }
+
+        PeripheralResetDialog(
+            isOpen = showDialog,
+            dismiss = { showDialog = false },
+            confirm = {
+                viewModel.resetToFactorySettings()
+                showDialog = false
+                onResetClicked()
+            }
+        )
         PeripheralTopBar(
             title = stringResource(R.string.peripheral_settings_screen_title),
             navigateUp = navigateUp,
             openPeripheralSettings = { },
             showActions = false
         )
+        error?.let {
+            PeripheralErrorDialog(
+                error = it,
+                isOpen = showErrorDialog) {
+                showErrorDialog = false
+            }
+        }
     }
 }
 
@@ -99,13 +101,16 @@ fun PeripheralResetDialog(
 
 @Composable
 internal fun PeripheralSettingsScreen(
+    modifier: Modifier = Modifier,
     peripheral: DiscoveredPeripheral,
     viewModel: PeripheralViewModel,
+    resetSettings: () -> Unit,
 ) {
     when (peripheral.type) {
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
-        PeripheralProfileEnum.SL_BASE    -> SLBaseSettingsScreen(viewModel as SLBaseViewModel)
+        PeripheralProfileEnum.SL_BASE    -> SLBaseSettingsScreen(modifier, viewModel as SLBaseViewModel, resetSettings)
+        PeripheralProfileEnum.SL_STANDART -> SLProSettingsScreen(modifier, viewModel as SLProViewModel, resetSettings)
         else -> { Text("HZ") }
     }
 }

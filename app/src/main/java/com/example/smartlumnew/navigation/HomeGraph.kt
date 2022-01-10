@@ -2,6 +2,7 @@ package com.example.smartlumnew.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,6 +32,7 @@ enum class HomeGraphDestinations(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addHomeGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,

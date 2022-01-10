@@ -30,10 +30,10 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
 
     val ledState                 = MutableLiveData<Boolean>()
     val ledBrightness            = MutableLiveData<Float>()
-    val ledTimeout               = MutableLiveData<@IntRange(from = 1)Int>()
-    val animationOnSpeed         = MutableLiveData<@FloatRange(from = 1.0)Float>()
-    val topSensorTriggerDistance = MutableLiveData<@FloatRange(from = 1.0)Float>()
-    val botSensorTriggerDistance = MutableLiveData<@FloatRange(from = 1.0)Float>()
+    val ledTimeout               = MutableLiveData<Int>()
+    val animationOnSpeed         = MutableLiveData<Float>()
+    val topSensorTriggerDistance = MutableLiveData<Float>()
+    val botSensorTriggerDistance = MutableLiveData<Float>()
 
     private inner class SLBasePeripheralManagerGattCallback : PeripheralManagerGattCallback() {
         override fun initialize() {
@@ -50,12 +50,13 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
 
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
             super.isRequiredServiceSupported(gatt)
-            val ledService       = gatt.getService(LED_SERVICE_UUID)
+            val ledService       = gatt.getService(LEGACY_LED_SERVICE_UUID)
             val animationService = gatt.getService(LEGACY_ANIMATION_SERVICE_UUID)
             val sensorService    = gatt.getService(LEGACY_SENSOR_SERVICE_UUID)
             ledService?.let       { initLedCharacteristics(it) }
             animationService?.let { initAnimationCharacteristics(it) }
             sensorService?.let    { initSensorCharacteristics(it) }
+            Log.e("TAG", "isRequiredServiceSupported: ${ledService != null }" )
             return ledService != null && animationService != null && sensorService != null
         }
 
@@ -77,7 +78,7 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
 
     private fun initLedCharacteristics(service: BluetoothGattService) {
         ledStateCharacteristic      = service.getCharacteristic(LEGACY_LED_STATE_CHARACTERISTIC_UUID)
-        ledBrightnessCharacteristic = service.getCharacteristic(LED_BRIGHTNESS_CHARACTERISTIC_UUID)
+        ledBrightnessCharacteristic = service.getCharacteristic(LEGACY_LED_BRIGHTNESS_CHARACTERISTIC_UUID)
         ledTimeoutCharacteristic    = service.getCharacteristic(LEGACY_LED_TIMEOUT_CHARACTERISTIC_UUID)
     }
 
@@ -183,7 +184,7 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
         topTriggerDistanceCharacteristic?.let {
             writeCharacteristic(
                 it,
-                createDoubleByteData(distance.toInt()),
+                Data.opCode(distance.toInt().toByte()),
                 WRITE_TYPE_NO_RESPONSE
             ).enqueue()
             Log.e("TAG", "writeTopSensorTriggerDistance: ${createDoubleByteData(distance.toInt()).joinToString()}" )
@@ -195,7 +196,7 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
         botTriggerDistanceCharacteristic?.let {
             writeCharacteristic(
                 it,
-                createDoubleByteData(distance.toInt()),
+                Data.opCode(distance.toInt().toByte()),
                 WRITE_TYPE_NO_RESPONSE
             ).enqueue()
             Log.e("TAG", "writeBotSensorTriggerDistance: ${createDoubleByteData(distance.toInt()).joinToString()}" )

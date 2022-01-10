@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.smartlumnew.models.bluetooth.TorchereManager
-import com.example.smartlumnew.models.data.PeripheralAnimationDirections
-import com.example.smartlumnew.models.data.FlClassicAnimations
+import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimations
+import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDirections
 
 class TorchereViewModelFactory(private val context: Application) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -30,7 +30,7 @@ class FLClassicViewModel(context: Application) : PeripheralViewModel(TorchereMan
     val randomColor:        LiveData<Boolean> = torchereManager.randomColor
     val animationMode:      LiveData<FlClassicAnimations> = torchereManager.animationMode
     val animationOnSpeed:   LiveData<Float> = torchereManager.animationOnSpeed
-    val animationDirection: LiveData<PeripheralAnimationDirections> = torchereManager.animationDirection
+    val animationDirection: LiveData<FlClassicAnimationDirections> = torchereManager.animationDirection
     val animationStep:      LiveData<Int> = torchereManager.animationStep
 
     fun setPrimaryColor(color: Int) {
@@ -65,7 +65,7 @@ class FLClassicViewModel(context: Application) : PeripheralViewModel(TorchereMan
         torchereManager.writeAnimationDirection(direction)
     }
 
-    fun setAnimationDirection(direction: PeripheralAnimationDirections) {
+    fun setAnimationDirection(direction: FlClassicAnimationDirections) {
         torchereManager.writeAnimationDirection(direction.code)
     }
 

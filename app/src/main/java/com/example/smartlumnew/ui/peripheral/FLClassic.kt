@@ -4,9 +4,9 @@ import android.graphics.Color
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FastForward
@@ -18,29 +18,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.AnimationSettings
-import com.example.smartlumnew.models.data.FlClassicAnimations
-import com.example.smartlumnew.models.data.PeripheralAnimationDirections
+import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimations
+import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDirections
 import com.example.smartlumnew.models.viewModels.FLClassicViewModel
 import com.example.smartlumnew.ui.components.*
+import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FLClassic(
-    //modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     viewModel: FLClassicViewModel
 ) {
     val primaryColor       = viewModel.primaryColor.observeAsState(Color.WHITE)
     val secondaryColor     = viewModel.secondaryColor.observeAsState(Color.WHITE)
     val randomColorState   = viewModel.randomColor.observeAsState(false)
     val animationMode      = viewModel.animationMode.observeAsState(FlClassicAnimations.Wave)
-    val animationDirection = viewModel.animationDirection.observeAsState(PeripheralAnimationDirections.FromTop)
+    val animationDirection = viewModel.animationDirection.observeAsState(FlClassicAnimationDirections.FromTop)
     val animationSpeed     = viewModel.animationOnSpeed.observeAsState(0f)
     val animationStep      = viewModel.animationStep.observeAsState(0)
 
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
-    val content: @Composable (() -> Unit) = { Text("NULL") }
+    val content: @Composable (() -> Unit) = { Text(" ") }
     var sheetContent   by remember { mutableStateOf(content) }
     val sheetAnim: AnimationSpec<Float> = tween(200)
     var crossfadeState by remember { mutableStateOf(animationMode.value) }
@@ -54,7 +55,9 @@ fun FLClassic(
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
         sheetContent = {
-            sheetContent()
+            Box(modifier = Modifier.navigationBarsPadding()) {
+                sheetContent()
+            }
         }
     ) {
         Crossfade(
@@ -62,8 +65,9 @@ fun FLClassic(
         ) { state ->
             Column(
                 modifier = Modifier
-                    .padding(8.dp, 16.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
+                    .padding(8.dp, 16.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 state.supportingSettings.forEach {
                     when (it) {
@@ -103,7 +107,10 @@ fun FLClassic(
                             }
                         }
                         AnimationSettings.RandomColor -> {
-                            SwitchCell(stringResource(R.string.switch_cell_random_color) ,randomColorState.value) { state ->
+                            SwitchCell(
+                                title = stringResource(R.string.switch_cell_random_color) ,
+                                value = randomColorState.value
+                            ) { state ->
                                 viewModel.setRandomColor(state)
                             }
                         }
@@ -122,14 +129,14 @@ fun FLClassic(
                         AnimationSettings.Direction -> {
                             ValuePickerCell(
                                 stringResource(R.string.picker_cell_direction),
-                                stringResource(animationDirection.value.elementName)
+                                stringResource(animationDirection.value.elementNameStringID)
                             ) {
                                 sheetContent = {
                                     ValuePicker(
-                                        items = PeripheralAnimationDirections.values().asList(),
+                                        items = FlClassicAnimationDirections.values().asList(),
                                         selected = animationDirection.value
                                     ) { selection ->
-                                        viewModel.setAnimationDirection(selection as PeripheralAnimationDirections)
+                                        viewModel.setAnimationDirection(selection as FlClassicAnimationDirections)
                                     }
                                 }
                                 scope.launch {
@@ -144,7 +151,7 @@ fun FLClassic(
                             StepperCell(
                                 stringResource(R.string.stepper_cell_step),
                                 animationStep.value,
-                                0,
+                                1,
                                 20
                             ) { step ->
                                 viewModel.setAnimationStep(step)
@@ -152,10 +159,9 @@ fun FLClassic(
                         }
                     }
                 }
-
                 ValuePickerCell(
                     stringResource(R.string.picker_cell_animations),
-                    stringResource(animationMode.value.elementName)
+                    stringResource(animationMode.value.elementNameStringID)
                 ) {
                     sheetContent = {
                         ValuePicker(
