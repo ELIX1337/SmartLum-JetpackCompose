@@ -11,10 +11,10 @@ import com.example.smartlumnew.models.data.peripheralData.SlProControllerType
 import com.example.smartlumnew.models.data.peripheralData.SlProStairsWorkModes
 
 /**
- * Конкретная ViewModel для устройства SL-PRO
- * Так же, как и менеджер, практически не имеет отличий от SL-STANDART, за исключением цвета
+ * Конкретная ViewModel для устройства SL-STANDART
+ * Так же, как и менеджер, практически не имеет отличий от SL-PRO, за исключением цвета
  */
-class SLProViewModel(context: Application) : PeripheralViewModel(SLProManager(context)) {
+class SLStandartViewModel(context: Application) : PeripheralViewModel(SLProManager(context)) {
 
     // Говорим о том, что у устройства есть расширенные настройки
     init {
@@ -24,8 +24,6 @@ class SLProViewModel(context: Application) : PeripheralViewModel(SLProManager(co
     // Делаем апкаст менеджера
     private val manager: SLProManager = peripheralManager as SLProManager
 
-    val primaryColor: LiveData<Int>    = manager.primaryColor
-    val randomColor: LiveData<Boolean> = manager.randomColor
     val ledState: LiveData<Boolean>    = manager.ledState
     val ledBrightness: LiveData<Float> = manager.ledBrightness
     val ledTimeout: LiveData<Int>      = manager.ledTimeout
@@ -56,14 +54,6 @@ class SLProViewModel(context: Application) : PeripheralViewModel(SLProManager(co
     private var initTopSensorTriggerLightness: Float = 1.0f
     private var initBotSensorTriggerLightness: Float = 1.0f
     private var initStepsCount: Int = 1
-
-    fun setPrimaryColor(color: Int) {
-        manager.writePrimaryColor(color)
-    }
-
-    fun setRandomColor(state: Boolean) {
-        manager.writeRandomColor(state)
-    }
 
     fun setLedBrightness(@FloatRange(from = 0.0) brightness: Float) {
         manager.writeLedBrightness(brightness)

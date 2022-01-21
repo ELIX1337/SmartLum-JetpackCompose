@@ -15,6 +15,11 @@ import com.example.smartlumnew.models.bluetooth.PeripheralManager
 import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
 import com.example.smartlumnew.models.data.PeripheralError
 
+/** Фабрика для получения соответствующих ViewModel.
+ * По какой-то причине выдает Exception если приложение какое-то время
+ * находится в свернутом режиме.
+ * (Полагаю теряется destinationPeripheral в AppNavigation, но это не точно)
+ */
 class PeripheralViewModelFactory(private val context: Application, private val type: PeripheralProfileEnum?) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         when (type) {
@@ -29,7 +34,7 @@ class PeripheralViewModelFactory(private val context: Application, private val t
                     return FLClassicViewModel(context) as T
                 }
             }
-            PeripheralProfileEnum.SL_STANDART -> {
+            PeripheralProfileEnum.SL_PRO -> {
                 if (modelClass.isAssignableFrom(SLProViewModel::class.java)) {
                     return SLProViewModel(context) as T
                 }
@@ -42,6 +47,13 @@ class PeripheralViewModelFactory(private val context: Application, private val t
     }
 }
 
+/**
+ *  Базовая ViewModel для устройств.
+ *  Содержит стандартные методы для всех девайсов.
+ *  От него наследуются конкретные ViewModel и расширяют ее фукционал.
+ *  Основная ее проблема в том, что она использует Context, а точнее, его используется PeripheralManager.
+ *  Поэтому процесс ее инициализации довольно неудобный и может вызвать утечки памяти (но я вроде пофиксил).
+ */
 open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
 
     val peripheralManager: PeripheralManager = manager
@@ -55,6 +67,7 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     val error:            LiveData<PeripheralError> = manager.error
     val demoMode:         LiveData<Boolean>         = manager.demoMode
 
+    // Переменная, которая говорит, имеет ли устройство расширенные настройки.
     val _hasOptions = MutableLiveData(false)
     val hasOptions: LiveData<Boolean> = _hasOptions
 
@@ -98,6 +111,10 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
         peripheralManager.writeDemoMode(state)
     }
 
+    // Этот метод отправляет данные для первичной настройки (инициализации) устройства.
+    // т.е. по нажатию кнопки "Подтвердить", срабатывает этот метод,
+    // который отправит на устройство все выставленные настройки.
+    // Значения этих настроек хранятся в переменных у классов-наследников
     open fun commit() { }
 
     override fun onCleared() {

@@ -116,6 +116,7 @@ fun DrawerContent(
     }
 }
 
+// Элемент из Drawer (меню слева)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DrawerItem(
@@ -180,6 +181,7 @@ fun DrawerItem(
     }
 }
 
+// Не используется, так как заменен на Drawer (меню слева)
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = HomeGraphDestinations.values()

@@ -14,9 +14,15 @@ import com.example.smartlumnew.models.data.createDoubleByteData
 import no.nordicsemi.android.ble.data.Data
 import java.util.*
 
+/**
+ * Конкретная реализация менеджера.
+ * Принцип абсолютно такой-же как и в родительком классе, просто дополняем его.
+ */
 class SLBaseManager(context: Context) : PeripheralManager(context) {
 
-    /** SL_BASE UUID  */
+    /**
+     * Рекламный UUID устройства SL-BASE. По идее не нужен, так как скинирование идет по маске
+     */
     companion object {
         val SL_BASE_SERVICE_UUID: UUID = UUID.fromString("BB930003-3CE1-4720-A753-28C0159DC777")
     }
@@ -35,6 +41,10 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
     val topSensorTriggerDistance = MutableLiveData<Float>()
     val botSensorTriggerDistance = MutableLiveData<Float>()
 
+    /**
+     * Переопределяем родительский класс, добавляем в него дополнительную реализацию
+     * Не забываем вызвать super метод
+     */
     private inner class SLBasePeripheralManagerGattCallback : PeripheralManagerGattCallback() {
         override fun initialize() {
             super.initialize()

@@ -9,15 +9,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.smartlumnew.models.bluetooth.SLBaseManager
 
+/**
+ * Конкретная ViewModel для устройства SL-BASE
+ */
 class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(context)) {
 
+    // Говорим о том, что у устройства есть расширенные настройки
     init {
         _hasOptions.postValue(true)
     }
 
+    // Делаем апкаст менеджера
     private val baseManager: SLBaseManager = peripheralManager as SLBaseManager
 
-    val ledBrightness: MutableLiveData<Float> = baseManager.ledBrightness
+    val ledBrightness:            MutableLiveData<Float> = baseManager.ledBrightness
     val ledState:                 LiveData<Boolean> = baseManager.ledState
     val ledTimeout:               LiveData<Int>     = baseManager.ledTimeout
     val animationOnSpeed:         LiveData<Float>   = baseManager.animationOnSpeed
@@ -59,6 +64,8 @@ class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(
         baseManager.writeAnimationOnSpeed(speed)
     }
 
+    // Этот метод сработает при нажатии кнопки "Подтвердить" на экране первичной настройки (инициализации)
+    // Отправит все необходимые для настройки данные на устройство
     override fun commit() {
         baseManager.writeTopSensorTriggerDistance(initTopSensorTriggerDistance)
         baseManager.writeBotSensorTriggerDistance(initBotSensorTriggerDistance)

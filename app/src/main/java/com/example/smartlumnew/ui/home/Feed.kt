@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
+// Не используется так как нечем его наполнять
 @Composable
 fun Feed() {
     Box(contentAlignment = Alignment.Center,

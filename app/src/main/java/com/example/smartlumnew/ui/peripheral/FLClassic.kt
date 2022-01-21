@@ -25,6 +25,9 @@ import com.example.smartlumnew.ui.components.*
 import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.launch
 
+/**
+ * UI для экрана устройства FL-CLASSIC
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FLClassic(
@@ -41,16 +44,24 @@ fun FLClassic(
 
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
+
+    // Костыль (а может гениальная релизация) для динамической смены контента внутри BottomSheet
     val content: @Composable (() -> Unit) = { Text(" ") }
     var sheetContent   by remember { mutableStateOf(content) }
     val sheetAnim: AnimationSpec<Float> = tween(200)
+
+    // Переменная, смена которой анимирует смену контента внутри Crossfade
+    // В ней лежит режим выбранной анимации
     var crossfadeState by remember { mutableStateOf(animationMode.value) }
     crossfadeState = animationMode.value
 
+    // Почему мы ее вынесли отдельно от других, а не отправляем дальше во ViewModel и менеджер?
+    // Потому-что слайдер почему-то начинает лагать
     var speed by remember { mutableStateOf(animationSpeed.value) }
 
     speed = animationSpeed.value
 
+    // Используется для ColorPicker и ValuePicker (как на iOS)
     if (!bottomSheetState.isVisible) sheetContent = content
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
@@ -60,6 +71,7 @@ fun FLClassic(
             }
         }
     ) {
+        // Анимируем UI в зависимости от типа выбранной анимации
         Crossfade(
             targetState = crossfadeState,
         ) { state ->
@@ -69,10 +81,13 @@ fun FLClassic(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // Перебираем поддерживаемые настройки для выбранной анимации
+                // и для каждой рисуем соответствующую ячейку
                 state.supportingSettings.forEach {
                     when (it) {
                         AnimationSettings.PrimaryColor -> {
                             ColorCell(stringResource(R.string.color_cell_primary), primaryColor.value) {
+                                // Контент для появляющегося снизу меню
                                 sheetContent = {
                                     ColorPicker(
                                         initColor = colorToHSV(primaryColor.value)
@@ -90,6 +105,7 @@ fun FLClassic(
                         }
                         AnimationSettings.SecondaryColor -> {
                             ColorCell(stringResource(R.string.color_cell_secondary), secondaryColor.value) {
+                                // Контент для появляющегося снизу меню
                                 sheetContent = {
                                     ColorPicker(
                                         initColor = colorToHSV(secondaryColor.value)
@@ -131,6 +147,7 @@ fun FLClassic(
                                 stringResource(R.string.picker_cell_direction),
                                 stringResource(animationDirection.value.elementNameStringID)
                             ) {
+                                // Контент для появляющегося снизу меню
                                 sheetContent = {
                                     ValuePicker(
                                         items = FlClassicAnimationDirections.values().asList(),
@@ -159,10 +176,13 @@ fun FLClassic(
                         }
                     }
                 }
+
+                // Ячейка выбора анимации, отдельно
                 ValuePickerCell(
                     stringResource(R.string.picker_cell_animations),
                     stringResource(animationMode.value.elementNameStringID)
                 ) {
+                    // Контент для появляющегося снизу меню
                     sheetContent = {
                         ValuePicker(
                             items = FlClassicAnimations.values().asList(),
@@ -183,6 +203,9 @@ fun FLClassic(
     }
 }
 
+/**
+ * Не имеет экрана расширенных настроек
+ */
 @Composable
 fun FLClassicSettingsScreen(
     viewModel: FLClassicViewModel

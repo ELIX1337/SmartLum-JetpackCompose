@@ -14,6 +14,12 @@ import com.example.smartlumnew.models.viewModels.ScannerViewModel
 import com.example.smartlumnew.ui.home.Scanner
 import com.example.smartlumnew.ui.home.Settings
 
+/**
+ * То же самое, что и MainDestination по иерархии выше.
+ * На данный момент имеет 2 экрана (сканер и настройки).
+ * Был еще третий (главная или home), где по идее должна была быть какая-нибудь лента или типа того,
+ * но так как контента для данного экрана не было, то я решел его вовсе убрать просто закомментив
+ */
 enum class HomeGraphDestinations(
     val route: String,
     @StringRes val title: Int,
@@ -32,6 +38,9 @@ enum class HomeGraphDestinations(
     }
 }
 
+/**
+ * Первый вложенный граф.
+ */
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.addHomeGraph(
     modifier: Modifier = Modifier,

@@ -4,6 +4,10 @@ import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.AnimationSettings
 import com.example.smartlumnew.models.data.PeripheralDataElement
 
+/**
+ * Список анимаций устройства FL-Classic.
+ * supportingSettings - список поддерживаемых анимацией настроек (используется для отрисовки UI)
+ */
 enum class FlClassicAnimations(val supportingSettings: List<AnimationSettings>):
     PeripheralDataElement {
 

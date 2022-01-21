@@ -3,6 +3,9 @@ package com.example.smartlumnew.ui.components
 import androidx.compose.animation.*
 import androidx.compose.runtime.Composable
 
+/**
+ * Этот Composable служит для быстрого анимирования смены двух элементов.
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentSwitch(

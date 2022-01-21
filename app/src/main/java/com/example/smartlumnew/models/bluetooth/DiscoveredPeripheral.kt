@@ -7,6 +7,10 @@ import no.nordicsemi.android.support.v18.scanner.ScanResult
 import org.jetbrains.annotations.Contract
 import java.util.*
 
+/**
+ * Класс, описывающий найденное Bluetooth устройство.
+ * На самом деле, помимо самого устройства содержит всю информацию о результате сканирования.
+ */
 class DiscoveredPeripheral : Parcelable {
     val device: BluetoothDevice
     private var lastScanResult: ScanResult? = null

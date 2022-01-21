@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.smartlumnew.models.bluetooth.TorchereManager
+import com.example.smartlumnew.models.bluetooth.FLClassicManager
 import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimations
 import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDirections
 
@@ -17,59 +17,59 @@ class TorchereViewModelFactory(private val context: Application) : ViewModelProv
     }
 }
 
-class FLClassicViewModel(context: Application) : PeripheralViewModel(TorchereManager(context)) {
+class FLClassicViewModel(context: Application) : PeripheralViewModel(FLClassicManager(context)) {
 
     init {
         _hasOptions.postValue(false)
     }
 
-    private val torchereManager: TorchereManager = peripheralManager as TorchereManager
+    private val FLClassicManager: FLClassicManager = peripheralManager as FLClassicManager
 
-    val primaryColor:       LiveData<Int> = torchereManager.primaryColor
-    val secondaryColor:     LiveData<Int> = torchereManager.secondaryColor
-    val randomColor:        LiveData<Boolean> = torchereManager.randomColor
-    val animationMode:      LiveData<FlClassicAnimations> = torchereManager.animationMode
-    val animationOnSpeed:   LiveData<Float> = torchereManager.animationOnSpeed
-    val animationDirection: LiveData<FlClassicAnimationDirections> = torchereManager.animationDirection
-    val animationStep:      LiveData<Int> = torchereManager.animationStep
+    val primaryColor:       LiveData<Int> = FLClassicManager.primaryColor
+    val secondaryColor:     LiveData<Int> = FLClassicManager.secondaryColor
+    val randomColor:        LiveData<Boolean> = FLClassicManager.randomColor
+    val animationMode:      LiveData<FlClassicAnimations> = FLClassicManager.animationMode
+    val animationOnSpeed:   LiveData<Float> = FLClassicManager.animationOnSpeed
+    val animationDirection: LiveData<FlClassicAnimationDirections> = FLClassicManager.animationDirection
+    val animationStep:      LiveData<Int> = FLClassicManager.animationStep
 
     fun setPrimaryColor(color: Int) {
-        torchereManager.writePrimaryColor(color)
+        FLClassicManager.writePrimaryColor(color)
     }
 
     fun setSecondaryColor(color: Int) {
-        torchereManager.writeSecondaryColor(color)
+        FLClassicManager.writeSecondaryColor(color)
     }
 
     fun setRandomColor(state: Boolean) {
-        torchereManager.writeRandomColor(state)
+        FLClassicManager.writeRandomColor(state)
     }
 
     fun setAnimationMode(mode: Int) {
-        torchereManager.writeAnimationMode(mode)
+        FLClassicManager.writeAnimationMode(mode)
     }
 
     fun setAnimationMode(mode: FlClassicAnimations) {
-        torchereManager.writeAnimationMode(mode.code)
+        FLClassicManager.writeAnimationMode(mode.code)
     }
 
     fun setAnimationOnSpeed(speed: Float) {
-        torchereManager.writeAnimationOnSpeed(speed)
+        FLClassicManager.writeAnimationOnSpeed(speed)
     }
 
     fun setAnimationOffSpeed(speed: Int) {
-        torchereManager.writeAnimationOffSpeed(speed)
+        FLClassicManager.writeAnimationOffSpeed(speed)
     }
 
     fun setAnimationDirection(direction: Int) {
-        torchereManager.writeAnimationDirection(direction)
+        FLClassicManager.writeAnimationDirection(direction)
     }
 
     fun setAnimationDirection(direction: FlClassicAnimationDirections) {
-        torchereManager.writeAnimationDirection(direction.code)
+        FLClassicManager.writeAnimationDirection(direction.code)
     }
 
     fun setAnimationStep(step: Int) {
-        torchereManager.writeAnimationStep(step)
+        FLClassicManager.writeAnimationStep(step)
     }
 }

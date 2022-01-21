@@ -13,6 +13,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Модель Ячейки (карточки), которая используется на экране устройства.
+ * Имеет главный контент (например, слайдер или свитч),
+ * и, при необходимости, дополнительный (например, текстовое пояснение).
+ *
+ * На основе этой модели создаются конкретные ячейки.
+ */
 @Composable
 fun Cell(
     modifier: Modifier = Modifier,
@@ -23,6 +30,7 @@ fun Cell(
     mainContent: @Composable (() -> Unit),
     additionalContent: @Composable (() -> Unit)? = null,
 ) {
+    // Здесь мы стилизуем текст внутри Composable
     val styledContent: @Composable (() -> Unit)? = additionalContent?.let {
         @Composable {
             val style = MaterialTheme.typography.body2.copy()
@@ -30,6 +38,10 @@ fun Cell(
         }
     }
 
+    // На момент написания этого кода, в Compose есть 2 типа Card: кликабельная (с методом onClick) и некликабельная
+    // Кликабельная по дефолту требует реализацию onClick и при нажатии на нее сработает ripple (эффект клика), даже если onClick пустой
+    // чтобы не вводить пользователя в заблуждение о том, что это что-то кликабельное, я реализовал сразу оба варианта Card,
+    // в зависимости от того, кликабельная карта или нет, отрендерится нужная
     if (onClick != null) {
         ClickableCell(
             modifier = modifier,
@@ -52,6 +64,7 @@ fun Cell(
     }
 }
 
+// Некликабельная Card
 @Composable
 fun Cell(
     modifier: Modifier = Modifier,
@@ -78,6 +91,7 @@ fun Cell(
     }
 }
 
+// Кликабельная Card
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClickableCell(

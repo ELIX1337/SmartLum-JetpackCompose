@@ -4,7 +4,12 @@ import android.os.ParcelUuid
 import androidx.lifecycle.LiveData
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 
+/**
+ * Найденные Bluetooth устройства
+ * Реализация была нагло и жестко украдена у приложения NRF Blinky
+ */
 class PeripheralsLiveData : LiveData<List<DiscoveredPeripheral?>?> {
+
     private val devices: MutableList<DiscoveredPeripheral> = ArrayList()
     private var filteredDevices: List<DiscoveredPeripheral>? = null
     private var filterUuidRequired: Boolean
@@ -117,7 +122,7 @@ class PeripheralsLiveData : LiveData<List<DiscoveredPeripheral?>?> {
     }
 
     companion object {
-        private val FILTER_UUID = ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID)
+        private val FILTER_UUID = ParcelUuid(FLClassicManager.FL_CLASSIC_SERVICE_UUID)
         private const val FILTER_RSSI = -50 // [dBm]
     }
 }

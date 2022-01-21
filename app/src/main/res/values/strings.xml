@@ -127,4 +127,5 @@
     <string name="standby_brightness_bot_steps_count_cell_title">Bottom steps count</string>
     <string name="top_current_distance_cell_title">Top current distance</string>
     <string name="bot_current_distance_cell_title">Bottom current distance</string>
+    <string name="peripheral_name_sl_standart">SL-Standart</string>
 </resources>

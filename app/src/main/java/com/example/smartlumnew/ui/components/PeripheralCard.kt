@@ -36,6 +36,10 @@ import com.example.smartlumnew.ui.theme.contrastTransparent
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 
+/**
+ * Список с устройствами Bluetooth
+ * Используется в сканнере, но ничто ведь не мешает еще куда-нить засунуть?
+ */
 @Composable
 fun PeripheralsList(
     modifier: Modifier = Modifier,
@@ -48,6 +52,7 @@ fun PeripheralsList(
             modifier = modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            // Вспоминаем, что я писал про topBar и добавляем отступы
             contentPadding = rememberInsetsPaddingValues(
                 insets = LocalWindowInsets.current.systemBars,
                 applyTop = true,
@@ -78,6 +83,9 @@ fun PeripheralsList(
     }
 }
 
+/**
+ * Используется если нет найденных устройств
+ */
 @Composable
 fun NoDevices() {
     Card(
@@ -101,6 +109,10 @@ fun NoDevices() {
     }
 }
 
+/**
+ * Карточка устройства.
+ * Используется в сканнере
+ */
 @Composable
 fun PeripheralCard(
     peripheralProfile: PeripheralProfileEnum,

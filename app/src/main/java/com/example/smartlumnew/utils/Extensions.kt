@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.smartlumnew.MainActivity
 
+// Не используется так заменено на Compose версию
 private fun MainActivity.requestPermissions(
     requestedPermissions: Array<String>,
     status: (permission: String, status: Boolean) -> Unit) {

@@ -15,12 +15,19 @@ import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDire
 import no.nordicsemi.android.ble.data.Data
 import java.util.*
 
-class TorchereManager(context: Context) : PeripheralManager(context) {
+/**
+ * Конкретная реализация менеджера.
+ * Принцип абсолютно такой-же как и в родительком классе, просто дополняем его.
+ */
+class FLClassicManager(context: Context) : PeripheralManager(context) {
 
-    /** Torchere UUID  */
+    /**
+     * Рекламный UUID устройств FL-MINI и FL-CLASSIC. По идее не нужны, так как скинирование идет по маске.
+     * Почему 2? Потому что оба устройства абсолютно одинаковые на программном уровне.
+     */
     companion object {
         val FL_MINI_SERVICE_UUID : UUID = UUID.fromString("BB930002-3CE1-4720-A753-28C0159DC777")
-        val TORCHERE_SERVICE_UUID: UUID = UUID.fromString("BB930001-3CE1-4720-A753-28C0159DC777")
+        val FL_CLASSIC_SERVICE_UUID: UUID = UUID.fromString("BB930001-3CE1-4720-A753-28C0159DC777")
     }
 
     private var primaryColorCharacteristic       : BluetoothGattCharacteristic? = null
@@ -41,7 +48,11 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
     val animationDirection = MutableLiveData<FlClassicAnimationDirections>()
     val animationStep      = MutableLiveData<Int>()
 
-    private inner class TorcherePeripheralManagerGattCallback : PeripheralManagerGattCallback() {
+    /**
+     * Переопределяем родительский класс, добавляем в него дополнительную реализацию
+     * Не забываем вызвать super метод
+     */
+    private inner class FLClassicPeripheralManagerGattCallback : PeripheralManagerGattCallback() {
         override fun initialize() {
             super.initialize()
             Log.e("TAG", "initialize torchere manager: ")
@@ -82,7 +93,7 @@ class TorchereManager(context: Context) : PeripheralManager(context) {
 
     override fun getGattCallback(): BleManagerGattCallback {
         super.getGattCallback()
-        return TorcherePeripheralManagerGattCallback()
+        return FLClassicPeripheralManagerGattCallback()
     }
 
     private fun initColorCharacteristics(service: BluetoothGattService) {

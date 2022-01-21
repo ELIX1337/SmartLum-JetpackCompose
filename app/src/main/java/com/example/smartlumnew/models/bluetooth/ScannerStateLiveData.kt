@@ -2,6 +2,10 @@ package com.example.smartlumnew.models.bluetooth
 
 import androidx.lifecycle.LiveData
 
+/**
+ * Упрощает отслеживание состояния сканера.
+ * Тоже было слизано с приложения NRF Blinky
+ */
 class ScannerStateLiveData (bluetoothEnabled: Boolean, locationEnabled: Boolean) : LiveData<ScannerStateLiveData>() {
 
     var isScanning: Boolean

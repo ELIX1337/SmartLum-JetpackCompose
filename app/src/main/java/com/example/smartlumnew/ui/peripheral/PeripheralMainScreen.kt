@@ -27,6 +27,9 @@ import com.example.smartlumnew.ui.components.Cell
 import com.example.smartlumnew.ui.components.ConnectingScreen
 import com.example.smartlumnew.ui.components.TransparentTopBar
 
+/**
+ * Обертка для экранов устройств
+ */
 @Composable
 fun PeripheralScreen(
     modifier: Modifier = Modifier,
@@ -40,17 +43,23 @@ fun PeripheralScreen(
     navigateUp: () -> Unit,
     openPeripheralSettings: (DiscoveredPeripheral, PeripheralViewModel) -> Unit,
 ) {
+    // Делаем коннект
     viewModel.connect(peripheral)
 
+    // Контейнер для экрана конкретного устройства
     PeripheralScreen(
         modifier = modifier.fillMaxSize(),
         viewModel = viewModel,
         peripheral = peripheral
     )
+
+    // Верхнее меню
+    // Иконка для перехода к расширенным настройкам появляется в зависимости от их наличия
     PeripheralTopBar(
         title = stringResource(peripheral.type.peripheralName),
         navigateUp = navigateUp,
         openPeripheralSettings = { openPeripheralSettings(peripheral, viewModel) },
+        // Рисуем или не рисуем иконку
         showActions = viewModel.isInitialized.observeAsState(false).value && viewModel.hasOptions.observeAsState(
             initial = false
         ).value
@@ -79,6 +88,8 @@ private fun PeripheralScreen(
     peripheral: DiscoveredPeripheral,
     connectionState: ConnectionState,
 ) {
+    // Если устройство еще не подключилось - показываем экран загрузки
+    // Иначе экран конкретного устройства
     if (connectionState == ConnectionState.READY) {
         PeripheralScreen(
             modifier = modifier,
@@ -90,6 +101,7 @@ private fun PeripheralScreen(
     }
 }
 
+// Устройство подключилось, показываем этот Composable
 @Composable
 private fun PeripheralScreen(
     modifier: Modifier = Modifier,
@@ -101,6 +113,10 @@ private fun PeripheralScreen(
     var showErrorDialog by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
+        // Проверяем состояние первичной настройки (инициализации)
+        // Если настроено, то показываем экран устройства,
+        // иначе показываем экран настройки устройства.
+        // Также здесь мы рисуем в самом верху ячейку об ошибке (если есть), при нажании откроет подробности (диалог)
         error?.let { PeripheralErrorCell { showErrorDialog = true } }
         if (isInitialized != false) {
             PeripheralReadyScreen(modifier, peripheralType, viewModel)
@@ -108,6 +124,9 @@ private fun PeripheralScreen(
             PeripheralSetupScreen(modifier, peripheralType, viewModel)
         }
     }
+
+    // Диалоговое окно с подробностями об ошибке
+    // Показывается когда было нажатие по кнопке "Подробнее"
     error?.let {
         PeripheralErrorDialog(
             error = it,
@@ -117,17 +136,21 @@ private fun PeripheralScreen(
     }
 }
 
+// Здесь уже конкретные экраны устройств
+// Сделано топорно через switch-case, но это был самый быстрый и простой способ,
+// Очевидно, что в будущем от этого нужно отойти
 @Composable
 fun PeripheralReadyScreen(
     modifier: Modifier = Modifier,
     peripheralType: PeripheralProfileEnum,
     viewModel: PeripheralViewModel
 ) {
+    // Показываем соответствующий экран в зависимости от устройства
     when (peripheralType) {
         PeripheralProfileEnum.FL_CLASSIC  -> FLClassic(modifier, viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI     -> FLClassic(modifier, viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE     -> SLBaseMainScreen(viewModel as SLBaseViewModel)
-        PeripheralProfileEnum.SL_STANDART -> SLProMainScreen(viewModel as SLProViewModel)
+        PeripheralProfileEnum.SL_PRO      -> SLProMainScreen(viewModel as SLProViewModel)
         PeripheralProfileEnum.UNKNOWN     -> {
             Log.e("TAG", "PeripheralReadyScreen: UNKNOWN DEVICE" )
             Text("Unknown device")
@@ -135,6 +158,7 @@ fun PeripheralReadyScreen(
     }
 }
 
+// Экран первичной настройки устройств (инициализации)
 @Composable
 fun PeripheralSetupScreen(
     modifier: Modifier = Modifier,
@@ -157,6 +181,8 @@ fun PeripheralSetupScreen(
     }
 }
 
+// Конкретные экраны для первичной настройки
+// Так же все топорно через switch-case
 @Composable
 private fun PeripheralSetupScreen(
     peripheralType: PeripheralProfileEnum,
@@ -166,12 +192,13 @@ private fun PeripheralSetupScreen(
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSetupScreen(viewModel as SLBaseViewModel)
-        PeripheralProfileEnum.SL_STANDART -> SLProSetupScreen(viewModel as SLProViewModel)
+        PeripheralProfileEnum.SL_PRO     -> SLProSetupScreen(viewModel as SLProViewModel)
         PeripheralProfileEnum.UNKNOWN    -> Text("Unknown device")
 
     }
 }
 
+// Верхнее меню
 @Composable
 fun PeripheralTopBar(
     title: String,
@@ -198,6 +225,9 @@ fun PeripheralTopBar(
     )
 }
 
+// Ячейка с ошибкой
+// В отличии от iOS не показывает код ошибки
+// Просто имеет кнопку "Подробнее"
 @Composable
 fun PeripheralErrorCell(
     openInfo: () -> Unit
@@ -227,6 +257,7 @@ fun PeripheralErrorCell(
     )
 }
 
+// Диалоговое окно в котором подробная информация об ошибке на устройстве
 @Composable
 fun PeripheralErrorDialog(
     error: PeripheralError,

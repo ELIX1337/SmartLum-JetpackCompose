@@ -26,12 +26,25 @@ enum class ConnectionState(@StringRes val textValue: Int) {
     DISCONNECTED(R.string.connection_state_disconnected);
 }
 
+/**
+ * Стандартный менеджер Bluetooth.
+ * От него наследуются контретные менеджеры для конкретных устройств.
+ * Здесь происходит обработка стандартных для всех устройств Smartlum данных.
+ * Можно посмотреть реализацию у Nordic (приложение NRF Blinky или Android-BLE-Library) на гитхабе
+ */
 open class PeripheralManager(context: Context) : ObservableBleManager(context) {
 
+    /**
+     * Маска, по которой будет происходить фильтрация найденных устройств
+     * Как можно заметить, все рекламные UUID отличаются лишь 4 байтами (нули),
+     * остальное все одинаковое, это позволяет использовать маску при сканировании,
+     * а не массив UUID.
+     */
     companion object {
         val UUID_MASK : UUID = UUID.fromString("BB930000-3CE1-4720-A753-28C0159DC777")
     }
 
+    // Дефолтные характеристики, которые есть на во всех устройствах (почти)
     private var firmwareVersionCharacteristic: BluetoothGattCharacteristic? = null
     private var resetToFactoryCharacteristic:  BluetoothGattCharacteristic? = null
     private var dfuCharacteristic:             BluetoothGattCharacteristic? = null
@@ -39,6 +52,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     private var deviceErrorCharacteristic:     BluetoothGattCharacteristic? = null
     private var demoModeStateCharacteristic:   BluetoothGattCharacteristic? = null
 
+    // Дефолтные параметры
     val peripheralConnectionState = MutableLiveData<ConnectionState>()
     val disconnectReason = MutableLiveData<Int>()
     val isConnected     = MutableLiveData<Boolean>()
@@ -47,14 +61,28 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     val error           = MutableLiveData<PeripheralError>()
     val demoMode        = MutableLiveData<Boolean>()
 
+    // Этот массив на самом деле не используетя
+    // Я его ввел для тестирования кое каких решений
+    // Аналогия с endpoints в приложении на iOS
     var foundCharacteristics = mutableMapOf<UUID,BluetoothGattCharacteristic>()
+
+    // Если false - то будет дисконнект
+    // Работает так, мы ищем конкретные сервисы
+    // Если что-то не нашли, то переменная становится false
+    // (метод isRequiredServiceSupported)
+    // можно принудительно сделать true, ничего не сломается
     private var supported = false
 
+    // По идее роли не играет вообще
     override fun shouldClearCacheWhenDisconnected(): Boolean {
         return supported
     }
 
+    /**
+     * Создаем объект для обработки событий подключения и тд.
+     */
     private val connectionCallback: ConnectionObserver = object : ConnectionObserver {
+
         override fun onDeviceConnecting(device: BluetoothDevice) {
             peripheralConnectionState.postValue(ConnectionState.CONNECTING)
             Log.e("TAG", "onDeviceConnecting: ${device.name}" )
@@ -88,8 +116,16 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         }
     }
 
+    /**
+     * Отдаем вышесозданный объект observer'у
+     */
     init { setConnectionObserver(connectionCallback) }
 
+    /**
+     * Дефолтный колбэк, стандартный для всех устройств.
+     * Переопределяем его в классах-наследниках (не забываем вызвать super метод)
+     * для конкретный устройств
+     */
     protected open inner class PeripheralManagerGattCallback : BleManagerGattCallback() {
 
         override fun initialize() {
@@ -140,6 +176,9 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         }
     }
 
+    /**
+     * Говорим, каким колбэком обрабатывать BLE
+     */
     override fun getGattCallback(): BleManagerGattCallback {
         return PeripheralManagerGattCallback()
     }
@@ -155,6 +194,9 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     private fun initEventCharacteristics(service: BluetoothGattService) {
         deviceErrorCharacteristic = service.getCharacteristic(LEGACY_EVENT_ERROR_CHARACTERISTIC_UUID)
     }
+
+    // Дальше идут публичные методы
+    // Они дефолтные для всех устройств
 
     fun resetToFactorySettings() {
         resetToFactoryCharacteristic?.let {
@@ -188,6 +230,9 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
             demoMode.postValue(state)
         }
     }
+
+    // Здесь мы пишем, как будем обрабатывать считывание данных с конкретной характеристики.
+    // Для этого создаем колбэк, и назначаем его характеристике в методе initialize()
 
     private val firmwareVersionCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {

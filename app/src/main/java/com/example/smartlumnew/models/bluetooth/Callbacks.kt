@@ -6,6 +6,12 @@ import com.example.smartlumnew.models.data.parseDoubleByteData
 import no.nordicsemi.android.ble.callback.profile.ProfileDataCallback
 import no.nordicsemi.android.ble.data.Data
 
+/**
+ * Здесь описаны различные колбэки Bluetooth.
+ * В зависимости от того, какие данные будут считаны, присваиваешь соответсвующий колбэк.
+ * Конкретная реализация происходит в самом PeripheralManager'e через абстрактный класс.
+ */
+
 interface IntegerCallback {
     fun onIntegerValueReceived(device: BluetoothDevice, data: Int)
 }

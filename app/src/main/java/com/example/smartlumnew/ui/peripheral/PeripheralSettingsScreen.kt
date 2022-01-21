@@ -1,17 +1,13 @@
 package com.example.smartlumnew.ui.peripheral
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
@@ -110,7 +106,7 @@ internal fun PeripheralSettingsScreen(
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSettingsScreen(modifier, viewModel as SLBaseViewModel, resetSettings)
-        PeripheralProfileEnum.SL_STANDART -> SLProSettingsScreen(modifier, viewModel as SLProViewModel, resetSettings)
+        PeripheralProfileEnum.SL_PRO -> SLProSettingsScreen(modifier, viewModel as SLProViewModel, resetSettings)
         else -> { Text("HZ") }
     }
 }

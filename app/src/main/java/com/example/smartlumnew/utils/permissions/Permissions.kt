@@ -11,6 +11,8 @@ import com.example.smartlumnew.ui.components.BottomSheetAlert
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 
+// Получение расрешений
+// Код взят и подогнан из документации
 @ExperimentalPermissionsApi
 @Composable
 fun RequestPermissions(

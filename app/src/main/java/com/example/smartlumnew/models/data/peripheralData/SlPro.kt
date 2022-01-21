@@ -86,6 +86,10 @@ enum class SlProAdaptiveModes(val supportingSettings: List<SlProAdaptiveSettings
     }
 }
 
+/**
+ * Список анимаций устройства SL-PRO.
+ * supportingSettings - список поддерживаемых анимацией настроек (используется для отрисовки UI)
+ */
 enum class SlProAnimations(val supportingSettings: List<AnimationSettings>):
     PeripheralDataElement {
     Tetris(

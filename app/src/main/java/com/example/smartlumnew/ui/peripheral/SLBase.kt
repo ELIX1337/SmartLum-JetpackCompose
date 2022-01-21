@@ -28,6 +28,9 @@ import com.example.smartlumnew.ui.components.SwitchCell
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 
+/**
+ * UI для экрана устройства SL-BASE
+ */
 @Composable
 fun SLBaseMainScreen(
     //modifier: Modifier = Modifier,
@@ -80,6 +83,9 @@ fun SLBaseMainScreen(
     }
 }
 
+/**
+ * Экран расширенных настроек SL-BASE
+ */
 @Composable
 fun SLBaseSettingsScreen(
     modifier: Modifier = Modifier,
@@ -123,6 +129,9 @@ fun SLBaseSettingsScreen(
     }
 }
 
+/**
+ * Экран первичной настройки (инициализации) устройства SL-BASE
+ */
 @Composable
 fun SLBaseSetupScreen(
     viewModel: SLBaseViewModel

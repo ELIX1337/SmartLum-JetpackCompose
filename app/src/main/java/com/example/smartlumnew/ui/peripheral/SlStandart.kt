@@ -1,6 +1,5 @@
 package com.example.smartlumnew.ui.peripheral
 
-import android.graphics.Color
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -18,20 +17,21 @@ import com.example.smartlumnew.models.data.peripheralData.SlProAdaptiveModes
 import com.example.smartlumnew.models.data.peripheralData.SlProAnimations
 import com.example.smartlumnew.models.data.peripheralData.SlProControllerType
 import com.example.smartlumnew.models.data.peripheralData.SlProStairsWorkModes
-import com.example.smartlumnew.models.viewModels.SLProViewModel
+import com.example.smartlumnew.models.viewModels.SLStandartViewModel
 import com.example.smartlumnew.ui.components.*
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.launch
 
+/**
+ * UI для экрана устройства SL-STANDART
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SLProMainScreen(
-    viewModel: SLProViewModel
+fun SLStandartMainScreen(
+    viewModel: SLStandartViewModel
 ) {
     var demoMode by remember { mutableStateOf(viewModel.demoMode.value ?: 0) }
-    val primaryColor by viewModel.primaryColor.observeAsState(Color.WHITE)
-    val randomColor by viewModel.randomColor.observeAsState(false)
     val ledState by viewModel.ledState.observeAsState(false)
     var ledBrightness by remember { mutableStateOf(viewModel.ledBrightness.value ?: 0f) }
     val ledTimeout by viewModel.ledTimeout.observeAsState(0)
@@ -64,20 +64,6 @@ fun SLProMainScreen(
                 .padding(8.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (viewModel.controllerType.observeAsState().value != SlProControllerType.Default) {
-                ColorCell(title = stringResource(R.string.color_cell_title), color = primaryColor) {
-                    sheetContent = {
-                        ColorPicker(
-                            initColor = colorToHSV(primaryColor)
-                        ) { color ->
-                            viewModel.setPrimaryColor(color)
-                        }
-                    }
-                }
-                SwitchCell(title = stringResource(R.string.random_color_cell_title), value = randomColor) {
-                    viewModel.setRandomColor(it)
-                }
-            }
             SwitchCell(title = stringResource(R.string.led_state_cell_title), value = ledState) {
                 viewModel.setLedState(it)
             }
@@ -115,9 +101,12 @@ fun SLProMainScreen(
 
 }
 
+/**
+ * Экран первичной настройки (инициализации) устройства SL-STANDART
+ */
 @Composable
-fun SLProSetupScreen(
-    viewModel: SLProViewModel
+fun SLStandartSetupScreen(
+    viewModel: SLStandartViewModel
 ) {
     var topTriggerDistance by remember { mutableStateOf(viewModel.topTriggerDistance.value ?: 0f) }
     var botTriggerDistance by remember { mutableStateOf(viewModel.botTriggerDistance.value ?: 0f) }
@@ -180,14 +169,16 @@ fun SLProSetupScreen(
     }
 }
 
+/**
+ * Экран расширенных настроек устройства SL-STANDART
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SLProSettingsScreen(
+fun SLStandartSettingsScreen(
     modifier: Modifier = Modifier,
-    viewModel: SLProViewModel,
+    viewModel: SLStandartViewModel,
     resetSettings: () -> Unit,
 ) {
-    val controllerType by viewModel.controllerType.observeAsState(SlProControllerType.Default)
     val adaptiveBrightness by viewModel.adaptiveBrightness.observeAsState(SlProAdaptiveModes.Off)
     val stairsWorkMode by viewModel.stairsWorkMode.observeAsState(SlProStairsWorkModes.BySensors)
     val stepsCount by viewModel.stepsCount.observeAsState(24)
@@ -230,11 +221,6 @@ fun SLProSettingsScreen(
             Spacer(modifier = Modifier
                 .statusBarsPadding()
                 .navigationBarsPadding())
-            ValuePickerCell(
-                title = stringResource(id = R.string.controller_type_cell_title),
-                value = controllerType.name,
-                showIcon = false
-            ) { }
             ValuePickerCell(
                 stringResource(id = R.string.adaptive_brightness_cell_title),
                 stringResource(adaptiveBrightness.elementNameStringID)

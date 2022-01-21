@@ -53,20 +53,24 @@ private val LightColorPalette = lightColors(
     */
 )
 
+// Используется для запонимания выбранной темы оформления
 val Context.dataStore : DataStore<Preferences> by preferencesDataStore(
     name = "app_settings"
 )
 
+// Используется для запонимания выбранной темы оформления
 object PREFERENCES_KEYS {
     val APP_THEME = intPreferencesKey(name = "app_theme")
 }
 
+// Используется для запонимания выбранной темы оформления
 suspend fun saveAppTheme(context: Context, theme: AppTheme){
     context.dataStore.edit { preferences ->
         preferences[PREFERENCES_KEYS.APP_THEME] = theme.code
     }
 }
 
+// Используется для запонимания выбранной темы оформления
 suspend fun getSavedAppTheme(context: Context): AppTheme {
     val theme = context.dataStore.data
         .map { preferences ->

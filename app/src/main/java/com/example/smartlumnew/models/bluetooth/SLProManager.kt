@@ -19,11 +19,17 @@ import com.example.smartlumnew.models.data.peripheralData.SlProStairsWorkModes
 import no.nordicsemi.android.ble.data.Data
 import java.util.*
 
+/**
+ * Конкретная реализация менеджера.
+ * Принцип абсолютно такой-же как и в родительком классе, просто дополняем его.
+ */
 class SLProManager(context: Context) : PeripheralManager(context) {
 
-    /** SL_STANDARD UUID  */
+    /**
+     * Рекламный UUID устройства SL-PRO. По идее не нужен, так как скинирование идет по маске
+     */
     companion object {
-        val SL_STANDARD_SERVICE_UUID: UUID = UUID.fromString("BB930004-3CE1-4720-A753-28C0159DC777")
+        val SL_PRO_SERVICE_UUID: UUID = UUID.fromString("BB930004-3CE1-4720-A753-28C0159DC777")
     }
 
     private var primaryColorCharacteristic:              BluetoothGattCharacteristic? = null
@@ -82,6 +88,10 @@ class SLProManager(context: Context) : PeripheralManager(context) {
         isInitialized.postValue(true)
     }
 
+    /**
+     * Переопределяем родительский класс, добавляем в него дополнительную реализацию
+     * Не забываем вызвать super метод
+     */
     private inner class SLBasePeripheralManagerGattCallback : PeripheralManagerGattCallback() {
         override fun initialize() {
             super.initialize()

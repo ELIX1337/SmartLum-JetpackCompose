@@ -38,6 +38,9 @@ fun SettingsPreview() {
     Settings(navController = NavHostController(LocalContext.current))
 }
 
+/**
+ * Экран настроек приложения
+ */
 @Composable
 fun Settings(
     modifier: Modifier = Modifier,
@@ -64,6 +67,9 @@ fun Settings(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            // Выбор темы
+            // Версия приложения
             ExpandableCell(
                 headerContent = { Text(stringResource(R.string.settings_general_cell_title)) }
             ) {
@@ -84,6 +90,7 @@ fun Settings(
                 }
             }
 
+            // About
             ExpandableCell(
                 headerContent = { Text(stringResource(R.string.settings_about_cell_title)) }
             ) {
@@ -109,6 +116,7 @@ fun Settings(
                 }
             }
 
+            // Контакты
             ExpandableCell(
                 headerContent = { Text(stringResource(R.string.settings_contacts_cell_title)) }
             ) {
@@ -140,6 +148,8 @@ fun Settings(
                 }
             }
         }
+
+        // Диалоговое окно для выбора темы
         ThemeSelectionDialog(
             isOpen = showDialog.value,
             dismiss = { showDialog.value = false },
@@ -211,30 +221,5 @@ fun ThemeSelectionDialog(
                 }
             }
         )
-    }
-}
-
-@Composable
-fun SettingsTopBar(
-    onBackPressed: () -> Unit
-) {
-    TopAppBar {
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            IconButton(onClick = { onBackPressed() }) {
-                Icon(
-                    Icons.Rounded.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-            Text(
-                "About",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h6)
-        }
     }
 }

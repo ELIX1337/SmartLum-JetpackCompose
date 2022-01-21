@@ -30,6 +30,11 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+/**
+ * Экран сканнера
+ * Управляется ViewModel
+ * Передает выбранное устройство вверх
+ */
 @OptIn(ExperimentalMaterialApi::class,
     ExperimentalPermissionsApi::class)
 @Composable
@@ -40,21 +45,28 @@ fun Scanner(
 ) {
     val context = LocalContext.current
     val isScanning by scannerViewModel.isScanning.observeAsState(false)
+    // Потянув список вниз, сделается рефреш, но иногда, по непонятной мне причине, зависает и вообще хз
     val isRefreshing by scannerViewModel.isRefreshing.observeAsState(false)
     val isBluetoothEnabled by scannerViewModel.isBluetoothEnabled.observeAsState(Utils.isBleEnabled(context))
+    // Чтобы Bluetooth работал, нужно включить геолокацию
     val isLocationEnabled by scannerViewModel.isLocationEnabled.observeAsState(Utils.isLocationEnabled(context))
     val isLocationPermissionGranted by scannerViewModel.isLocationGranted.observeAsState(Utils.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION))
+    //  Экспериментальный API для получени разрешений (намного удобнее стандартных)
     val requiredPermissions = rememberMultiplePermissionsState(listOf(Manifest.permission.ACCESS_FINE_LOCATION))
     val scanResult by scannerViewModel.scanResult.observeAsState()
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = rememberBottomSheetState(
         BottomSheetValue.Collapsed)
     )
+
+    // Не обычный Scaffold, а тот, у которого есть всплывающее снизу меню
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
         sheetShape = RoundedCornerShape(24.dp, 24.dp),
         sheetGesturesEnabled = false,
         sheetElevation = 24.dp,
+        // Контент всплывающего снизу меню (запрос разрешений и включения Bluetooth)
         sheetContent = {
             Box(modifier = Modifier
                 .padding(24.dp)
@@ -84,12 +96,14 @@ fun Scanner(
                 //verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Добавляет фичу "потянуть чтобы обновить"
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(isRefreshing),
                     indicatorPadding = PaddingValues(appBarHeight + statusBarHeight),
                     refreshTriggerDistance = 100.dp,
                     onRefresh = { scannerViewModel.refresh() }
                 ) {
+                    // Список найденных устройств
                     PeripheralsList(
                         Modifier.padding(8.dp, 0.dp),
                         scanResult,
@@ -100,6 +114,9 @@ fun Scanner(
         }
     }
 
+    // Просто проверяем разрешения, состояние Bluetooth и геолокацию
+    // Если что-то не работает - всплывает меню снизу
+    // Если все работает (включилось) - закрываем меню
     if (!isBluetoothEnabled || !isLocationEnabled || !isLocationPermissionGranted) {
         LaunchedEffect(bottomSheetScaffoldState.bottomSheetState) {
             bottomSheetScaffoldState.bottomSheetState.expand()

@@ -16,7 +16,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.smartlumnew.models.bluetooth.PeripheralManager
 import com.example.smartlumnew.models.bluetooth.PeripheralsLiveData
 import com.example.smartlumnew.models.bluetooth.SLBaseManager
-import com.example.smartlumnew.models.bluetooth.TorchereManager
+import com.example.smartlumnew.models.bluetooth.FLClassicManager
 import com.example.smartlumnew.utils.Utils
 import no.nordicsemi.android.support.v18.scanner.*
 
@@ -63,7 +63,7 @@ class ScannerViewModel(application: Application) : AndroidViewModel(application)
             return
         }
         val uuidList: MutableList<ParcelUuid> = arrayListOf(
-            ParcelUuid(TorchereManager.TORCHERE_SERVICE_UUID),
+            ParcelUuid(FLClassicManager.FL_CLASSIC_SERVICE_UUID),
             ParcelUuid(SLBaseManager.SL_BASE_SERVICE_UUID)
         )
 
