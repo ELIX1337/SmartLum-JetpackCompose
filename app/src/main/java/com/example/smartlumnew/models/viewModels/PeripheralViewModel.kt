@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.smartlumnew.models.bluetooth.ConnectionState
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.bluetooth.PeripheralManager
-import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
+import com.example.smartlumnew.models.data.PeripheralProfileEnum
 import com.example.smartlumnew.models.data.PeripheralError
 
 /** Фабрика для получения соответствующих ViewModel.
@@ -35,8 +35,8 @@ class PeripheralViewModelFactory(private val context: Application, private val t
                 }
             }
             PeripheralProfileEnum.SL_PRO -> {
-                if (modelClass.isAssignableFrom(SLProViewModel::class.java)) {
-                    return SLProViewModel(context) as T
+                if (modelClass.isAssignableFrom(SLProStandartViewModel::class.java)) {
+                    return SLProStandartViewModel(context) as T
                 }
             }
             else -> {
@@ -59,6 +59,9 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     val peripheralManager: PeripheralManager = manager
     private var peripheral: BluetoothDevice? = null
 
+    // Инициализируется после коннекта
+    var peripheralType: PeripheralProfileEnum? = PeripheralProfileEnum.UNKNOWN
+
     val firmwareVersion:  LiveData<Int>             = manager.firmwareVersion
     val isInitialized:    LiveData<Boolean>         = manager.isInitialized
     val isConnected:      LiveData<Boolean>         = manager.isConnected
@@ -74,6 +77,7 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     fun connect(target: DiscoveredPeripheral) {
         if (peripheral == null) {
             peripheral = target.device
+            peripheralType = target.type
         }
         reconnect()
     }
@@ -115,7 +119,15 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     // т.е. по нажатию кнопки "Подтвердить", срабатывает этот метод,
     // который отправит на устройство все выставленные настройки.
     // Значения этих настроек хранятся в переменных у классов-наследников
-    open fun commit() { }
+    open fun commit(): Boolean {
+        return false
+    }
+
+    // Сообщает, готовы ли данные для первичной настройки.
+    // Реализуется в наследниках
+    open fun isInitDataReady(): Boolean {
+        return false
+    }
 
     override fun onCleared() {
         super.onCleared()

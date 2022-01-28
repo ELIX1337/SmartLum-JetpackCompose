@@ -3,6 +3,7 @@ package com.example.smartlumnew.models.bluetooth
 import android.bluetooth.BluetoothDevice
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.smartlumnew.models.data.PeripheralProfileEnum
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 import org.jetbrains.annotations.Contract
 import java.util.*

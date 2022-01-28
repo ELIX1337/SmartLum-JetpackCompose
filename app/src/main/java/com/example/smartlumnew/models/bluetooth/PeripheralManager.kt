@@ -45,12 +45,12 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     }
 
     // Дефолтные характеристики, которые есть на во всех устройствах (почти)
-    private var firmwareVersionCharacteristic: BluetoothGattCharacteristic? = null
-    private var resetToFactoryCharacteristic:  BluetoothGattCharacteristic? = null
-    private var dfuCharacteristic:             BluetoothGattCharacteristic? = null
-    private var deviceInitStateCharacteristic: BluetoothGattCharacteristic? = null
-    private var deviceErrorCharacteristic:     BluetoothGattCharacteristic? = null
-    private var demoModeStateCharacteristic:   BluetoothGattCharacteristic? = null
+    var firmwareVersionCharacteristic: BluetoothGattCharacteristic? = null
+    var resetToFactoryCharacteristic:  BluetoothGattCharacteristic? = null
+    var dfuCharacteristic:             BluetoothGattCharacteristic? = null
+    var deviceInitStateCharacteristic: BluetoothGattCharacteristic? = null
+    var deviceErrorCharacteristic:     BluetoothGattCharacteristic? = null
+    var demoModeStateCharacteristic:   BluetoothGattCharacteristic? = null
 
     // Дефолтные параметры
     val peripheralConnectionState = MutableLiveData<ConnectionState>()
@@ -183,7 +183,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         return PeripheralManagerGattCallback()
     }
 
-    private fun initDeviceInfoCharacteristics(service: BluetoothGattService) {
+    open fun initDeviceInfoCharacteristics(service: BluetoothGattService) {
         firmwareVersionCharacteristic = service.getCharacteristic(LEGACY_DEVICE_FIRMWARE_VERSION_CHARACTERISTIC_UUID)
         resetToFactoryCharacteristic  = service.getCharacteristic(LEGACY_RESET_TO_FACTORY_CHARACTERISTIC_UUID)
         dfuCharacteristic             = service.getCharacteristic(LEGACY_DEVICE_DFU_CHARACTERISTIC_UUID)
@@ -191,7 +191,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         demoModeStateCharacteristic   = service.getCharacteristic(DEVICE_DEMO_MODE_STATE_CHARACTERISTIC_UUID)
     }
 
-    private fun initEventCharacteristics(service: BluetoothGattService) {
+    open fun initEventCharacteristics(service: BluetoothGattService) {
         deviceErrorCharacteristic = service.getCharacteristic(LEGACY_EVENT_ERROR_CHARACTERISTIC_UUID)
     }
 
@@ -243,7 +243,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
 
     private val deviceInitStateCallBack: BooleanDataCallback = object : BooleanDataCallback() {
         override fun onBooleanReceived(device: BluetoothDevice, state: Boolean) {
-            Log.e("TAG", "onDevice initialized: $state")
+            Log.e("TAG", "onDeviceinitialized: $state")
             isInitialized.postValue(state)
         }
 

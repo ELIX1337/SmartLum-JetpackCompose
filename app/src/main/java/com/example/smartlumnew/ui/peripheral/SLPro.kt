@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.peripheralData.SlProAdaptiveModes
 import com.example.smartlumnew.models.data.peripheralData.SlProAnimations
-import com.example.smartlumnew.models.data.peripheralData.SlProControllerType
+import com.example.smartlumnew.models.data.peripheralData.SlProStandartControllerType
 import com.example.smartlumnew.models.data.peripheralData.SlProStairsWorkModes
-import com.example.smartlumnew.models.viewModels.SLProViewModel
+import com.example.smartlumnew.models.viewModels.SLProStandartViewModel
 import com.example.smartlumnew.ui.components.*
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SLProMainScreen(
-    viewModel: SLProViewModel
+    viewModel: SLProStandartViewModel
 ) {
     var demoMode by remember { mutableStateOf(viewModel.demoMode.value ?: 0) }
     val primaryColor by viewModel.primaryColor.observeAsState(Color.WHITE)
@@ -38,7 +38,7 @@ fun SLProMainScreen(
     val ledState by viewModel.ledState.observeAsState(false)
     var ledBrightness by remember { mutableStateOf(viewModel.ledBrightness.value ?: 0f) }
     val ledTimeout by viewModel.ledTimeout.observeAsState(0)
-    val controllerType by viewModel.controllerType.observeAsState(SlProControllerType.Default)
+    val controllerType by viewModel.controllerType.observeAsState(SlProStandartControllerType.Default)
     val animationMode by viewModel.animationMode.observeAsState(SlProAnimations.Tetris)
     var animationSpeed by remember { mutableStateOf(viewModel.animationOnSpeed.value ?: 0f) }
 
@@ -67,7 +67,7 @@ fun SLProMainScreen(
                 .padding(8.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (viewModel.controllerType.observeAsState().value != SlProControllerType.Default) {
+            if (viewModel.controllerType.observeAsState().value != SlProStandartControllerType.Default) {
                 ColorCell(title = stringResource(R.string.color_cell_title), color = primaryColor) {
                     sheetContent = {
                         ColorPicker(
@@ -123,65 +123,79 @@ fun SLProMainScreen(
  */
 @Composable
 fun SLProSetupScreen(
-    viewModel: SLProViewModel
+    viewModel: SLProStandartViewModel
 ) {
     var topTriggerDistance by remember { mutableStateOf(viewModel.topTriggerDistance.value ?: 0f) }
     var botTriggerDistance by remember { mutableStateOf(viewModel.botTriggerDistance.value ?: 0f) }
-    var topTriggerLightness by remember { mutableStateOf(viewModel.topTriggerLightness.value ?: 0) }
-    var botTriggerLightness by remember { mutableStateOf(viewModel.botTriggerLightness.value ?: 0) }
-    var topCurrentDistance by remember { mutableStateOf(viewModel.topCurrentDistance.value ?: 0) }
-    var botCurrentDistance by remember { mutableStateOf(viewModel.botCurrentDistance.value ?: 0) }
-    var topCurrentLightness by remember { mutableStateOf(viewModel.topCurrentLightness.value ?: 0) }
-    var botCurrentLightness by remember { mutableStateOf(viewModel.botCurrentLightness.value ?: 0) }
     var stepsCount by remember { mutableStateOf(viewModel.stepsCount.value ?: 0) }
-    var standbyState by remember { mutableStateOf(viewModel.standbyState.value ?: false) }
-    var standbyTopCount by remember { mutableStateOf(viewModel.standbyTopCount.value ?: 0) }
-    var standbyBotCount by remember { mutableStateOf(viewModel.standbyBotCount.value ?: 0) }
-    var standbyBrightness by remember { mutableStateOf(viewModel.standbyBrightness.value ?: 0f) }
+    var topSensorCount by remember { mutableStateOf(viewModel.topSensorCount.value ?:1) }
+    var botSensorCount by remember { mutableStateOf(viewModel.botSensorCount.value ?:1) }
+
+    var showInitAlert by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ValuePickerCell(title = stringResource(R.string.controller_type_cell_title), value = "type") { }
-        ValuePickerCell(title = stringResource(R.string.adaptive_brightness_cell_title), value = "mode") { }
-        ValuePickerCell(title = stringResource(R.string.stairs_work_mode_cell_title), value = "mode") { }
         StepperCell(title = stringResource(R.string.steps_count_cell_title), value = stepsCount) {
             stepsCount = it
             viewModel.initStepsCount(it)
         }
-        StepperCell(title = stringResource(R.string.top_sensor_count_cell_title), value = 1) {  }
-        StepperCell(title = stringResource(R.string.bot_sensor_count_cell_title), value = 1) {  }
-        SwitchCell(title = stringResource(R.string.standby_brightness_state_cell_title), value = false) { }
-        SliderCell(title = stringResource(R.string.standby_brightness_value_cell_title), value = 0f, valueRange = 0f..100f) { }
-        StepperCell(title = stringResource(R.string.standby_brightness_top_steps_count_cell_title), value = 1) { }
-        StepperCell(title = stringResource(R.string.standby_brightness_bot_steps_count_cell_title), value = 1) { }
+
+        StepperCell(
+            title = stringResource(id = R.string.top_sensor_count_cell_title),
+            value = topSensorCount
+        ) {
+            topSensorCount = it
+            viewModel.initTopSensorCount(it)
+        }
+
+        StepperCell(
+            title = stringResource(id = R.string.bot_sensor_count_cell_title),
+            value = botSensorCount
+        ) {
+            botSensorCount = it
+            viewModel.initBotSensorCount(it)
+        }
+
         SliderCell(
             title = stringResource(R.string.title_top_sensor_trigger_distance),
             value = topTriggerDistance,
             valueRange = 1f..200f,
-            additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + topTriggerDistance.toInt()) },
+            additionalContent = { Text(topTriggerDistance.toInt().toString() + stringResource(R.string.peripheral_sensor_distance_current_distance)) },
             onValueChanged = {
                 topTriggerDistance = it
                 viewModel.initTopSensorTriggerDistance(it)
             }
         )
+
         SliderCell(
             title = stringResource(R.string.title_bot_sensor_trigger_distance),
             value = botTriggerDistance,
             valueRange = 1f..200f,
-            additionalContent = { Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + botTriggerDistance.toInt()) },
+            additionalContent = { Text(botTriggerDistance.toInt().toString() + stringResource(R.string.peripheral_sensor_distance_current_distance) ) },
             onValueChanged = {
                 botTriggerDistance = it
                 viewModel.initBotSensorTriggerDistance(it)
             }
         )
-        SliderCell(title = stringResource(R.string.top_trigger_lightness_cell_title), value = 0f, valueRange = 0f..100f) { }
-        SliderCell(title = stringResource(R.string.bot_trigger_lightness_cell_title), value = 0f, valueRange = 0f..100f) { }
-        ValuePickerCell(title = stringResource(R.string.top_current_lightness_cell_title), value = "0") { }
-        ValuePickerCell(title = stringResource(R.string.bot_current_lightness_cell_title), value = "0") { }
-        Button(onClick = { viewModel.commit() }) {
+
+        Button(
+            onClick = {
+                showInitAlert = viewModel.commit()
+            }
+        ) {
             Text(stringResource(R.string.button_commit))
+        }
+
+        // Диалоговое окно с подробностями об ошибке
+        // Показывается когда было нажатие по кнопке "Подробнее"
+
+        if (!showInitAlert) {
+            PeripheralInitAlertDialog(
+                isOpen = showInitAlert) {
+                showInitAlert = true
+            }
         }
     }
 }
@@ -193,10 +207,10 @@ fun SLProSetupScreen(
 @Composable
 fun SLProSettingsScreen(
     modifier: Modifier = Modifier,
-    viewModel: SLProViewModel,
+    viewModel: SLProStandartViewModel,
     resetSettings: () -> Unit,
 ) {
-    val controllerType by viewModel.controllerType.observeAsState(SlProControllerType.Default)
+    val controllerType by viewModel.controllerType.observeAsState(SlProStandartControllerType.Default)
     val adaptiveBrightness by viewModel.adaptiveBrightness.observeAsState(SlProAdaptiveModes.Off)
     val stairsWorkMode by viewModel.stairsWorkMode.observeAsState(SlProStairsWorkModes.BySensors)
     val stepsCount by viewModel.stepsCount.observeAsState(24)

@@ -8,13 +8,11 @@ import android.bluetooth.BluetoothGattService
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
-import androidx.annotation.FloatRange
-import androidx.annotation.IntRange
 import androidx.lifecycle.MutableLiveData
 import com.example.smartlumnew.models.data.*
 import com.example.smartlumnew.models.data.peripheralData.SlProAdaptiveModes
 import com.example.smartlumnew.models.data.peripheralData.SlProAnimations
-import com.example.smartlumnew.models.data.peripheralData.SlProControllerType
+import com.example.smartlumnew.models.data.peripheralData.SlProStandartControllerType
 import com.example.smartlumnew.models.data.peripheralData.SlProStairsWorkModes
 import no.nordicsemi.android.ble.data.Data
 import java.util.*
@@ -23,7 +21,7 @@ import java.util.*
  * Конкретная реализация менеджера.
  * Принцип абсолютно такой-же как и в родительком классе, просто дополняем его.
  */
-class SLProManager(context: Context) : PeripheralManager(context) {
+class SLProStandartManager(context: Context) : PeripheralManager(context) {
 
     /**
      * Рекламный UUID устройства SL-PRO. По идее не нужен, так как скинирование идет по маске
@@ -58,6 +56,8 @@ class SLProManager(context: Context) : PeripheralManager(context) {
     private var topCurrentLightnessCharacteristic:       BluetoothGattCharacteristic? = null
     private var botCurrentLightnessCharacteristic:       BluetoothGattCharacteristic? = null
 
+    val deviceType: PeripheralProfileEnum? = null
+
     val primaryColor        = MutableLiveData<Int>()
     val randomColor         = MutableLiveData<Boolean>()
     val ledState            = MutableLiveData<Boolean>()
@@ -65,7 +65,7 @@ class SLProManager(context: Context) : PeripheralManager(context) {
     val ledTimeout          = MutableLiveData<Int>()
     val animationMode       = MutableLiveData<SlProAnimations>()
     val animationOnSpeed    = MutableLiveData<Float>()
-    val controllerType      = MutableLiveData<SlProControllerType>()
+    val controllerType      = MutableLiveData<SlProStandartControllerType>()
     val adaptiveBrightness  = MutableLiveData<SlProAdaptiveModes>()
     val stairsWorkModes     = MutableLiveData<SlProStairsWorkModes>()
     val stepsCount          = MutableLiveData<Int>()
@@ -83,10 +83,6 @@ class SLProManager(context: Context) : PeripheralManager(context) {
     val botCurrentDistance  = MutableLiveData<Int>()
     val topCurrentLightness = MutableLiveData<Int>()
     val botCurrentLightness = MutableLiveData<Int>()
-
-    init {
-        isInitialized.postValue(true)
-    }
 
     /**
      * Переопределяем родительский класс, добавляем в него дополнительную реализацию
@@ -134,11 +130,15 @@ class SLProManager(context: Context) : PeripheralManager(context) {
 
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
             super.isRequiredServiceSupported(gatt)
+            val deviceInfoServie = gatt.getService(DEVICE_INFO_SERVICE_UUID)
+            val eventService      = gatt.getService(EVENT_SERVICE_UUID)
             val colorService     = gatt.getService(COLOR_SERVICE_UUID)
             val ledService       = gatt.getService(LED_SERVICE_UUID)
             val animationService = gatt.getService(ANIMATION_SERVICE_UUID)
             val sensorService    = gatt.getService(SENSOR_SERVICE_UUID)
             val stairsService    = gatt.getService(STAIRS_SERVICE_UUID)
+            deviceInfoServie?.let { initDeviceInfoCharacteristics(it) }
+            eventService?.let     { initEventCharacteristics(it) }
             colorService?.let     { initColorCharacteristics(it) }
             ledService?.let       { initLedCharacteristics(it) }
             animationService?.let { initAnimationCharacteristics(it) }
@@ -178,6 +178,19 @@ class SLProManager(context: Context) : PeripheralManager(context) {
     override fun getGattCallback(): BleManagerGattCallback {
         super.getGattCallback()
         return SLBasePeripheralManagerGattCallback()
+    }
+
+    // Переопределяем так как на этих устройствах используются 16-битные UUID
+    override fun initDeviceInfoCharacteristics(service: BluetoothGattService) {
+        firmwareVersionCharacteristic = service.getCharacteristic(DEVICE_FIRMWARE_VERSION_CHARACTERISTIC_UUID)
+        resetToFactoryCharacteristic  = service.getCharacteristic(RESET_TO_FACTORY_CHARACTERISTIC_UUID)
+        dfuCharacteristic             = service.getCharacteristic(DEVICE_DFU_CHARACTERISTIC_UUID)
+        deviceInitStateCharacteristic = service.getCharacteristic(DEVICE_INIT_STATE_CHARACTERISTIC_UUID)
+    }
+
+    // Переопределяем так как на этих устройствах используются 16-битные UUID
+    override fun initEventCharacteristics(service: BluetoothGattService) {
+        deviceErrorCharacteristic = service.getCharacteristic(EVENT_ERROR_CHARACTERISTIC_UUID)
     }
 
     private fun initColorCharacteristics(service: BluetoothGattService) {
@@ -268,7 +281,7 @@ class SLProManager(context: Context) : PeripheralManager(context) {
     private val controllerTypeCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             Log.e("TAG", "SlProManager led type: $data")
-            controllerType.postValue(SlProControllerType.valueOf(data))
+            controllerType.postValue(SlProStandartControllerType.valueOf(data))
         }
     }
 

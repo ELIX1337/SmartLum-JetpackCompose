@@ -4,7 +4,7 @@ import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.AnimationSettings
 import com.example.smartlumnew.models.data.PeripheralDataElement
 
-enum class SlProControllerType: PeripheralDataElement {
+enum class SlProStandartControllerType: PeripheralDataElement {
     Default {
         override val code: Int
             get() = 0
@@ -19,7 +19,7 @@ enum class SlProControllerType: PeripheralDataElement {
     };
 
     companion object {
-        fun valueOf(code: Int): SlProControllerType? = values().find { it.code == code }
+        fun valueOf(code: Int): SlProStandartControllerType? = values().find { it.code == code }
     }
 }
 

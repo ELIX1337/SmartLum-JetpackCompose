@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.smartlumnew.models.bluetooth.SLBaseManager
+import com.example.smartlumnew.models.data.PeripheralProfileEnum
 
 /**
  * Конкретная ViewModel для устройства SL-BASE
@@ -29,8 +30,8 @@ class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(
     val topSensorTriggerDistance: LiveData<Float>   = baseManager.topSensorTriggerDistance
     val botSensorTriggerDistance: LiveData<Float>   = baseManager.botSensorTriggerDistance
 
-    var initTopSensorTriggerDistance: Float = 1.0f
-    var initBotSensorTriggerDistance: Float = 1.0f
+    var initTopSensorTriggerDistance: Float? = null
+    var initBotSensorTriggerDistance: Float? = null
 
     fun setLedBrightness(@FloatRange(from = 0.0) brightness: Float) {
         baseManager.writeLedBrightness(brightness)
@@ -64,11 +65,22 @@ class SLBaseViewModel(context: Application) : PeripheralViewModel(SLBaseManager(
         baseManager.writeAnimationOnSpeed(speed)
     }
 
+    override fun isInitDataReady(): Boolean {
+        return initTopSensorTriggerDistance != null &&
+                initBotSensorTriggerDistance != null
+
+    }
+
     // Этот метод сработает при нажатии кнопки "Подтвердить" на экране первичной настройки (инициализации)
     // Отправит все необходимые для настройки данные на устройство
-    override fun commit() {
-        baseManager.writeTopSensorTriggerDistance(initTopSensorTriggerDistance)
-        baseManager.writeBotSensorTriggerDistance(initBotSensorTriggerDistance)
+    override fun commit(): Boolean {
+        if (isInitDataReady()) {
+            baseManager.writeTopSensorTriggerDistance(initTopSensorTriggerDistance!!)
+            baseManager.writeBotSensorTriggerDistance(initBotSensorTriggerDistance!!)
+
+            return true
+        }
+        return false
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.smartlumnew.models.bluetooth
+package com.example.smartlumnew.models.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

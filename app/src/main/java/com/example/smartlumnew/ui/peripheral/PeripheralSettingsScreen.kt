@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
-import com.example.smartlumnew.models.bluetooth.PeripheralProfileEnum
+import com.example.smartlumnew.models.data.PeripheralProfileEnum
 import com.example.smartlumnew.models.viewModels.FLClassicViewModel
 import com.example.smartlumnew.models.viewModels.PeripheralViewModel
 import com.example.smartlumnew.models.viewModels.SLBaseViewModel
-import com.example.smartlumnew.models.viewModels.SLProViewModel
+import com.example.smartlumnew.models.viewModels.SLProStandartViewModel
 
 @Composable
 fun PeripheralSettingsScreen(
@@ -106,7 +106,7 @@ internal fun PeripheralSettingsScreen(
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSettingsScreen(modifier, viewModel as SLBaseViewModel, resetSettings)
-        PeripheralProfileEnum.SL_PRO -> SLProSettingsScreen(modifier, viewModel as SLProViewModel, resetSettings)
+        PeripheralProfileEnum.SL_PRO -> SLProSettingsScreen(modifier, viewModel as SLProStandartViewModel, resetSettings)
         else -> { Text("HZ") }
     }
 }
