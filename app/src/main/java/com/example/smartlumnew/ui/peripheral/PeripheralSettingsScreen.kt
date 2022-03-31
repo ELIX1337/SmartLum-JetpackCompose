@@ -106,7 +106,8 @@ internal fun PeripheralSettingsScreen(
         PeripheralProfileEnum.FL_CLASSIC -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI    -> FLClassicSettingsScreen(viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE    -> SLBaseSettingsScreen(modifier, viewModel as SLBaseViewModel, resetSettings)
+        PeripheralProfileEnum.SL_STANDART -> SLStandartSettingsScreen(modifier, viewModel as SLProStandartViewModel, resetSettings)
         PeripheralProfileEnum.SL_PRO -> SLProSettingsScreen(modifier, viewModel as SLProStandartViewModel, resetSettings)
-        else -> { Text("HZ") }
+        else -> { Text("Unknown device settings screen") }
     }
 }

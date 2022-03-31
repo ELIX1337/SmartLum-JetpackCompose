@@ -24,7 +24,6 @@ import com.example.smartlumnew.ui.components.PermissionRequestSheet
 import com.example.smartlumnew.ui.theme.appBarHeight
 import com.example.smartlumnew.ui.theme.statusBarHeight
 import com.example.smartlumnew.utils.Utils
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -70,7 +69,8 @@ fun Scanner(
         sheetContent = {
             Box(modifier = Modifier
                 .padding(24.dp)
-                .navigationBarsPadding()) {
+                .navigationBarsPadding()
+            ) {
                 when {
                     !isBluetoothEnabled -> BluetoothEnableRequestSheet(isBluetoothEnabled)
                     !isLocationEnabled -> LocationEnableRequestSheet(isLocationEnabled)

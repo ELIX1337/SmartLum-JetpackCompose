@@ -399,7 +399,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         }
     }
 
-    private val topSensorCurrentLightnessCallback: DoubleByteDataCallback = object : DoubleByteDataCallback() {
+    private val topSensorCurrentLightnessCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             topCurrentLightness.postValue(data)
             Log.e("TAG", "onIntegerValueReceived: top current lightness - $data" )
@@ -411,7 +411,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         }
     }
 
-    private val botSensorCurrentLightnessCallback: DoubleByteDataCallback = object : DoubleByteDataCallback() {
+    private val botSensorCurrentLightnessCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             botCurrentLightness.postValue(data)
             Log.e("TAG", "SlProManager: bot current lightness - $data" )

@@ -1,8 +1,5 @@
 package com.example.smartlumnew.ui.components
 
-import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,16 +7,29 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.lang.NumberFormatException
-import kotlin.math.min
+
+@Preview(
+    showSystemUi = true,
+    showBackground = true)
+@Composable
+fun StepperCellPreview() {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        StepperCell(
+            title = "Some title",
+            value = 5,
+            onStepChanged = { }
+        )
+    }
+}
 
 @Composable
 fun StepperCell(
@@ -35,53 +45,67 @@ fun StepperCell(
 
     Cell(
         mainContent = {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(text = title,
-                    modifier = Modifier
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
                 )
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(12.dp, 0.dp)
-                        .width(36.dp)
-                        .weight(1f),
-                    value = _value.toString(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            onStepChanged(_value)
-                            focusManager.clearFocus()
-                        }
-                    ),
-                    singleLine = true,
-                    onValueChange = {
-                        if (it.isNotEmpty()) {
-                            try {
-                                it.toInt().let { number ->
-                                    when {
-                                        number > maxValue -> { _value = maxValue }
-                                        number < minValue -> { _value = minValue }
-                                        else -> { _value = number }
+                Row(
+                    modifier = Modifier.padding(4.dp).fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(12.dp, 0.dp)
+                            //.width(36.dp),
+                            .weight(1f),
+                        value = _value.toString(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                onStepChanged(_value)
+                                focusManager.clearFocus()
+                            }
+                        ),
+                        singleLine = true,
+                        onValueChange = {
+                            if (it.isNotEmpty()) {
+                                try {
+                                    it.toInt().let { number ->
+                                        when {
+                                            number > maxValue -> {
+                                                _value = maxValue
+                                            }
+                                            number < minValue -> {
+                                                _value = minValue
+                                            }
+                                            else -> {
+                                                _value = number
+                                            }
+                                        }
                                     }
+                                } catch (e: NumberFormatException) {
                                 }
-                            } catch (e:NumberFormatException) { }
-                        } else {
-                            _value = minValue
-                        }
-                    })
-                Stepper(
-                    modifier = Modifier.weight(1f),
-                    value = _value,
-                    minValue = minValue,
-                    maxValue = maxValue
-                ) {
-                    _value = it
-                    onStepChanged(it)
+                            } else {
+                                _value = minValue
+                            }
+                        })
+                    Stepper(
+                        modifier = Modifier.weight(3f),
+                        value = _value,
+                        minValue = minValue,
+                        maxValue = maxValue
+                    ) {
+                        _value = it
+                        onStepChanged(it)
+                    }
                 }
             }
         },

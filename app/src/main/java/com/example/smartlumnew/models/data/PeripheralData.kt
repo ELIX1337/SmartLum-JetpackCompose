@@ -72,5 +72,92 @@ fun createDoubleByteData(data: Int): ByteArray {
     return array
 }
 
+// SL-STANDART DATA
+val PeripheralData.SLStandartMaxStepsCount: Int
+    get() = 18
+
+val PeripheralData.SLStandartMinStepsCount: Int
+    get() = 2
+
+val PeripheralData.SLStandartMaxSensorCount: Int
+    get() = 1
+
+val PeripheralData.SLStandartMinSensorCount: Int
+    get() = 1
+
+val PeripheralData.SLStandartMinAnimationSpeed: Int
+    get() = 1
+
+val PeripheralData.SLStandartMaxAnimationSpeed: Int
+    get() = 255
+
+val PeripheralData.SLStandartMinSensorDistance: Int
+    get() = 20
+
+val PeripheralData.SLStandartMaxSensorDistance: Int
+    get() = 200
+
+val PeripheralData.SLStandartMinSensorLightness: Int
+    get() = 0
+
+val PeripheralData.SLStandartMaxSensorLightness: Int
+    get() = 100
+
+val PeripheralData.SLStandartMinLedTimeout: Int
+    get() = 1
+
+val PeripheralData.SLStandartMaxLedTimeout: Int
+    get() = 120
+
+val PeripheralData.SLStandartMinLedBrightness: Int
+    get() = 1
+
+val PeripheralData.SLStandartMaxLedBrightness: Int
+    get() = 255
+
+// SL-PRO DATA
+val PeripheralData.SLProMaxStepsCount: Int
+    get() = 24
+
+val PeripheralData.SLProMinStepsCount: Int
+    get() = 2
+
+val PeripheralData.SLProMaxSensorCount: Int
+    get() = 1
+
+val PeripheralData.SLProMinSensorCount: Int
+    get() = 2
+
+val PeripheralData.SLProMinAnimationSpeed: Int
+    get() = 1
+
+val PeripheralData.SLProMaxAnimationSpeed: Int
+    get() = 255
+
+val PeripheralData.SLProMinSensorDistance: Int
+    get() = 20
+
+val PeripheralData.SLProMaxSensorDistance: Int
+    get() = 200
+
+val PeripheralData.SLProMinSensorLightness: Int
+    get() = 0
+
+val PeripheralData.SLProMaxSensorLightness: Int
+    get() = 100
+
+val PeripheralData.SLProMinLedTimeout: Int
+    get() = 1
+
+val PeripheralData.SLProMaxLedTimeout: Int
+    get() = 120
+
+val PeripheralData.SLProMinLedBrightness: Int
+    get() = 1
+
+val PeripheralData.SLProMaxLedBrightness: Int
+    get() = 255
+
+
 
 

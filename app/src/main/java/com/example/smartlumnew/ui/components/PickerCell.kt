@@ -25,7 +25,7 @@ fun ValuePickerCell(
     value: String = "Null",
     showIcon: Boolean = true,
     additionalContent: @Composable (() -> Unit)? = null,
-    onClick: () -> Unit
+    onClick: (() -> Unit)? = null
 ) {
     Cell(
         onClick = onClick,

@@ -34,6 +34,7 @@ class PeripheralViewModelFactory(private val context: Application, private val t
                     return FLClassicViewModel(context) as T
                 }
             }
+            PeripheralProfileEnum.SL_STANDART,
             PeripheralProfileEnum.SL_PRO -> {
                 if (modelClass.isAssignableFrom(SLProStandartViewModel::class.java)) {
                     return SLProStandartViewModel(context) as T

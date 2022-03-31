@@ -5,9 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -29,9 +27,6 @@ import com.example.smartlumnew.ui.components.DrawerContent
 import com.example.smartlumnew.ui.components.TransparentTopBar
 import com.example.smartlumnew.ui.theme.SmartLumTheme
 import com.example.smartlumnew.ui.theme.appBarHeight
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
 
@@ -41,7 +36,7 @@ fun SmartLumApp(
     scannerViewModel: ScannerViewModel,
 ) {
     // Убираем отступы от системных элементов
-    ProvideWindowInsets {
+    //ProvideWindowInsets {
 
         // Оборачиваем все приложение в собственную тему
         SmartLumTheme {
@@ -160,7 +155,7 @@ fun SmartLumApp(
                 }
             }
         }
-    }
+    //}
 }
 
 /**
@@ -175,8 +170,7 @@ fun NavigationTopBar(
     navigateUp: () -> Unit = { },
 ) {
 
-    Column {
-
+    //Column {
         // Кастомный бар
         TransparentTopBar(
             title = { Text(titleText ?: stringResource(R.string.app_name)) },
@@ -191,12 +185,8 @@ fun NavigationTopBar(
                         contentTo = { Icon(Icons.Rounded.ArrowBack, "Back") }
                     )
                 }
-            }
+            },
+        progressIndicator = progressIndicator
         )
-        if (progressIndicator) {
-            LinearProgressIndicator(
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-    }
+    //}
 }

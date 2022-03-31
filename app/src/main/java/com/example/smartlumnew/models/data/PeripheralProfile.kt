@@ -45,14 +45,14 @@ enum class PeripheralProfileEnum(
     ),   
     SL_PRO(
         type = R.string.peripheral_type_stairs_lighting,
-        UUID = UUID.fromString("BB930004-3CE1-4720-A753-28C0159DC777"),
+        UUID = UUID.fromString("BB930005-3CE1-4720-A753-28C0159DC777"),
         peripheralName = R.string.peripheral_name_sl_pro,
         description = R.string.peripheral_description_sl_pro,
         image = R.drawable.image_stairs_rgb
     ),
     SL_STANDART(
         type = R.string.peripheral_type_stairs_lighting,
-        UUID = UUID.fromString("BB930005-3CE1-4720-A753-28C0159DC777"),
+        UUID = UUID.fromString("BB930004-3CE1-4720-A753-28C0159DC777"),
         peripheralName = R.string.peripheral_name_sl_standart,
         description = R.string.peripheral_description_sl_pro,
         image = R.drawable.image_stairs

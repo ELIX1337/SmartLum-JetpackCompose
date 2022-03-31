@@ -22,7 +22,6 @@ import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimations
 import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDirections
 import com.example.smartlumnew.models.viewModels.FLClassicViewModel
 import com.example.smartlumnew.ui.components.*
-import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.launch
 
 /**

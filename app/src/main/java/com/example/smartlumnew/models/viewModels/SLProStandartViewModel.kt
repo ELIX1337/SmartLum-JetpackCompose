@@ -48,8 +48,6 @@ class SLProStandartViewModel(context: Application) : PeripheralViewModel(SLProSt
     val botTriggerDistance: LiveData<Float>  = proStandartManager.botTriggerDistance
     val topTriggerLightness: LiveData<Float> = proStandartManager.topTriggerLightness
     val botTriggerLightness: LiveData<Float> = proStandartManager.botTriggerLightness
-    val topCurrentDistance: LiveData<Int>    = proStandartManager.topCurrentDistance
-    val botCurrentDistance: LiveData<Int>    = proStandartManager.botCurrentDistance
     val topCurrentLightness: LiveData<Int>   = proStandartManager.topCurrentLightness
     val botCurrentLightness: LiveData<Int>   = proStandartManager.botCurrentLightness
 

@@ -25,8 +25,6 @@ import com.example.smartlumnew.models.viewModels.SLBaseViewModel
 import com.example.smartlumnew.ui.components.SliderCell
 import com.example.smartlumnew.ui.components.StepperCell
 import com.example.smartlumnew.ui.components.SwitchCell
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 
 /**
  * UI для экрана устройства SL-BASE

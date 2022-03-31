@@ -14,14 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
+import com.example.smartlumnew.models.data.*
 import com.example.smartlumnew.models.data.peripheralData.SlProAdaptiveModes
 import com.example.smartlumnew.models.data.peripheralData.SlProAnimations
 import com.example.smartlumnew.models.data.peripheralData.SlProStandartControllerType
 import com.example.smartlumnew.models.data.peripheralData.SlProStairsWorkModes
 import com.example.smartlumnew.models.viewModels.SLProStandartViewModel
 import com.example.smartlumnew.ui.components.*
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.launch
 
 /**
@@ -32,27 +31,21 @@ import kotlinx.coroutines.launch
 fun SLProMainScreen(
     viewModel: SLProStandartViewModel
 ) {
-    var demoMode by remember { mutableStateOf(viewModel.demoMode.value ?: 0) }
     val primaryColor by viewModel.primaryColor.observeAsState(Color.WHITE)
     val randomColor by viewModel.randomColor.observeAsState(false)
     val ledState by viewModel.ledState.observeAsState(false)
     var ledBrightness by remember { mutableStateOf(viewModel.ledBrightness.value ?: 0f) }
     val ledTimeout by viewModel.ledTimeout.observeAsState(0)
-    val controllerType by viewModel.controllerType.observeAsState(SlProStandartControllerType.Default)
     val animationMode by viewModel.animationMode.observeAsState(SlProAnimations.Tetris)
     var animationSpeed by remember { mutableStateOf(viewModel.animationOnSpeed.value ?: 0f) }
 
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
-    val content: @Composable (() -> Unit) = { Text("NULL") }
+    val content: @Composable (() -> Unit) = { Text(" ") }
     var sheetContent   by remember { mutableStateOf(content) }
     val sheetAnim: AnimationSpec<Float> = tween(200)
-    var crossfadeState by remember { mutableStateOf(animationMode) }
-    crossfadeState = animationMode
 
-    var speed by remember { mutableStateOf(animationSpeed) }
-    speed = animationSpeed
-
+    if (!bottomSheetState.isVisible) sheetContent = content
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
         sheetContent = {
@@ -76,6 +69,12 @@ fun SLProMainScreen(
                             viewModel.setPrimaryColor(color)
                         }
                     }
+                    scope.launch {
+                        bottomSheetState.animateTo(
+                            ModalBottomSheetValue.Expanded,
+                            sheetAnim
+                        )
+                    }
                 }
                 SwitchCell(title = stringResource(R.string.random_color_cell_title), value = randomColor) {
                     viewModel.setRandomColor(it)
@@ -85,12 +84,20 @@ fun SLProMainScreen(
                 viewModel.setLedState(it)
             }
             if (viewModel.adaptiveBrightness.observeAsState().value == SlProAdaptiveModes.Off) {
-                SliderCell(title = stringResource(R.string.brightness_cell_title), value = ledBrightness, valueRange = 0f..100f) {
+                SliderCell(
+                    title = stringResource(R.string.brightness_cell_title),
+                    value = ledBrightness,
+                    valueRange = PeripheralData.SLProMinLedBrightness.toFloat()..PeripheralData.SLProMaxLedBrightness.toFloat()) {
                     ledBrightness = it
                     viewModel.setLedBrightness(it)
                 }
             }
-            StepperCell(title = stringResource(R.string.led_timeout_cell_title), value = ledTimeout) {
+            StepperCell(
+                title = stringResource(R.string.led_timeout_cell_title),
+                value = ledTimeout,
+                minValue = PeripheralData.SLProMinLedTimeout,
+                maxValue = PeripheralData.SLProMaxLedTimeout
+                ) {
                 viewModel.setLedTimeout(it)
             }
             ValuePickerCell(stringResource(R.string.animation_mode_cell_title), stringResource(id = animationMode.elementNameStringID)) {
@@ -109,7 +116,11 @@ fun SLProMainScreen(
                     )
                 }
             }
-            SliderCell(title = stringResource(R.string.animation_speed_cell_title), value = animationSpeed, valueRange = 0f..30f) {
+            SliderCell(
+                title = stringResource(R.string.animation_speed_cell_title),
+                value = animationSpeed,
+                valueRange = PeripheralData.SLProMinAnimationSpeed.toFloat()..PeripheralData.SLProMaxAnimationSpeed.toFloat()
+            ) {
                 animationSpeed = it
                 viewModel.setAnimationOnSpeed(it)
             }
@@ -135,16 +146,24 @@ fun SLProSetupScreen(
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        StepperCell(title = stringResource(R.string.steps_count_cell_title), value = stepsCount) {
+        StepperCell(
+            title = stringResource(R.string.steps_count_cell_title),
+            value = stepsCount,
+            minValue = PeripheralData.SLProMinStepsCount,
+            maxValue = PeripheralData.SLProMaxStepsCount
+        ) {
             stepsCount = it
             viewModel.initStepsCount(it)
         }
 
         StepperCell(
             title = stringResource(id = R.string.top_sensor_count_cell_title),
-            value = topSensorCount
+            value = topSensorCount,
+            minValue = PeripheralData.SLProMinSensorCount,
+            maxValue = PeripheralData.SLProMaxSensorCount
         ) {
             topSensorCount = it
             viewModel.initTopSensorCount(it)
@@ -152,7 +171,9 @@ fun SLProSetupScreen(
 
         StepperCell(
             title = stringResource(id = R.string.bot_sensor_count_cell_title),
-            value = botSensorCount
+            value = botSensorCount,
+            minValue = PeripheralData.SLProMinSensorCount,
+            maxValue = PeripheralData.SLProMaxSensorCount
         ) {
             botSensorCount = it
             viewModel.initBotSensorCount(it)
@@ -161,7 +182,7 @@ fun SLProSetupScreen(
         SliderCell(
             title = stringResource(R.string.title_top_sensor_trigger_distance),
             value = topTriggerDistance,
-            valueRange = 1f..200f,
+            valueRange = PeripheralData.SLProMinSensorDistance.toFloat()..PeripheralData.SLProMaxSensorDistance.toFloat(),
             additionalContent = { Text(topTriggerDistance.toInt().toString() + stringResource(R.string.peripheral_sensor_distance_current_distance)) },
             onValueChanged = {
                 topTriggerDistance = it
@@ -172,7 +193,7 @@ fun SLProSetupScreen(
         SliderCell(
             title = stringResource(R.string.title_bot_sensor_trigger_distance),
             value = botTriggerDistance,
-            valueRange = 1f..200f,
+            valueRange = PeripheralData.SLProMinSensorDistance.toFloat()..PeripheralData.SLProMaxSensorDistance.toFloat(),
             additionalContent = { Text(botTriggerDistance.toInt().toString() + stringResource(R.string.peripheral_sensor_distance_current_distance) ) },
             onValueChanged = {
                 botTriggerDistance = it
@@ -193,7 +214,8 @@ fun SLProSetupScreen(
 
         if (!showInitAlert) {
             PeripheralInitAlertDialog(
-                isOpen = showInitAlert) {
+                isOpen = showInitAlert
+            ) {
                 showInitAlert = true
             }
         }
@@ -224,8 +246,6 @@ fun SLProSettingsScreen(
     var botTriggerDistance by remember { mutableStateOf(viewModel.botTriggerDistance.value ?: 20f) }
     var topTriggerLightness by remember { mutableStateOf(viewModel.topTriggerLightness.value ?: 0f) }
     var botTriggerLightness by remember { mutableStateOf(viewModel.botTriggerLightness.value ?: 0f) }
-    val topCurrentDistance by viewModel.topCurrentDistance.observeAsState(0)
-    val botCurrentDistance by viewModel.botCurrentDistance.observeAsState(0)
     val topCurrentLightness by viewModel.topCurrentLightness.observeAsState(0)
     val botCurrentLightness by viewModel.botCurrentLightness.observeAsState(0)
 
@@ -257,7 +277,7 @@ fun SLProSettingsScreen(
                 title = stringResource(id = R.string.controller_type_cell_title),
                 value = controllerType.name,
                 showIcon = false
-            ) { }
+            )
             ValuePickerCell(
                 stringResource(id = R.string.adaptive_brightness_cell_title),
                 stringResource(adaptiveBrightness.elementNameStringID)
@@ -296,50 +316,68 @@ fun SLProSettingsScreen(
                     )
                 }
             }
-            StepperCell(title = stringResource(id = R.string.steps_count_cell_title), value = stepsCount) {
+            StepperCell(
+                title = stringResource(id = R.string.steps_count_cell_title),
+                value = stepsCount,
+                minValue = PeripheralData.SLProMinStepsCount,
+                maxValue = PeripheralData.SLProMaxStepsCount,
+                ) {
                 viewModel.setStepsCount(it)
             }
             StepperCell(
                 title = stringResource(id = R.string.top_sensor_count_cell_title),
-                value = 1,
-                minValue = 1,
-                maxValue = 2
+                value = topSensorCount,
+                minValue = PeripheralData.SLProMinSensorCount,
+                maxValue = PeripheralData.SLProMaxSensorCount
             ) {
                 viewModel.setTopSensorsCount(it)
             }
             StepperCell(
                 title = stringResource(id = R.string.bot_sensor_count_cell_title),
-                value = 1,
-                minValue = 1,
-                maxValue = 2
+                value = botSensorCount,
+                minValue = PeripheralData.SLProMinSensorCount,
+                maxValue = PeripheralData.SLProMaxSensorCount
             ) {
                 viewModel.setBotSensorsCount(it)
             }
-            SwitchCell(title = stringResource(id = R.string.standby_brightness_state_cell_title), value = standbyState) {
+            SwitchCell(
+                title = stringResource(id = R.string.standby_brightness_state_cell_title),
+                value = standbyState
+            ) {
                 viewModel.setStandbyState(it)
             }
             if (adaptiveBrightness == SlProAdaptiveModes.Off) {
                 SliderCell(
                     title = stringResource(id = R.string.standby_brightness_value_cell_title),
                     value = standbyBrightness,
-                    valueRange = 0f..100f
+                    valueRange = PeripheralData.SLProMinLedBrightness.toFloat()..PeripheralData.SLProMaxLedBrightness.toFloat()
                 ) {
                     standbyBrightness = it
                     viewModel.setStandbyBrightness(it)
                 }
             }
-            StepperCell(title = stringResource(id = R.string.standby_brightness_top_steps_count_cell_title), value = standbyTopCount) {
+            StepperCell(
+                title = stringResource(id = R.string.standby_brightness_top_steps_count_cell_title),
+                value = standbyTopCount,
+                minValue = 1,
+                maxValue = PeripheralData.SLProMaxStepsCount / 2
+            ) {
                 viewModel.setStandbyTopCount(it)
             }
-            StepperCell(title = stringResource(id = R.string.standby_brightness_bot_steps_count_cell_title), value = standbyBotCount) {
+            StepperCell(
+                title = stringResource(id = R.string.standby_brightness_bot_steps_count_cell_title),
+                value = standbyBotCount,
+                minValue = 1,
+                maxValue = PeripheralData.SLProMaxStepsCount / 2
+            ) {
                 viewModel.setStandbyBotCount(it)
             }
             SliderCell(
                 title = stringResource(R.string.title_top_sensor_trigger_distance),
                 value = topTriggerDistance,
-                valueRange = 1f..200f,
+                valueRange = PeripheralData.SLProMinSensorDistance.toFloat()..PeripheralData.SLProMaxSensorDistance.toFloat(),
                 additionalContent = {
-                    Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + topTriggerDistance.toInt())
+                    Text(topTriggerDistance.toInt().toString() + stringResource(R.string.peripheral_sensor_distance_current_distance))
                 },
                 onValueChanged = {
                     topTriggerDistance = it
@@ -349,9 +387,9 @@ fun SLProSettingsScreen(
             SliderCell(
                 title = stringResource(R.string.title_bot_sensor_trigger_distance),
                 value = botTriggerDistance,
-                valueRange = 1f..200f,
+                valueRange = PeripheralData.SLProMinSensorDistance.toFloat()..PeripheralData.SLProMaxSensorDistance.toFloat(),
                 additionalContent = {
-                    Text(stringResource(R.string.peripheral_sensor_distance_current_distance) + botTriggerDistance.toInt())
+                    Text(botTriggerDistance.toInt().toString() + stringResource(R.string.peripheral_sensor_distance_current_distance))
                 },
                 onValueChanged = {
                     botTriggerDistance = it
@@ -361,7 +399,10 @@ fun SLProSettingsScreen(
             SliderCell(
                 title = stringResource(id = R.string.top_trigger_lightness_cell_title),
                 value = topTriggerLightness,
-                valueRange = 0f..100f
+                valueRange = PeripheralData.SLProMinSensorLightness.toFloat()..PeripheralData.SLProMaxSensorLightness.toFloat(),
+                additionalContent = {
+                    Text(topTriggerLightness.toInt().toString())
+                },
             ) {
                 topTriggerLightness = it
                 viewModel.setTopSensorTriggerLightness(it)
@@ -369,27 +410,31 @@ fun SLProSettingsScreen(
             SliderCell(
                 title = stringResource(id = R.string.bot_trigger_lightness_cell_title),
                 value = botTriggerLightness,
-                valueRange = 0f..100f
+                valueRange = PeripheralData.SLProMinSensorLightness.toFloat()..PeripheralData.SLProMaxSensorLightness.toFloat(),
+                additionalContent = {
+                    Text(botTriggerLightness.toInt().toString())
+                },
             ) {
                 botTriggerLightness = it
                 viewModel.setBotSensorTriggerLightness(it)
             }
-            ValuePickerCell(
-                title = stringResource(R.string.top_current_distance_cell_title),
-                value = topCurrentDistance.toString()
-            ) { }
-            ValuePickerCell(
-                title = stringResource(R.string.bot_current_distance_cell_title),
-                value = botCurrentDistance.toString()
-            ) { }
+            // Не нужно
+//            ValuePickerCell(
+//                title = stringResource(R.string.top_current_distance_cell_title),
+//                value = topCurrentDistance.toString()
+//            )
+//            ValuePickerCell(
+//                title = stringResource(R.string.bot_current_distance_cell_title),
+//                value = botCurrentDistance.toString()
+//            )
             ValuePickerCell(
                 title = stringResource(id = R.string.top_current_lightness_cell_title),
                 value = topCurrentLightness.toString()
-            ) { }
+            )
             ValuePickerCell(
                 title = stringResource(id = R.string.bot_current_lightness_cell_title),
                 value = botCurrentLightness.toString()
-            ) { }
+            )
             Button(onClick = resetSettings) {
                 Text(stringResource(R.string.reset_button))
             }

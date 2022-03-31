@@ -28,8 +28,6 @@ import com.example.smartlumnew.R
 import com.example.smartlumnew.navigation.HomeGraphDestinations
 import com.example.smartlumnew.ui.theme.themeTransparent
 import com.example.smartlumnew.ui.theme.withAlpha
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -40,21 +38,27 @@ fun TransparentTopBar(
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = themeTransparent(),
+    progressIndicator: Boolean = false,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = 0.dp
 ) {
-    Column() {
-        TopAppBar(
-            title = title,
-            modifier = modifier
-                .blur(radius = 12.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+    TopAppBar(
+        title = title,
+        modifier = modifier
+            .blur(radius = 12.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+        navigationIcon = navigationIcon,
+        actions = actions,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        elevation = elevation
+    )
+    if (progressIndicator) {
+        LinearProgressIndicator(
+            modifier = Modifier.fillMaxWidth()
                 .statusBarsPadding()
-                .navigationBarsPadding(bottom = false),
-            navigationIcon = navigationIcon,
-            actions = actions,
-            backgroundColor = backgroundColor,
-            contentColor = contentColor,
-            elevation = elevation
+                .navigationBarsPadding()
         )
     }
 }

@@ -153,6 +153,7 @@ fun PeripheralReadyScreen(
         PeripheralProfileEnum.FL_CLASSIC  -> FLClassic(modifier, viewModel as FLClassicViewModel)
         PeripheralProfileEnum.FL_MINI     -> FLClassic(modifier, viewModel as FLClassicViewModel)
         PeripheralProfileEnum.SL_BASE     -> SLBaseMainScreen(viewModel as SLBaseViewModel)
+        PeripheralProfileEnum.SL_STANDART -> SLStandartMainScreen(viewModel as SLProStandartViewModel)
         PeripheralProfileEnum.SL_PRO      -> SLProMainScreen(viewModel as SLProStandartViewModel)
         PeripheralProfileEnum.UNKNOWN     -> {
             Log.e("TAG", "PeripheralReadyScreen: UNKNOWN DEVICE" )
@@ -282,6 +283,29 @@ fun PeripheralErrorDialog(
                     Spacer(Modifier.height(4.dp))
                     Text(stringResource(error.description))
                 }
+            },
+            confirmButton = {
+                Button(dismiss) {
+                    Text(stringResource(R.string.alert_dialog_peripheral_error_dismiss_button))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun PeripheralInitAlertDialog(
+    isOpen: Boolean,
+    dismiss: () -> Unit
+) {
+    if (isOpen) {
+        AlertDialog(
+            onDismissRequest = dismiss,
+            title = {
+                Text(
+                    text = "Please specify all the fields",
+                    fontWeight = FontWeight.SemiBold
+                )
             },
             confirmButton = {
                 Button(dismiss) {

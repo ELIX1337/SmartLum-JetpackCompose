@@ -28,8 +28,6 @@ import com.example.smartlumnew.models.bluetooth.DiscoveredPeripheral
 import com.example.smartlumnew.models.data.PeripheralProfileEnum
 import com.example.smartlumnew.ui.theme.appBarHeight
 import com.example.smartlumnew.ui.theme.contrastTransparent
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 /**
  * Список с устройствами Bluetooth
@@ -48,13 +46,19 @@ fun PeripheralsList(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             // Вспоминаем, что я писал про topBar и добавляем отступы
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.systemBars,
-                applyTop = true,
-                applyBottom = true,
-                additionalTop = appBarHeight + 12.dp,
-                additionalBottom = 6.dp
-            )
+            contentPadding = WindowInsets(
+                0.dp,
+                appBarHeight + 26.dp,
+                0.dp,
+                appBarHeight)
+                .asPaddingValues()
+//            contentPadding = rememberInsetsPaddingValues(
+//                insets = LocalWindowInsets.current.systemBars,
+//                applyTop = true,
+//                applyBottom = true,
+//                additionalTop = appBarHeight + 12.dp,
+//                additionalBottom = 6.dp
+//            )
         ) {
             items(peripherals, key = { result -> result.hashCode() }) { peripheral ->
                 if (peripheral != null) {

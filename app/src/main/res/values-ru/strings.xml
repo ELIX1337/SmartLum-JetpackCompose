@@ -118,14 +118,14 @@
     <string name="steps_count_cell_title">Количество ступеней</string>
     <string name="top_sensor_count_cell_title">Количество верхних датчиков</string>
     <string name="bot_sensor_count_cell_title">Количество нижних датчиков</string>
-    <string name="standby_brightness_state_cell_title">Дежурное подсветка</string>
-    <string name="standby_brightness_value_cell_title">Яркость</string>
+    <string name="standby_brightness_state_cell_title">Дежурная подсветка</string>
+    <string name="standby_brightness_value_cell_title">Яркость дежурной подсветки</string>
     <string name="top_trigger_lightness_cell_title">Порог освещенности верхних датчиков</string>
     <string name="bot_trigger_lightness_cell_title">Порог освещенности нижних датчиков</string>
     <string name="top_current_lightness_cell_title">Текущая освещенность наверху</string>
     <string name="bot_current_lightness_cell_title">Текущая освещенность внизу</string>
-    <string name="standby_brightness_top_steps_count_cell_title">Количество ступеней сверху</string>
-    <string name="standby_brightness_bot_steps_count_cell_title">Количество ступеней сверху</string>
+    <string name="standby_brightness_top_steps_count_cell_title">Количество ступеней дежурной подсветки сверху</string>
+    <string name="standby_brightness_bot_steps_count_cell_title">Количество ступеней дежурной подсветки снизу</string>
     <string name="top_current_distance_cell_title">Текущая дистанция на верхнем датчике</string>
     <string name="bot_current_distance_cell_title">Текущая дистанция на нижнем датчике</string>
 </resources>
