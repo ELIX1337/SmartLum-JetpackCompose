@@ -61,6 +61,7 @@ fun SLStandartMainScreen(
                 .padding(8.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Если контроллер многоцветный, то показываем соответсвующий UI
             if (viewModel.controllerType.observeAsState().value != SlProStandartControllerType.Default) {
                 ColorCell(title = stringResource(R.string.color_cell_title), color = primaryColor) {
                     sheetContent = {
@@ -141,6 +142,8 @@ fun SLStandartSetupScreen(
 ) {
     var topTriggerDistance by remember { mutableStateOf(viewModel.topTriggerDistance.value ?: 0f) }
     var botTriggerDistance by remember { mutableStateOf(viewModel.botTriggerDistance.value ?: 0f) }
+    val topCurrentDistance by remember { mutableStateOf(viewModel.topCurrentDistance.value ?: 0) }
+    val botCurrentDistance by remember { mutableStateOf(viewModel.botCurrentDistance.value ?: 0) }
     var stepsCount by remember { mutableStateOf(viewModel.stepsCount.value ?: 0) }
     var showInitAlert by remember { mutableStateOf(false) }
 
@@ -180,6 +183,15 @@ fun SLStandartSetupScreen(
             }
         )
 
+        ValuePickerCell(
+            title = stringResource(id = R.string.top_current_distance_cell_title) + "(cm)",
+            value = topCurrentDistance.toString()
+        ) { }
+        ValuePickerCell(
+            title = stringResource(id = R.string.bot_current_distance_cell_title) + "(cm)",
+            value = botCurrentDistance.toString()
+        ) { }
+
         Button(
             onClick = {
                 showInitAlert = viewModel.commit()
@@ -211,6 +223,8 @@ fun SLStandartSettingsScreen(
     viewModel: SLProStandartViewModel,
     resetSettings: () -> Unit,
 ) {
+    val firmwareVersion by viewModel.firmwareVersion.observeAsState(0)
+    val serialNumber by viewModel.serialNumber.observeAsState( "0")
     val adaptiveBrightness by viewModel.adaptiveBrightness.observeAsState(SlProAdaptiveModes.Off)
     val stairsWorkMode by viewModel.stairsWorkMode.observeAsState(SlProStairsWorkModes.BySensors)
     val stepsCount by viewModel.stepsCount.observeAsState(24)
@@ -220,6 +234,8 @@ fun SLStandartSettingsScreen(
     val standbyBotCount by viewModel.standbyBotCount.observeAsState(1)
     var topTriggerDistance by remember { mutableStateOf(viewModel.topTriggerDistance.value ?: 20f) }
     var botTriggerDistance by remember { mutableStateOf(viewModel.botTriggerDistance.value ?: 20f) }
+    val topCurrentDistance by viewModel.topCurrentDistance.observeAsState(0)
+    val botCurrentDistance by viewModel.botCurrentDistance.observeAsState(0)
     var topTriggerLightness by remember { mutableStateOf(viewModel.topTriggerLightness.value ?: 0f) }
     var botTriggerLightness by remember { mutableStateOf(viewModel.botTriggerLightness.value ?: 0f) }
     val topCurrentLightness by viewModel.topCurrentLightness.observeAsState(0)
@@ -248,7 +264,19 @@ fun SLStandartSettingsScreen(
         ) {
             Spacer(modifier = Modifier
                 .statusBarsPadding()
-                .navigationBarsPadding())
+                .navigationBarsPadding()
+            )
+
+            ValuePickerCell(
+                title = stringResource(id = R.string.peripheral_settings_text_firmware_version),
+                value = firmwareVersion.toString()
+            ) { }
+
+            ValuePickerCell(
+                title = stringResource(id = R.string.peripheral_settings_text_serial_number),
+                value = serialNumber
+            ) { }
+
             ValuePickerCell(
                 stringResource(id = R.string.adaptive_brightness_cell_title),
                 stringResource(adaptiveBrightness.elementNameStringID)
@@ -370,12 +398,20 @@ fun SLStandartSettingsScreen(
                     viewModel.setBotSensorTriggerDistance(it)
                 }
             )
+            ValuePickerCell(
+                title = stringResource(id = R.string.top_current_distance_cell_title),
+                value = "$topCurrentDistance cm"
+            ) { }
+            ValuePickerCell(
+                title = stringResource(id = R.string.bot_current_distance_cell_title),
+                value = "$botCurrentDistance cm"
+            ) { }
             SliderCell(
                 title = stringResource(id = R.string.top_trigger_lightness_cell_title),
                 value = topTriggerLightness,
                 valueRange = PeripheralData.SLStandartMinSensorLightness.toFloat()..PeripheralData.SLStandartMaxSensorLightness.toFloat(),
                 additionalContent = {
-                    Text(topTriggerLightness.toInt().toString())
+                    Text(topTriggerLightness.toInt().toString() + " %")
                 },
             ) {
                 topTriggerLightness = it
@@ -386,7 +422,7 @@ fun SLStandartSettingsScreen(
                 value = botTriggerLightness,
                 valueRange = PeripheralData.SLStandartMinSensorLightness.toFloat()..PeripheralData.SLStandartMaxSensorLightness.toFloat(),
                 additionalContent = {
-                    Text(botTriggerLightness.toInt().toString())
+                    Text(botTriggerLightness.toInt().toString() + " %")
                 },
             ) {
                 botTriggerLightness = it
@@ -394,11 +430,11 @@ fun SLStandartSettingsScreen(
             }
             ValuePickerCell(
                 title = stringResource(id = R.string.top_current_lightness_cell_title),
-                value = topCurrentLightness.toString()
+                value = "$topCurrentLightness %"
             ) { }
             ValuePickerCell(
                 title = stringResource(id = R.string.bot_current_lightness_cell_title),
-                value = botCurrentLightness.toString()
+                value = "$botCurrentLightness %"
             ) { }
             Button(onClick = resetSettings) {
                 Text(stringResource(R.string.reset_button))

@@ -46,6 +46,8 @@ class SLProStandartViewModel(context: Application) : PeripheralViewModel(SLProSt
     val standbyBotCount: LiveData<Int>     = proStandartManager.standbyBotCount
     val topTriggerDistance: LiveData<Float>  = proStandartManager.topTriggerDistance
     val botTriggerDistance: LiveData<Float>  = proStandartManager.botTriggerDistance
+    val topCurrentDistance: LiveData<Int>  = proStandartManager.topCurrentDistance
+    val botCurrentDistance: LiveData<Int>  = proStandartManager.botCurrentDistance
     val topTriggerLightness: LiveData<Float> = proStandartManager.topTriggerLightness
     val botTriggerLightness: LiveData<Float> = proStandartManager.botTriggerLightness
     val topCurrentLightness: LiveData<Int>   = proStandartManager.topCurrentLightness

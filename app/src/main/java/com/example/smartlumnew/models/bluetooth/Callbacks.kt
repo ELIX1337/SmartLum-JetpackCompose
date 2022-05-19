@@ -2,6 +2,8 @@ package com.example.smartlumnew.models.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.graphics.Color
+import android.util.Log
+import androidx.compose.ui.res.stringArrayResource
 import com.example.smartlumnew.models.data.parseDoubleByteData
 import no.nordicsemi.android.ble.callback.profile.ProfileDataCallback
 import no.nordicsemi.android.ble.data.Data
@@ -20,8 +22,27 @@ interface BooleanCallback {
     fun onBooleanReceived(device: BluetoothDevice, state: Boolean)
 }
 
+interface StringCallback {
+    fun onStringReceived(device: BluetoothDevice, string: String)
+}
+
 interface RGBCallback {
     fun onRGBReceived(device: BluetoothDevice, color: Int)
+}
+
+abstract class StringDataCallback : ProfileDataCallback, StringCallback {
+
+    override fun onDataReceived(device: BluetoothDevice, data: Data) {
+        var string = ""
+        for (element in 0 until data.size()) {
+            string += data.getByte(element)
+        }
+        data.value?.let {
+            onStringReceived(device, string)
+            return
+        }
+        onInvalidDataReceived(device, data)
+    }
 }
 
 abstract class SingleByteDataCallback : ProfileDataCallback, IntegerCallback {

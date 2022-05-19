@@ -37,7 +37,7 @@
     <string name="peripheral_name_sl_base">SL-Base</string>
     <string name="settings_instagram_link_button">Instagram</string>
     <string name="peripheral_list_text_no_devices_found">" Нет найденных устройств"</string>
-    <string name="peripheral_settings_text_firmware_version">"Версия ПО - "</string>
+    <string name="peripheral_settings_text_firmware_version">"Версия ПО"</string>
     <string name="peripheral_settings_screen_title">Настройки устройства</string>
     <string name="alert_dialog_reset_title">Сброс до заводских настроек</string>
     <string name="alert_dialog_reset_text">Это действие сбросит настройки устройства до заводских</string>
@@ -128,4 +128,6 @@
     <string name="standby_brightness_bot_steps_count_cell_title">Количество ступеней дежурной подсветки снизу</string>
     <string name="top_current_distance_cell_title">Текущая дистанция на верхнем датчике</string>
     <string name="bot_current_distance_cell_title">Текущая дистанция на нижнем датчике</string>
+    <string name="peripheral_name_sl_standart">SL-Standart</string>
+    <string name="peripheral_settings_text_serial_number">Серийный номер</string>
 </resources>

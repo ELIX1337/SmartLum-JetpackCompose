@@ -113,15 +113,19 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
             readCharacteristic(botTriggerDistanceCharacteristic).with(botSensorTriggerDistanceCallback).enqueue()
             readCharacteristic(topTriggerLightnessCharacteristic).with(topSensorTriggerLightnessCallback).enqueue()
             readCharacteristic(botTriggerLightnessCharacteristic).with(botSensorTriggerLightnessCallback).enqueue()
+
             setNotificationCallback(topCurrentDistanceCharacteristic).with(topSensorCurrentDistanceCallback)
             readCharacteristic(topCurrentDistanceCharacteristic).with(topSensorCurrentDistanceCallback).enqueue()
             enableNotifications(topCurrentDistanceCharacteristic).enqueue()
+
             setNotificationCallback(botCurrentDistanceCharacteristic).with(botSensorCurrentDistanceCallback)
             readCharacteristic(botCurrentDistanceCharacteristic).with(botSensorCurrentDistanceCallback).enqueue()
             enableNotifications(botCurrentDistanceCharacteristic).enqueue()
+
             setNotificationCallback(topCurrentLightnessCharacteristic).with(topSensorCurrentLightnessCallback)
             readCharacteristic(topCurrentLightnessCharacteristic).with(topSensorCurrentLightnessCallback).enqueue()
             enableNotifications(topCurrentLightnessCharacteristic).enqueue()
+
             setNotificationCallback(botCurrentLightnessCharacteristic).with(botSensorCurrentLightnessCallback)
             readCharacteristic(botCurrentLightnessCharacteristic).with(botSensorCurrentLightnessCallback).enqueue()
             enableNotifications(botCurrentLightnessCharacteristic).enqueue()
@@ -130,25 +134,31 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
 
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
             super.isRequiredServiceSupported(gatt)
-            val deviceInfoServie = gatt.getService(DEVICE_INFO_SERVICE_UUID)
+
+            val deviceInfoService = gatt.getService(DEVICE_INFO_SERVICE_UUID)
             val eventService      = gatt.getService(EVENT_SERVICE_UUID)
-            val colorService     = gatt.getService(COLOR_SERVICE_UUID)
-            val ledService       = gatt.getService(LED_SERVICE_UUID)
-            val animationService = gatt.getService(ANIMATION_SERVICE_UUID)
-            val sensorService    = gatt.getService(SENSOR_SERVICE_UUID)
-            val stairsService    = gatt.getService(STAIRS_SERVICE_UUID)
-            deviceInfoServie?.let { initDeviceInfoCharacteristics(it) }
-            eventService?.let     { initEventCharacteristics(it) }
-            colorService?.let     { initColorCharacteristics(it) }
-            ledService?.let       { initLedCharacteristics(it) }
-            animationService?.let { initAnimationCharacteristics(it) }
-            sensorService?.let    { initSensorCharacteristics(it) }
-            stairsService?.let    { initStairsCharacteristics(it) }
-            return colorService != null &&
+            val colorService      = gatt.getService(COLOR_SERVICE_UUID)
+            val ledService        = gatt.getService(LED_SERVICE_UUID)
+            val animationService  = gatt.getService(ANIMATION_SERVICE_UUID)
+            val sensorService     = gatt.getService(SENSOR_SERVICE_UUID)
+            val stairsService     = gatt.getService(STAIRS_SERVICE_UUID)
+
+            deviceInfoService?.let { initDeviceInfoCharacteristics(it) }
+            eventService?.let      { initEventCharacteristics(it) }
+            colorService?.let      { initColorCharacteristics(it) }
+            ledService?.let        { initLedCharacteristics(it) }
+            animationService?.let  { initAnimationCharacteristics(it) }
+            sensorService?.let     { initSensorCharacteristics(it) }
+            stairsService?.let     { initStairsCharacteristics(it) }
+
+            val isSupported = colorService != null &&
                     ledService != null &&
                     animationService != null &&
                     sensorService != null &&
                     stairsService != null
+            Log.e("TAG", "isRequiredServiceSupported: SLProStandartManager - $isSupported")
+
+            return isSupported
         }
 
         override fun onServicesInvalidated() {
@@ -183,6 +193,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
     // Переопределяем так как на этих устройствах используются 16-битные UUID
     override fun initDeviceInfoCharacteristics(service: BluetoothGattService) {
         firmwareVersionCharacteristic = service.getCharacteristic(DEVICE_FIRMWARE_VERSION_CHARACTERISTIC_UUID)
+        serialNumberCharacteristic    = service.getCharacteristic(DEVICE_SERIAL_NUMBER_CHARACTERISTIC_UUID)
         resetToFactoryCharacteristic  = service.getCharacteristic(RESET_TO_FACTORY_CHARACTERISTIC_UUID)
         dfuCharacteristic             = service.getCharacteristic(DEVICE_DFU_CHARACTERISTIC_UUID)
         deviceInitStateCharacteristic = service.getCharacteristic(DEVICE_INIT_STATE_CHARACTERISTIC_UUID)
@@ -351,7 +362,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         }
     }
 
-    private val topSensorCurrentDistanceCallback: DoubleByteDataCallback = object : DoubleByteDataCallback() {
+    private val topSensorCurrentDistanceCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             topCurrentDistance.postValue(data)
             Log.e("TAG", "onIntegerValueReceived: top current distance - $data" )
@@ -363,7 +374,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         }
     }
 
-    private val botSensorCurrentDistanceCallback: DoubleByteDataCallback = object : DoubleByteDataCallback() {
+    private val botSensorCurrentDistanceCallback: SingleByteDataCallback = object : SingleByteDataCallback() {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             botCurrentDistance.postValue(data)
             Log.e("TAG", "SlProManager: bot current distance- $data" )
@@ -668,7 +679,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         topTriggerDistanceCharacteristic?.let {
             writeCharacteristic(
                 it,
-                createDoubleByteData(distance.toInt()),
+                Data.opCode(distance.toInt().toByte()),
                 WRITE_TYPE_NO_RESPONSE
             ).enqueue()
             Log.e("TAG", "writeTopSensorTriggerDistance: ${createDoubleByteData(distance.toInt()).joinToString()}" )
@@ -680,7 +691,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         botTriggerDistanceCharacteristic?.let {
             writeCharacteristic(
                 it,
-                createDoubleByteData(distance.toInt()),
+                Data.opCode(distance.toInt().toByte()),
                 WRITE_TYPE_NO_RESPONSE
             ).enqueue()
             Log.e("TAG", "writeBotSensorTriggerDistance: ${createDoubleByteData(distance.toInt()).joinToString()}" )
@@ -692,7 +703,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         topTriggerLightnessCharacteristic?.let {
             writeCharacteristic(
                 it,
-                createDoubleByteData(lightness.toInt()),
+                Data.opCode(lightness.toInt().toByte()),
                 WRITE_TYPE_NO_RESPONSE
             ).enqueue()
             Log.e("TAG", "writeTopSensorTriggerLightness: ${createDoubleByteData(lightness.toInt()).joinToString()}" )
@@ -704,7 +715,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
         botTriggerLightnessCharacteristic?.let {
             writeCharacteristic(
                 it,
-                createDoubleByteData(lightness.toInt()),
+                Data.opCode(lightness.toInt().toByte()),
                 WRITE_TYPE_NO_RESPONSE
             ).enqueue()
             Log.e("TAG", "writeBotSensorTriggerLightness: ${createDoubleByteData(lightness.toInt()).joinToString()}" )

@@ -1,6 +1,8 @@
 package com.example.smartlumnew.ui.home
 
 import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -43,15 +45,29 @@ fun Scanner(
     onPeripheralSelected: (DiscoveredPeripheral) -> Unit,
 ) {
     val context = LocalContext.current
+
     val isScanning by scannerViewModel.isScanning.observeAsState(false)
+
     // Потянув список вниз, сделается рефреш, но иногда, по непонятной мне причине, зависает и вообще хз
     val isRefreshing by scannerViewModel.isRefreshing.observeAsState(false)
+
     val isBluetoothEnabled by scannerViewModel.isBluetoothEnabled.observeAsState(Utils.isBleEnabled(context))
+
     // Чтобы Bluetooth работал, нужно включить геолокацию
     val isLocationEnabled by scannerViewModel.isLocationEnabled.observeAsState(Utils.isLocationEnabled(context))
+
     val isLocationPermissionGranted by scannerViewModel.isLocationGranted.observeAsState(Utils.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION))
+    
     //  Экспериментальный API для получени разрешений (намного удобнее стандартных)
-    val requiredPermissions = rememberMultiplePermissionsState(listOf(Manifest.permission.ACCESS_FINE_LOCATION))
+    val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        rememberMultiplePermissionsState(listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT))
+    } else {
+        rememberMultiplePermissionsState(listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION))
+    }
     val scanResult by scannerViewModel.scanResult.observeAsState()
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = rememberBottomSheetState(

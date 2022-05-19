@@ -74,7 +74,7 @@ fun createDoubleByteData(data: Int): ByteArray {
 
 // SL-STANDART DATA
 val PeripheralData.SLStandartMaxStepsCount: Int
-    get() = 18
+    get() = 27
 
 val PeripheralData.SLStandartMinStepsCount: Int
     get() = 2
@@ -117,16 +117,16 @@ val PeripheralData.SLStandartMaxLedBrightness: Int
 
 // SL-PRO DATA
 val PeripheralData.SLProMaxStepsCount: Int
-    get() = 24
+    get() = 27
 
 val PeripheralData.SLProMinStepsCount: Int
     get() = 2
 
 val PeripheralData.SLProMaxSensorCount: Int
-    get() = 1
+    get() = 2
 
 val PeripheralData.SLProMinSensorCount: Int
-    get() = 2
+    get() = 1
 
 val PeripheralData.SLProMinAnimationSpeed: Int
     get() = 1

@@ -46,6 +46,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
 
     // Дефолтные характеристики, которые есть на во всех устройствах (почти)
     var firmwareVersionCharacteristic: BluetoothGattCharacteristic? = null
+    var serialNumberCharacteristic:    BluetoothGattCharacteristic? = null
     var resetToFactoryCharacteristic:  BluetoothGattCharacteristic? = null
     var dfuCharacteristic:             BluetoothGattCharacteristic? = null
     var deviceInitStateCharacteristic: BluetoothGattCharacteristic? = null
@@ -57,6 +58,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
     val disconnectReason = MutableLiveData<Int>()
     val isConnected     = MutableLiveData<Boolean>()
     val firmwareVersion = MutableLiveData<Int>()
+    val serialNumber    = MutableLiveData<String>()
     val isInitialized   = MutableLiveData<Boolean>()
     val error           = MutableLiveData<PeripheralError>()
     val demoMode        = MutableLiveData<Boolean>()
@@ -133,6 +135,9 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
             readCharacteristic(firmwareVersionCharacteristic)
                 .with(firmwareVersionCallback)
                 .enqueue()
+            readCharacteristic(serialNumberCharacteristic)
+                .with(serialNumberCallback)
+                .enqueue()
             setNotificationCallback(deviceInitStateCharacteristic)
                 .with(deviceInitStateCallBack)
             readCharacteristic(deviceInitStateCharacteristic)
@@ -185,6 +190,7 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
 
     open fun initDeviceInfoCharacteristics(service: BluetoothGattService) {
         firmwareVersionCharacteristic = service.getCharacteristic(LEGACY_DEVICE_FIRMWARE_VERSION_CHARACTERISTIC_UUID)
+        serialNumberCharacteristic    = service.getCharacteristic(LEGACY_DEVICE_SERIAL_NUMBER_CHARACTERISTIC_UUID)
         resetToFactoryCharacteristic  = service.getCharacteristic(LEGACY_RESET_TO_FACTORY_CHARACTERISTIC_UUID)
         dfuCharacteristic             = service.getCharacteristic(LEGACY_DEVICE_DFU_CHARACTERISTIC_UUID)
         deviceInitStateCharacteristic = service.getCharacteristic(LEGACY_DEVICE_INIT_STATE_CHARACTERISTIC_UUID)
@@ -238,6 +244,17 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         override fun onIntegerValueReceived(device: BluetoothDevice, data: Int) {
             Log.e("TAG", "onFirmwareVersionReceived base manager: $data")
             firmwareVersion.postValue(data)
+        }
+    }
+
+    private val serialNumberCallback: StringDataCallback = object : StringDataCallback() {
+        override fun onStringReceived(device: BluetoothDevice, string: String) {
+            Log.e("TAG", "onSerialNumberReceiver base manager: $string")
+            serialNumber.postValue(string)
+        }
+
+        override fun onInvalidDataReceived(device: BluetoothDevice, data: Data) {
+            Log.e("TAG", "onInvalidDataReceived: Serial number" )
         }
     }
 

@@ -64,6 +64,7 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     var peripheralType: PeripheralProfileEnum? = PeripheralProfileEnum.UNKNOWN
 
     val firmwareVersion:  LiveData<Int>             = manager.firmwareVersion
+    val serialNumber:     LiveData<String>             = manager.serialNumber
     val isInitialized:    LiveData<Boolean>         = manager.isInitialized
     val isConnected:      LiveData<Boolean>         = manager.isConnected
     val connectionState:  LiveData<ConnectionState> = manager.peripheralConnectionState
