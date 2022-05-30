@@ -92,24 +92,25 @@ enum class SlProAdaptiveModes(val supportingSettings: List<SlProAdaptiveSettings
  */
 enum class SlProAnimations(val supportingSettings: List<AnimationSettings>):
     PeripheralDataElement {
-    Tetris(
-        listOf(
-            AnimationSettings.PrimaryColor,
-            AnimationSettings.SecondaryColor,
-            AnimationSettings.RandomColor,
-            AnimationSettings.Direction,
-            AnimationSettings.Speed)
-    ) {
-        override val code: Int
-            get() = 1
-        override val elementNameStringID: Int
-            get() = R.string.peripheral_animation_mode_name_tetris
-    },
+//    Tetris(
+//        listOf(
+//            AnimationSettings.PrimaryColor,
+//            AnimationSettings.SecondaryColor,
+//            AnimationSettings.RandomColor,
+//            AnimationSettings.Direction,
+//            AnimationSettings.Speed)
+//    ) {
+//        override val code: Int
+//            get() = 1
+//        override val elementNameStringID: Int
+//            get() = R.string.peripheral_animation_mode_name_tetris
+//    },
 
     Wave(
         listOf(
             AnimationSettings.PrimaryColor,
             AnimationSettings.SecondaryColor,
+            AnimationSettings.RandomColor,
             AnimationSettings.Direction,
             AnimationSettings.Speed,
             AnimationSettings.Step)
@@ -117,7 +118,22 @@ enum class SlProAnimations(val supportingSettings: List<AnimationSettings>):
         override val code: Int
             get() = 2
         override val elementNameStringID: Int
-            get() = R.string.peripheral_animation_mode_name_wave
+            get() = R.string.peripheral_animation_mode_name_smooth
+    },
+
+    Sharp(
+    listOf(
+    AnimationSettings.PrimaryColor,
+    AnimationSettings.SecondaryColor,
+    AnimationSettings.RandomColor,
+    AnimationSettings.Direction,
+    AnimationSettings.Speed,
+    AnimationSettings.Step)
+    ) {
+        override val code: Int
+        get() = 3
+        override val elementNameStringID: Int
+        get() = R.string.peripheral_animation_mode_name_sharp
     };
 
     companion object {

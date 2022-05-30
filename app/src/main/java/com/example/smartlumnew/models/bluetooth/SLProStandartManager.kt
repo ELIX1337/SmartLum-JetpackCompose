@@ -158,7 +158,7 @@ class SLProStandartManager(context: Context) : PeripheralManager(context) {
                     stairsService != null
             Log.e("TAG", "isRequiredServiceSupported: SLProStandartManager - $isSupported")
 
-            return isSupported
+            return true
         }
 
         override fun onServicesInvalidated() {

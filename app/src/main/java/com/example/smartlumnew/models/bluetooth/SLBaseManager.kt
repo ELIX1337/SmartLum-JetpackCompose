@@ -63,11 +63,16 @@ class SLBaseManager(context: Context) : PeripheralManager(context) {
             val ledService       = gatt.getService(LEGACY_LED_SERVICE_UUID)
             val animationService = gatt.getService(LEGACY_ANIMATION_SERVICE_UUID)
             val sensorService    = gatt.getService(LEGACY_SENSOR_SERVICE_UUID)
+
             ledService?.let       { initLedCharacteristics(it) }
             animationService?.let { initAnimationCharacteristics(it) }
             sensorService?.let    { initSensorCharacteristics(it) }
-            Log.e("TAG", "isRequiredServiceSupported: ${ledService != null }" )
-            return ledService != null && animationService != null && sensorService != null
+
+            val isSupported = ledService != null && animationService != null && sensorService != null
+
+            Log.e("TAG", "isRequiredServiceSupported: $isSupported" )
+
+            return true
         }
 
         override fun onServicesInvalidated() {

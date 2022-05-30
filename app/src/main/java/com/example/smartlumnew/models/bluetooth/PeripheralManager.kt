@@ -157,10 +157,13 @@ open class PeripheralManager(context: Context) : ObservableBleManager(context) {
         override fun isRequiredServiceSupported(gatt: BluetoothGatt): Boolean {
             val deviceInfoService = gatt.getService(LEGACY_DEVICE_INFO_SERVICE_UUID)
             val eventService      = gatt.getService(LEGACY_EVENT_SERVICE_UUID)
+
             deviceInfoService?.let { initDeviceInfoCharacteristics(it) }
             eventService?.let      { initEventCharacteristics(it) }
-            supported = deviceInfoService != null
-            return supported
+
+            supported = deviceInfoService != null && eventService != null
+
+            return true
         }
 
         override fun onDeviceReady() {

@@ -130,4 +130,9 @@
     <string name="bot_current_distance_cell_title">Текущая дистанция на нижнем датчике</string>
     <string name="peripheral_name_sl_standart">SL-Standart</string>
     <string name="peripheral_settings_text_serial_number">Серийный номер</string>
+    <string name="peripheral_animation_mode_name_smooth">Плавно</string>
+    <string name="peripheral_animation_mode_name_sharp">Резко</string>
+    <string name="peripheral_adaptive_brightness_cell_footer">При включении адаптивного режима, настройка яркости вручную недоступна.</string>
+    <string name="peripheral_trigger_lightness_cell_footer">Значение (%) при котором устройство перейдет в ночной режим работы. Выставьте 0% чтобы отключить ночной режим</string>
+    <string name="button_advanced_settings">Расширенные настройки</string>
 </resources>

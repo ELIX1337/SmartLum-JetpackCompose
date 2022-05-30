@@ -21,7 +21,7 @@ import com.example.smartlumnew.models.data.PeripheralError
  * (Полагаю теряется destinationPeripheral в AppNavigation, но это не точно)
  */
 class PeripheralViewModelFactory(private val context: Application, private val type: PeripheralProfileEnum?) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         when (type) {
             PeripheralProfileEnum.SL_BASE -> {
                 if (modelClass.isAssignableFrom(SLBaseViewModel::class.java)) {
@@ -64,7 +64,7 @@ open class PeripheralViewModel(manager: PeripheralManager) : ViewModel() {
     var peripheralType: PeripheralProfileEnum? = PeripheralProfileEnum.UNKNOWN
 
     val firmwareVersion:  LiveData<Int>             = manager.firmwareVersion
-    val serialNumber:     LiveData<String>             = manager.serialNumber
+    val serialNumber:     LiveData<String>          = manager.serialNumber
     val isInitialized:    LiveData<Boolean>         = manager.isInitialized
     val isConnected:      LiveData<Boolean>         = manager.isConnected
     val connectionState:  LiveData<ConnectionState> = manager.peripheralConnectionState

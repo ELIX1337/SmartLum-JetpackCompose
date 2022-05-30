@@ -36,7 +36,7 @@ fun SLProMainScreen(
     val ledState by viewModel.ledState.observeAsState(false)
     var ledBrightness by remember { mutableStateOf(viewModel.ledBrightness.value ?: 0f) }
     val ledTimeout by viewModel.ledTimeout.observeAsState(0)
-    val animationMode by viewModel.animationMode.observeAsState(SlProAnimations.Tetris)
+    val animationMode by viewModel.animationMode.observeAsState(SlProAnimations.Sharp)
     var animationSpeed by remember { mutableStateOf(viewModel.animationOnSpeed.value ?: 0f) }
 
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)

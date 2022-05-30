@@ -9,12 +9,13 @@ import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimations
 import com.example.smartlumnew.models.data.peripheralData.FlClassicAnimationDirections
 
 class TorchereViewModelFactory(private val context: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FLClassicViewModel::class.java)) {
             return FLClassicViewModel(context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+
 }
 
 class FLClassicViewModel(context: Application) : PeripheralViewModel(FLClassicManager(context)) {

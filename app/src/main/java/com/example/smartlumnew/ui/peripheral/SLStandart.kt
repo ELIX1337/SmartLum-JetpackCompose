@@ -12,6 +12,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.smartlumnew.R
 import com.example.smartlumnew.models.data.*
@@ -29,20 +30,18 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SLStandartMainScreen(
-    viewModel: SLProStandartViewModel
+    viewModel: SLProStandartViewModel,
+    openSettings: ()-> Unit
 ) {
     val primaryColor by viewModel.primaryColor.observeAsState(Color.WHITE)
     val randomColor by viewModel.randomColor.observeAsState(false)
     val ledState by viewModel.ledState.observeAsState(false)
     var ledBrightness by remember { mutableStateOf(viewModel.ledBrightness.value ?: 0f) }
-    val ledTimeout by viewModel.ledTimeout.observeAsState(0)
-    val controllerType by viewModel.controllerType.observeAsState(SlProStandartControllerType.Default)
-    val animationMode by viewModel.animationMode.observeAsState(SlProAnimations.Tetris)
+    val animationMode by viewModel.animationMode.observeAsState(SlProAnimations.Sharp)
     var animationSpeed by remember { mutableStateOf(viewModel.animationOnSpeed.value ?: 0f) }
-
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
-    val content: @Composable (() -> Unit) = { Text("NULL") }
+    val content: @Composable (() -> Unit) = { Text(" ") }
     var sheetContent   by remember { mutableStateOf(content) }
     val sheetAnim: AnimationSpec<Float> = tween(200)
 
@@ -59,7 +58,8 @@ fun SLStandartMainScreen(
             modifier = Modifier
                 //.verticalScroll(rememberScrollState())
                 .padding(8.dp, 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Если контроллер многоцветный, то показываем соответсвующий UI
             if (viewModel.controllerType.observeAsState().value != SlProStandartControllerType.Default) {
@@ -95,14 +95,6 @@ fun SLStandartMainScreen(
                     viewModel.setLedBrightness(it)
                 }
             }
-            StepperCell(
-                title = stringResource(R.string.led_timeout_cell_title),
-                value = ledTimeout,
-                minValue = PeripheralData.SLStandartMinLedTimeout,
-                maxValue = PeripheralData.SLStandartMaxLedTimeout
-            ) {
-                viewModel.setLedTimeout(it)
-            }
             ValuePickerCell(stringResource(R.string.animation_mode_cell_title), stringResource(id = animationMode.elementNameStringID)) {
                 sheetContent = {
                     ValuePicker(
@@ -127,6 +119,12 @@ fun SLStandartMainScreen(
             {
                 animationSpeed = it
                 viewModel.setAnimationOnSpeed(it)
+            }
+
+            Button(
+                onClick = openSettings,
+            ) {
+                Text(stringResource(R.string.button_advanced_settings))
             }
         }
     }
@@ -227,6 +225,7 @@ fun SLStandartSettingsScreen(
     val serialNumber by viewModel.serialNumber.observeAsState( "0")
     val adaptiveBrightness by viewModel.adaptiveBrightness.observeAsState(SlProAdaptiveModes.Off)
     val stairsWorkMode by viewModel.stairsWorkMode.observeAsState(SlProStairsWorkModes.BySensors)
+    val ledTimeout by viewModel.ledTimeout.observeAsState(0)
     val stepsCount by viewModel.stepsCount.observeAsState(24)
     val standbyState by viewModel.standbyState.observeAsState(false)
     var standbyBrightness by remember { mutableStateOf(viewModel.standbyBrightness.value ?: 0f) }
@@ -243,7 +242,7 @@ fun SLStandartSettingsScreen(
 
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope            = rememberCoroutineScope()
-    val content: @Composable (() -> Unit) = { Text("NULL") }
+    val content: @Composable (() -> Unit) = { Text(" ") }
     var sheetContent   by remember { mutableStateOf(content) }
     val sheetAnim: AnimationSpec<Float> = tween(200)
 
@@ -268,18 +267,14 @@ fun SLStandartSettingsScreen(
             )
 
             ValuePickerCell(
-                title = stringResource(id = R.string.peripheral_settings_text_firmware_version),
-                value = firmwareVersion.toString()
-            ) { }
-
-            ValuePickerCell(
-                title = stringResource(id = R.string.peripheral_settings_text_serial_number),
-                value = serialNumber
-            ) { }
-
-            ValuePickerCell(
-                stringResource(id = R.string.adaptive_brightness_cell_title),
-                stringResource(adaptiveBrightness.elementNameStringID)
+                title = stringResource(id = R.string.adaptive_brightness_cell_title),
+                value = stringResource(adaptiveBrightness.elementNameStringID),
+                additionalContent = {
+                    Text(
+                        text = stringResource(R.string.peripheral_adaptive_brightness_cell_footer),
+                        style = MaterialTheme.typography.overline,
+                    )
+                }
             ) {
                 sheetContent = {
                     ValuePicker(
@@ -324,6 +319,15 @@ fun SLStandartSettingsScreen(
                 viewModel.setStepsCount(it)
             }
 
+            StepperCell(
+                title = stringResource(R.string.led_timeout_cell_title),
+                value = ledTimeout,
+                minValue = PeripheralData.SLStandartMinLedTimeout,
+                maxValue = PeripheralData.SLStandartMaxLedTimeout
+            ) {
+                viewModel.setLedTimeout(it)
+            }
+
             // Убрана поддержка 4 датчиков, теперь по дефолту только 2
 //            StepperCell(
 //                title = stringResource(id = R.string.top_sensor_count_cell_title),
@@ -348,31 +352,34 @@ fun SLStandartSettingsScreen(
             ) {
                 viewModel.setStandbyState(it)
             }
-            if (adaptiveBrightness == SlProAdaptiveModes.Off) {
-                SliderCell(
-                    title = stringResource(id = R.string.standby_brightness_value_cell_title),
-                    value = standbyBrightness,
-                    valueRange = PeripheralData.SLStandartMinLedBrightness.toFloat()..PeripheralData.SLStandartMaxLedBrightness.toFloat()
-                ) {
-                    standbyBrightness = it
-                    viewModel.setStandbyBrightness(it)
+            if (standbyState) {
+                if (adaptiveBrightness == SlProAdaptiveModes.Off ) {
+                    SliderCell(
+                        title = stringResource(id = R.string.standby_brightness_value_cell_title),
+                        value = standbyBrightness,
+                        valueRange = PeripheralData.SLStandartMinLedBrightness.toFloat()..PeripheralData.SLStandartMaxLedBrightness.toFloat()
+                    ) {
+                        standbyBrightness = it
+                        viewModel.setStandbyBrightness(it)
+                    }
                 }
-            }
-            StepperCell(
-                title = stringResource(id = R.string.standby_brightness_top_steps_count_cell_title),
-                value = standbyTopCount,
-                minValue = 1,
-                maxValue = PeripheralData.SLStandartMaxStepsCount / 2
-            ) {
-                viewModel.setStandbyTopCount(it)
-            }
-            StepperCell(
-                title = stringResource(id = R.string.standby_brightness_bot_steps_count_cell_title),
-                value = standbyBotCount,
-                minValue = 1,
-                maxValue = PeripheralData.SLStandartMaxStepsCount / 2
-            ) {
-                viewModel.setStandbyBotCount(it)
+
+                StepperCell(
+                    title = stringResource(id = R.string.standby_brightness_top_steps_count_cell_title),
+                    value = standbyTopCount,
+                    minValue = 1,
+                    maxValue = PeripheralData.SLStandartMaxStepsCount / 2
+                ) {
+                    viewModel.setStandbyTopCount(it)
+                }
+                StepperCell(
+                    title = stringResource(id = R.string.standby_brightness_bot_steps_count_cell_title),
+                    value = standbyBotCount,
+                    minValue = 1,
+                    maxValue = PeripheralData.SLStandartMaxStepsCount / 2
+                ) {
+                    viewModel.setStandbyBotCount(it)
+                }
             }
             SliderCell(
                 title = stringResource(R.string.title_top_sensor_trigger_distance),
@@ -412,6 +419,11 @@ fun SLStandartSettingsScreen(
                 valueRange = PeripheralData.SLStandartMinSensorLightness.toFloat()..PeripheralData.SLStandartMaxSensorLightness.toFloat(),
                 additionalContent = {
                     Text(topTriggerLightness.toInt().toString() + " %")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.peripheral_trigger_lightness_cell_footer),
+                        style = MaterialTheme.typography.overline,
+                    )
                 },
             ) {
                 topTriggerLightness = it
@@ -423,6 +435,11 @@ fun SLStandartSettingsScreen(
                 valueRange = PeripheralData.SLStandartMinSensorLightness.toFloat()..PeripheralData.SLStandartMaxSensorLightness.toFloat(),
                 additionalContent = {
                     Text(botTriggerLightness.toInt().toString() + " %")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.peripheral_trigger_lightness_cell_footer),
+                        style = MaterialTheme.typography.overline,
+                    )
                 },
             ) {
                 botTriggerLightness = it
@@ -436,6 +453,17 @@ fun SLStandartSettingsScreen(
                 title = stringResource(id = R.string.bot_current_lightness_cell_title),
                 value = "$botCurrentLightness %"
             ) { }
+
+            ValuePickerCell(
+                title = stringResource(id = R.string.peripheral_settings_text_firmware_version),
+                value = firmwareVersion.toString()
+            ) { }
+
+            ValuePickerCell(
+                title = stringResource(id = R.string.peripheral_settings_text_serial_number),
+                value = serialNumber
+            ) { }
+
             Button(onClick = resetSettings) {
                 Text(stringResource(R.string.reset_button))
             }

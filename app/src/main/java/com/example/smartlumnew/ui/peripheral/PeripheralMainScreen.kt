@@ -50,7 +50,8 @@ fun PeripheralScreen(
     PeripheralScreen(
         modifier = modifier.fillMaxSize(),
         viewModel = viewModel,
-        peripheral = peripheral
+        peripheral = peripheral,
+        openPeripheralSettings = { openPeripheralSettings(peripheral, viewModel) }
     )
 
     // Верхнее меню
@@ -62,9 +63,9 @@ fun PeripheralScreen(
             navigateUp() },
         openPeripheralSettings = { openPeripheralSettings(peripheral, viewModel) },
         // Рисуем или не рисуем иконку
-        showActions = viewModel.isInitialized.observeAsState(false).value && viewModel.hasOptions.observeAsState(
-            initial = false
-        ).value
+        showActions = viewModel.isInitialized.observeAsState(false).value &&
+                viewModel.hasOptions.observeAsState(initial = false).value &&
+                viewModel.isConnected.observeAsState(initial = false).value
     )
 }
 
@@ -72,14 +73,16 @@ fun PeripheralScreen(
 private fun PeripheralScreen(
     modifier: Modifier = Modifier,
     viewModel: PeripheralViewModel,
-    peripheral: DiscoveredPeripheral
+    peripheral: DiscoveredPeripheral,
+    openPeripheralSettings: () -> Unit
 ) {
     val connectionState by viewModel.connectionState.observeAsState(ConnectionState.CONNECTING)
     PeripheralScreen(
         modifier = modifier,
         viewModel = viewModel,
         peripheral = peripheral,
-        connectionState = connectionState
+        connectionState = connectionState,
+        openPeripheralSettings = openPeripheralSettings
     )
 }
 
@@ -89,6 +92,7 @@ private fun PeripheralScreen(
     viewModel: PeripheralViewModel,
     peripheral: DiscoveredPeripheral,
     connectionState: ConnectionState,
+    openPeripheralSettings: () -> Unit
 ) {
     // Если устройство еще не подключилось - показываем экран загрузки
     // Иначе экран конкретного устройства
@@ -97,6 +101,7 @@ private fun PeripheralScreen(
             modifier = modifier,
             viewModel = viewModel,
             peripheralType = peripheral.type,
+            openPeripheralSettings = openPeripheralSettings,
         )
     } else {
         ConnectingScreen(connectionState)
@@ -109,6 +114,7 @@ private fun PeripheralScreen(
     modifier: Modifier = Modifier,
     viewModel: PeripheralViewModel,
     peripheralType: PeripheralProfileEnum,
+    openPeripheralSettings: () -> Unit
 ) {
     val isInitialized   by viewModel.isInitialized.observeAsState()
     val error           by viewModel.error.observeAsState()
@@ -122,7 +128,7 @@ private fun PeripheralScreen(
         // Также здесь мы рисуем в самом верху ячейку об ошибке (если есть), при нажании откроет подробности (диалог)
         error?.let { PeripheralErrorCell { showErrorDialog = true } }
         if (isInitialized != false) {
-            PeripheralReadyScreen(modifier, peripheralType, viewModel)
+            PeripheralReadyScreen(modifier, peripheralType, viewModel, openPeripheralSettings)
         } else if (isInitialized == false) {
             PeripheralSetupScreen(modifier, peripheralType, viewModel)
         }
@@ -146,18 +152,22 @@ private fun PeripheralScreen(
 fun PeripheralReadyScreen(
     modifier: Modifier = Modifier,
     peripheralType: PeripheralProfileEnum,
-    viewModel: PeripheralViewModel
+    viewModel: PeripheralViewModel,
+    openPeripheralSettings: () -> Unit
 ) {
     // Показываем соответствующий экран в зависимости от устройства
-    when (peripheralType) {
-        PeripheralProfileEnum.FL_CLASSIC  -> FLClassic(modifier, viewModel as FLClassicViewModel)
-        PeripheralProfileEnum.FL_MINI     -> FLClassic(modifier, viewModel as FLClassicViewModel)
-        PeripheralProfileEnum.SL_BASE     -> SLBaseMainScreen(viewModel as SLBaseViewModel)
-        PeripheralProfileEnum.SL_STANDART -> SLStandartMainScreen(viewModel as SLProStandartViewModel)
-        PeripheralProfileEnum.SL_PRO      -> SLProMainScreen(viewModel as SLProStandartViewModel)
-        PeripheralProfileEnum.UNKNOWN     -> {
-            Log.e("TAG", "PeripheralReadyScreen: UNKNOWN DEVICE" )
-            Text("Unknown device")
+    Column() {
+
+        when (peripheralType) {
+            PeripheralProfileEnum.FL_CLASSIC -> FLClassic(modifier, viewModel as FLClassicViewModel)
+            PeripheralProfileEnum.FL_MINI -> FLClassic(modifier, viewModel as FLClassicViewModel)
+            PeripheralProfileEnum.SL_BASE -> SLBaseMainScreen(viewModel as SLBaseViewModel, openPeripheralSettings)
+            PeripheralProfileEnum.SL_STANDART -> SLStandartMainScreen(viewModel as SLProStandartViewModel, openPeripheralSettings)
+            PeripheralProfileEnum.SL_PRO -> SLProMainScreen(viewModel as SLProStandartViewModel)
+            PeripheralProfileEnum.UNKNOWN -> {
+                Log.e("TAG", "PeripheralReadyScreen: UNKNOWN DEVICE")
+                Text("Unknown device")
+            }
         }
     }
 }

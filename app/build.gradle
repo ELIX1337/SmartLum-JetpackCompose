@@ -21,7 +21,7 @@ android {
         applicationId "com.smartlum.smartlum"
         minSdk 26
         targetSdk 31
-        versionCode 11
+        versionCode 15
         versionName "2.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -90,21 +90,21 @@ dependencies {
 
     implementation 'androidx.preference:preference-ktx:1.2.0'
 
-    implementation 'com.google.android.material:material:1.6.0-beta01'
+    implementation 'com.google.android.material:material:1.7.0-alpha02'
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Permissions
-    implementation 'com.google.accompanist:accompanist-permissions:0.24.5-alpha'
-    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.4-alpha'
-    implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.4-alpha'
-    implementation 'com.google.accompanist:accompanist-navigation-animation:0.24.4-alpha'
+    implementation 'com.google.accompanist:accompanist-permissions:0.24.9-beta'
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.9-beta'
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.9-beta'
+    implementation 'com.google.accompanist:accompanist-navigation-animation:0.24.9-beta'
     //implementation 'com.google.accompanist:accompanist-insets:0.24.5-alpha'
 
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

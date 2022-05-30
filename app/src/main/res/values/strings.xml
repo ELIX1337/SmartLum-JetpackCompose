@@ -129,4 +129,9 @@
     <string name="bot_current_distance_cell_title">Bottom current distance</string>
     <string name="peripheral_name_sl_standart">SL-Standart</string>
     <string name="peripheral_settings_text_serial_number">Serial number</string>
+    <string name="peripheral_animation_mode_name_smooth">Smooth</string>
+    <string name="peripheral_animation_mode_name_sharp">Sharp</string>
+    <string name="peripheral_adaptive_brightness_cell_footer">When adaptive mode is enabled, manual brightness adjustment is not available.</string>
+    <string name="peripheral_trigger_lightness_cell_footer">The value (%) at which the device switches to night mode. Set to 0% to disable night mode.</string>
+    <string name="button_advanced_settings">Advanced settings</string>
 </resources>

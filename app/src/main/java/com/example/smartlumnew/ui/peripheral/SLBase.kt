@@ -32,7 +32,8 @@ import com.example.smartlumnew.ui.components.SwitchCell
 @Composable
 fun SLBaseMainScreen(
     //modifier: Modifier = Modifier,
-    baseViewModel: SLBaseViewModel
+    baseViewModel: SLBaseViewModel,
+    openSettings: () -> Unit
 ) {
     var ledState by remember { mutableStateOf(baseViewModel.ledState.value ?: false) }
     var brightness by remember { mutableStateOf(baseViewModel.ledBrightness.value ?: 0f) }
@@ -43,7 +44,8 @@ fun SLBaseMainScreen(
         modifier = Modifier
             //.verticalScroll(rememberScrollState())
             .padding(8.dp, 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SwitchCell(
             title = stringResource(R.string.switch_cell_led_on),
@@ -76,6 +78,10 @@ fun SLBaseMainScreen(
         StepperCell(stringResource(R.string.stepper_cell_led_timeout), ledTimeout, 1, 30) {
             ledTimeout = it
             baseViewModel.setLedTimeout(it)
+        }
+
+        Button(onClick = openSettings) {
+            Text(stringResource(R.string.button_advanced_settings))
         }
 
     }
